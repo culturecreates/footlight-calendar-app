@@ -11,8 +11,9 @@ i18n
       en: {
         translations: {
           
-          "Region": "Regions",
-          "Types": "Types",
+          "Region": "REGIONS",
+          "Types": "TYPES",
+          "Publics" : "PUBLICS",
           welcome: "Hello  <strong>World</strong>"
         }
       },
@@ -20,6 +21,7 @@ i18n
         translations: {
           "Types": "Types",
             "Region": "Regions",
+            "Publics" : "PUBLICS",
         }
       }
     },

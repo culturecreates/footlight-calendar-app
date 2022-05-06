@@ -12,6 +12,9 @@
     animation: App-logo-spin infinite 20s linear;
   }
 }
+.ant-layout.events-app-layout{
+  background-color: #fff;
+}
 .app-header{
   position: fixed;
   width: 100%;
@@ -36,6 +39,54 @@
   margin: 0px !important;
   column-gap: 3px;
   justify-content: center;
+}
+
+.event-date{
+  font-size: 12px;
+    line-height: 19px;
+    display: inline-block;
+    color: #fff;
+    background-color: #f04d46;
+    padding: 6px 10px;
+    font-weight: 700;
+    margin-top: 25px;
+}
+.event-desc{
+  display: inline;
+  padding: 8px 10px;
+  color: #f04d46;
+  font-weight: 700;
+  font-size: 16px;
+  line-height: 27px;
+  background-color: #fff;
+  -webkit-box-decoration-break: clone;
+}
+.event-name{
+  padding: 9px 10px;
+  font-size: 13px;
+  line-height: 22px;
+  top: 7px;
+  display: table;
+  color: #fff;
+  font-weight: 700;
+  background-color: #f04d46;
+  padding: 8px 10px;
+  -webkit-box-decoration-break: clone;
+}
+.event-detail{
+  margin-bottom: 25px;
+}
+.event-item{
+  background-image: url(https://cdn.caligram.com/uploads/event/8J5/medium/6242018236834.png);
+  width: 310px;
+  height: 260px;
+  background-size: cover;
+  background-position: 50% 50%;
+  margin-bottom: 5.5%;
+  overflow: auto;
+  justify-content: space-between;
+  display: flex;
+  flex-direction: column;
 }
 /* .App-header {
   
@@ -66,6 +117,24 @@
   align-items: center;
   padding: 5px 5px 7px 5px;
   color: #fff;
+  margin: 3px;
+  width: 140px;
+  justify-content: space-between;
+}
+.ant-tag.tag-click{
+  display: inline-flex;
+  align-items: center;
+  padding: 5px 5px 7px 5px;
+  border-top: 2px solid #f0f0f0;
+  break-inside: avoid;
+  color: #231f20;
+  margin: 3px;
+  width: 140px;
+  justify-content: space-between;
+  font-size: 16px;
+  line-height: 22px;
+  cursor: pointer;
+  margin: 3px 2px 3px 10px;
 }
 .tag-close .ant-tag-close-icon{
   font-size: 15px;
@@ -76,11 +145,11 @@
 }
 .tag-type{
   color: #e59090;
-  font-size: 20px;
+  font-size: 18px;
   margin-right: 7px;
 }
 .tag-name{
-  font-size: 20px;
+  font-size: 18px;
   margin-right: 3px;
 }
 .site-calendar-demo-card {
@@ -89,4 +158,43 @@
   width: 296px;
   border: 1px solid #f0f0f0;
   border-radius: 2px;
+}
+
+/* felx filter */
+.side-filter{
+  flex: 0 0 315px;
+}
+.side-filter-type{
+  width: 140px;
+  margin: 5px;
+}
+.filter-type{
+  font-size: 13px;
+  line-height: 19px;
+  font-weight: 700;
+  text-transform: uppercase;
+  margin: 20px 10px 12px;
+  color: #7b7b7b;
+}
+.right-events{
+  flex: 1 1 auto;
+}
+.event-layout{
+  display: flex;
+}
+.events-row{
+  row-gap: 15px !important;
+  column-gap: 30px !important;
+  margin-left: 30px;
+}
+
+.ant-radio-group.ant-radio-group-outline.ant-radio-group-small.ant-picker-calendar-mode-switch{
+  display: none;
+}
+.site-calendar-demo-card .ant-picker-calendar-header{
+  justify-content: center;
+}
+.selected-filter{
+  margin-left: 30px;
+  margin-bottom: 20px;
 }
