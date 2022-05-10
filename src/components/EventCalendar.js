@@ -3,13 +3,13 @@ import { Calendar } from "antd";
 import PropTypes from "prop-types";
 import "../App.css";
 
-const EventCalendar = function ({ onClose }) {
-  function onPanelChange(value, mode) {
-    console.log(value, mode);
+const EventCalendar = function ({ onSelection }) {
+  function onPanelChange(value) {
+    onSelection(value)
   }
   return (
     <div className="site-calendar-demo-card">
-      <Calendar fullscreen={false} onPanelChange={onPanelChange}
+      <Calendar fullscreen={false} onSelect={onPanelChange}
        />
     </div>
   );
