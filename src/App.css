@@ -61,7 +61,7 @@
 }
 
 .event-date{
-  font-size: 12px;
+  font-size: 15px;
     line-height: 19px;
     display: inline-block;
     color: #fff;
@@ -94,6 +94,7 @@
 }
 .event-detail{
   margin-bottom: 25px;
+  max-width: calc(100% - 10px);
 }
 .event-item{
   background-image: url(https://cdn.caligram.com/uploads/event/8J5/medium/6242018236834.png);
@@ -106,6 +107,9 @@
   justify-content: space-between;
   display: flex;
   flex-direction: column;
+}
+.event-date-section{
+  display: flex;
 }
 /* .App-header {
   
@@ -216,4 +220,9 @@
 .selected-filter{
   margin-left: 30px;
   margin-bottom: 20px;
+}
+.event-pagination.ant-pagination{
+  display: flex;
+  justify-content: flex-end;
+  margin-right: 25px
 }

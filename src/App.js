@@ -4,13 +4,9 @@ import { useTranslation, Trans } from "react-i18next";
 import "antd/dist/antd.min.css";
 import "antd/dist/antd.less";
 import { useState } from "react";
-import enUS from "antd/lib/locale/en_US";
-import zhCN from "antd/lib/locale/fr_CA";
-import moment from "moment";
-import "moment/locale/fr-ca";
+
 import Events from "./pages/Events";
 
-moment.locale("en");
 
 const { Header, Footer, Content } = Layout;
 function App() {
@@ -21,15 +17,15 @@ function App() {
     i18n.changeLanguage(lng);
   };
  
-  const changeLocale = (e) => {
-    const localeValue = e.target.value;
-    setLocale(localeValue);
-    if (!localeValue) {
-      moment.locale("en");
-    } else {
-      moment.locale("fr-ca");
-    }
-  };
+  // const changeLocale = (e) => {
+  //   const localeValue = e.target.value;
+  //   setLocale(localeValue);
+  //   if (!localeValue) {
+  //     moment.locale("en");
+  //   } else {
+  //     moment.locale("fr-ca");
+  //   }
+  // };
 
   return (
     <Layout className="events-app-layout">
