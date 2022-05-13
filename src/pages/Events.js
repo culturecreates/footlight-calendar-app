@@ -282,7 +282,7 @@ const Events = function ({ onSelection }) {
               setupEventsFilter(eventsFilter);
             }}
           >
-            Remove all search criteria
+            {t("Remove")}
           </Button>
         )}
         <Row className="events-row">

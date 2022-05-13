@@ -11,17 +11,19 @@ i18n
       en: {
         translations: {
           
-          "Region": "REGIONS",
+          "Region": "OUTAOUAIS",
           "Types": "TYPES",
           "Publics" : "PUBLICS",
+          "Remove" : "Retirer tous les critères de recherche",
           welcome: "Hello  <strong>World</strong>"
         }
       },
       de: {
         translations: {
           "Types": "Types",
-            "Region": "Regions",
+            "Region": "OUTAOUAIS",
             "Publics" : "PUBLICS",
+            "Remove" : "Retirer tous les critères de recherche",
         }
       }
     },
