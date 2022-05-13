@@ -1,10 +1,5 @@
 import React, { useState, useEffect, useRef } from "react";
-import {
-  Row,
-  Col,
-  ConfigProvider,
-  Pagination,
-} from "antd";
+import { Row, Col, ConfigProvider, Pagination, Button } from "antd";
 import { useTranslation, Trans } from "react-i18next";
 
 import PropTypes from "prop-types";
@@ -26,43 +21,81 @@ const Events = function ({ onSelection }) {
   const [locale, setLocale] = useState(zhCN);
   const [currentLang, setCurrentLang] = useState("fr");
   const [totalPage, setTotalPage] = useState(1);
-
   const [loading, setLoading] = useState(false);
   const [filter, setFilter] = useState([]);
   const [eventList, setEventList] = useState([]);
-  const [regions, setRegions] = useState([
-    { name: "tessds41", color: "#b2b4b6", selected: false },
-    { name: "tessds42", color: "#fcb043", selected: false },
-    { name: "tessds43", color: "#367443", selected: false },
-    { name: "tessds44", color: "#eacc20", selected: false },
-    { name: "tessds45", color: "#e2dd1f", selected: false },
-    { name: "tessds46", color: "#f04d46", selected: false },
-  ]);
-  const [publicFilter, setPublic] = useState([
-    { name: "tessds51", color: "#b2b4b6", selected: false },
-    { name: "tessds52", color: "#fcb043", selected: false },
-    { name: "tessds53", color: "#367443", selected: false },
-    { name: "tessds54", color: "#eacc20", selected: false },
-    { name: "tessds55", color: "#e2dd1f", selected: false },
-    { name: "tessds56", color: "#f04d46", selected: false },
-  ]);
-  const [types, setTypes] = useState([
-    { name: "tessds1", selected: false },
-    { name: "tessds2", selected: false },
-    { name: "tessds3", selected: false },
-    { name: "tessds4", selected: false },
-    { name: "tessds5", selected: false },
-    { name: "tessds6", selected: false },
-  ]);
+  const [regions, setRegions] = useState([]);
+  const colors = [
+    "#b2b4b6",
+    "#fcb043",
+    "#367443",
+    "#eacc20",
+    "#e2dd1f",
+    "#b2b4b6",
+    "#fcb043",
+    "#367443",
+    "#eacc20",
+    "#e2dd1f",
+  ];
+  const [publicFilter, setPublic] = useState([]);
+  const [types, setTypes] = useState([]);
+  const [eventsFilter, setEventsFilter] = useState();
+  const [calendarDate, setCalendarDate] = useState(moment());
 
   const { t, i18n } = useTranslation();
 
   useEffect(() => {
     moment.locale("fr-ca");
     getEvents();
+    getCalendarInfo();
   }, []);
 
-  const getEvents = (page =1) => {
+  const getCalendarInfo = () => {
+    setLoading(true);
+    ServiceApi.calendarInfo()
+      .then((response) => {
+        if (response && response.data && response.data) {
+          const events = response.data;
+          setupEventsFilter(events);
+          setEventsFilter(events);
+        }
+        setLoading(false);
+      })
+      .catch((error) => {
+        setLoading(false);
+      });
+  };
+
+  const setupEventsFilter = (events = eventsFilter) => {
+    const regArr = events.regions.map((item, index) => {
+      const obj = {
+        name: item.name[currentLang],
+        color: colors[index],
+        selected: false,
+      };
+      return obj;
+    });
+    setRegions(regArr);
+
+    const typeArr = events.eventAdditionalTypes.map((item, index) => {
+      const obj = {
+        name: item.name[currentLang],
+        selected: false,
+      };
+      return obj;
+    });
+    setTypes(typeArr);
+
+    const publicArr = events.audiences.map((item, index) => {
+      const obj = {
+        name: item.name[currentLang],
+        selected: false,
+      };
+      return obj;
+    });
+    setPublic(publicArr);
+  };
+  const getEvents = (page = 1) => {
     setLoading(true);
     ServiceApi.eventList(page)
       .then((response) => {
@@ -118,8 +151,10 @@ const Events = function ({ onSelection }) {
   const removeItem = (obj, type) => {
     const filterArray = filter.filter((item) => item.name !== obj.name);
     setFilter(filterArray);
-
-    if (type === "Region") {
+    if (type === "Date") {
+        setCalendarDate(moment())
+    }
+    else if (type === "Region") {
       const newArr = regions.map((object) => {
         if (object.name === obj.name) {
           return { ...object, selected: false };
@@ -147,6 +182,7 @@ const Events = function ({ onSelection }) {
   };
 
   const dateSelection = (value) => {
+    setCalendarDate(moment(value));
     const dateObj = {
       type: "Date",
       name: moment(value).format("DD MM YYYY"),
@@ -161,6 +197,12 @@ const Events = function ({ onSelection }) {
 
       setFilter(newArr);
     } else setFilter([...filter, dateObj]);
+    if (scrollRef)
+      scrollRef.current.scrollIntoView({
+        behavior: "smooth",
+        block: "nearest",
+        inline: "start",
+      });
   };
   return (
     <div className="event-layout">
@@ -189,7 +231,7 @@ const Events = function ({ onSelection }) {
           </Row>
         </div>
         <ConfigProvider locale={locale}>
-          <EventCalendar onSelection={dateSelection} />
+          <EventCalendar onSelection={dateSelection} value={calendarDate} />
         </ConfigProvider>
         <div className="filter-type">{t("Types")}</div>
         <div>
@@ -216,9 +258,9 @@ const Events = function ({ onSelection }) {
           ))}
         </div>
       </div>
-      <div className="right-events" >
-          <div ref={scrollRef}></div>
-        <div className="selected-filter" >
+      <div className="right-events">
+        <div ref={scrollRef}></div>
+        <div className="selected-filter">
           {filter.map((item) => (
             <SelectionTag
               closeButton
@@ -229,26 +271,38 @@ const Events = function ({ onSelection }) {
             />
           ))}
         </div>
+        {filter.length > 1 && (
+          <Button
+            className="remove-all"
+            icon={<CloseOutlined />}
+            danger
+            onClick={() => {
+              setFilter([]);
+              setCalendarDate(moment());
+              setupEventsFilter(eventsFilter);
+            }}
+          >
+            Remove all search criteria
+          </Button>
+        )}
         <Row className="events-row">
           {eventList.map((item) => (
             <Col>
-             
-              <EventItem item={item} currentLang={currentLang}/>
+              <EventItem item={item} currentLang={currentLang} />
             </Col>
           ))}
         </Row>
         <Pagination
-        className="event-pagination"
-        defaultCurrent={1}
-        pageSize={20}
-        total={totalPage}
-        hideOnSinglePage={true}
-        showSizeChanger={false}
-        onChange={page=>getEvents(page)}
-      />
+          className="event-pagination"
+          defaultCurrent={1}
+          pageSize={20}
+          total={totalPage}
+          hideOnSinglePage={true}
+          showSizeChanger={false}
+          onChange={(page) => getEvents(page)}
+        />
       </div>
       {loading && <Spinner />}
-      
     </div>
   );
 };

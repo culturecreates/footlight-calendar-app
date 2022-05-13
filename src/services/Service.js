@@ -1,6 +1,13 @@
 import { Axios } from "../utils/ServerConfig";
 
 export default class ServiceApi {
+  static calendarInfo() {
+    return Axios({
+      url: `calendar-info`,
+      method: "GET",
+    
+    });
+  }
   static eventList(page=1) {
     return Axios({
       url: `events/list`,
