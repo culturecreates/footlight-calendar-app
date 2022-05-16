@@ -4,8 +4,9 @@ import { useTranslation, Trans } from "react-i18next";
 import "antd/dist/antd.min.css";
 import "antd/dist/antd.less";
 import { useState } from "react";
-
+import { BrowserRouter as Router, Route, Routes } from "react-router-dom";
 import Events from "./pages/Events";
+import EventDetails from "./pages/EventDetails";
 
 
 const { Header, Footer, Content } = Layout;
@@ -50,7 +51,15 @@ function App() {
         </Row>
         
         <Trans i18nKey="welcome">trans</Trans> */}
-       <Events/>
+        <Router>
+        <Routes>
+          <Route path="/" element={<Events />} />
+          <Route path="/events/:eventId" element={<EventDetails />} />
+
+          {/* <Route  path="/home" element={Dashboard} />
+    <Route  path="/" element={Login} /> */}
+        </Routes>
+      </Router>
       </Content>
       <Footer>Footer</Footer>
     </Layout>

@@ -8,6 +8,16 @@ export default class ServiceApi {
     
     });
   }
+  static searchSuggesion(value) {
+    return Axios({
+      url: `search-suggestion`,
+      method: "GET",
+      params:{
+        "language":"EN",
+         "search-key": value
+      }
+    });
+  }
   static eventList(page=1) {
     return Axios({
       url: `events/list`,

@@ -14,6 +14,7 @@ import enUS from "antd/lib/locale/en_US";
 import zhCN from "antd/lib/locale/fr_CA";
 import "moment/locale/fr-ca";
 import EventItem from "../components/EventItem";
+import SemanticSearch from "../components/SemanticSearch";
 moment.locale("fr-ca");
 
 const Events = function ({ onSelection }) {
@@ -205,7 +206,10 @@ const Events = function ({ onSelection }) {
       });
   };
   return (
+      <>
+      <SemanticSearch/>
     <div className="event-layout">
+        
       <div className="side-filter">
         <div className="filter-type">{t("Region")}</div>
         <div>
@@ -304,6 +308,7 @@ const Events = function ({ onSelection }) {
       </div>
       {loading && <Spinner />}
     </div>
+    </>
   );
 };
 export default Events;
