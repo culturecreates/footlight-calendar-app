@@ -47,9 +47,11 @@ const Events = function ({ onSelection }) {
 
   useEffect(() => {
     moment.locale("fr-ca");
-    getEvents();
     getCalendarInfo();
   }, []);
+  useEffect(() => {
+    getEvents();
+  }, [filter]);
 
   const getCalendarInfo = () => {
     setLoading(true);
@@ -98,7 +100,7 @@ const Events = function ({ onSelection }) {
   };
   const getEvents = (page = 1) => {
     setLoading(true);
-    ServiceApi.eventList(page)
+    ServiceApi.eventList(page,filter)
       .then((response) => {
         if (response && response.data && response.data.data) {
           const events = response.data.data;

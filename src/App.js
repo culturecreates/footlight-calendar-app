@@ -3,7 +3,7 @@ import "./App.css";
 import { useTranslation, Trans } from "react-i18next";
 import "antd/dist/antd.min.css";
 import "antd/dist/antd.less";
-import { useState } from "react";
+import React,{ useState } from "react";
 import { BrowserRouter as Router, Route, Routes } from "react-router-dom";
 import Events from "./pages/Events";
 import EventDetails from "./pages/EventDetails";

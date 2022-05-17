@@ -15,6 +15,8 @@ i18n
           "Types": "TYPES",
           "Publics" : "PUBLICS",
           "Remove" : "Retirer tous les critères de recherche",
+          "Contact" :"Contact",
+          "AllEvents": "All Events",
           welcome: "Hello  <strong>World</strong>"
         }
       },
@@ -24,6 +26,8 @@ i18n
             "Region": "OUTAOUAIS",
             "Publics" : "PUBLICS",
             "Remove" : "Retirer tous les critères de recherche",
+            "Contact" :"Contact",
+            "AllEvents": "All Events",
         }
       }
     },

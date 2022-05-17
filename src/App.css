@@ -220,6 +220,7 @@
 .selected-filter{
   margin-left: 30px;
   margin-bottom: 20px;
+  margin-top: 20px;
 }
 .event-pagination.ant-pagination{
   display: flex;

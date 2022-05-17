@@ -11,7 +11,7 @@ const SemanticSearch = function ({ onSelection, value }) {
 
     
     const renderTitle = (title) => (
-        <span>
+        <span className="search-title">
           {title}
         </span>
       );
