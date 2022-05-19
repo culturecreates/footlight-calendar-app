@@ -11,27 +11,36 @@ i18n
       en: {
         translations: {
           
-          "Region": "OUTAOUAIS",
+          "Region": "REGION",
           "Types": "TYPES",
           "Publics" : "PUBLICS",
           "Remove" : "Retirer tous les critères de recherche",
           "Contact" :"Contact",
           "AllEvents": "All Events",
+          "Search": "Search for an event, theme, venue",
+          "audiences":"Audiences",
+          "additionalType":"Additional Type",
+
           welcome: "Hello  <strong>World</strong>"
         }
       },
-      de: {
+      fr: {
         translations: {
-          "Types": "Types",
+            "Types": "Types",
+            "Type": "Type",
             "Region": "OUTAOUAIS",
             "Publics" : "PUBLICS",
             "Remove" : "Retirer tous les critères de recherche",
             "Contact" :"Contact",
-            "AllEvents": "All Events",
+            "AllEvents": "Tous les événements",
+            "audiences":"Audiences",
+            "audience":"Audience",
+            "additionalType":"Additional Type",
+            "Search": "Recherchez un événement, un thème ou un lieu"
         }
       }
     },
-    fallbackLng: "en",
+    fallbackLng: "fr",
     debug: true,
 
     // have a common namespace used around the full app

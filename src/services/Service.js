@@ -26,8 +26,8 @@ export default class ServiceApi {
       }
     });
   }
-  static eventList(page=1,filterArray=[],queryString) {
-    console.log(filterArray,filterArray.find((o) => o.type === "Date")&&this.convertDate(filterArray.find((o) => o.type === "Date").name))
+  static eventList(page=1,filterArray=[]) {
+    console.log(filterArray,filterArray.find((o) => o.type === "queryString")&&filterArray.find((o) => o.type === "queryString").name)
     return Axios({
       url: `events/list`,
       method: "GET",
@@ -36,21 +36,20 @@ export default class ServiceApi {
           limit: 20,
           audiences:filterArray.filter(item=>item.type === "Public").map(item=>item.name),
           types:filterArray.filter(item=>item.type === "Type").map(item=>item.name),
-          venues:[],
-          query:queryString, 
-          organizations:[],
+          venues: filterArray.filter(item=>item.type === "places").map(item=>item.name),
+          query:filterArray.find((o) => o.type === "queryString")&&filterArray.find((o) => o.type === "queryString").name, 
+          organizations: filterArray.filter(item=>item.type === "organizations").map(item=>item.name),
           range: filterArray.find((o) => o.type === "Date")&&this.convertDate(filterArray.find((o) => o.type === "Date").name)
           
       }
     });
   }
 
-  static getEventDetail(payload) {
+  static getEventDetail(id) {
     return Axios({
-      url: `event/5`,
+      url: `events/${id}`,
       method: "GET",
 
-      data: JSON.stringify(payload),
     });
   }
 

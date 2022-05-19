@@ -1,6 +1,9 @@
 .semantic-search-div{
     display: flex;
     justify-content: center;
+    padding-top: 20px;
+    padding-bottom: 20px;
+    background: #f04d47;
 }
 .search-title{
     font-weight: 700;

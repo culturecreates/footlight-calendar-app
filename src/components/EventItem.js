@@ -8,7 +8,7 @@ const EventItem = function ({ item, currentLang }) {
     const navigate = useNavigate();
     const redirectionToDetails=()=>{
         
-        navigate("/events/119");
+        navigate(`/events/${item.uuid}`);
     }
   return (
     <div

@@ -7,15 +7,18 @@ import React,{ useState } from "react";
 import { BrowserRouter as Router, Route, Routes } from "react-router-dom";
 import Events from "./pages/Events";
 import EventDetails from "./pages/EventDetails";
+import moment from "moment";
 
 
 const { Header, Footer, Content } = Layout;
 function App() {
   const [locale, setLocale] = useState();
+  const [currentLang, setCurrentLang] = useState("fr");
  
   const { t, i18n } = useTranslation();
   const changeLanguage = (lng) => {
     i18n.changeLanguage(lng);
+    setCurrentLang(lng)
   };
  
   // const changeLocale = (e) => {
@@ -30,7 +33,7 @@ function App() {
 
   return (
     <Layout className="events-app-layout">
-      <Header className="app-header">Header</Header>
+      <Header className="app-header" onClick={()=>changeLanguage("en")}>Header</Header>
 
       <Content className="app-content">
         {/* <div className="change-locale">
@@ -53,8 +56,8 @@ function App() {
         <Trans i18nKey="welcome">trans</Trans> */}
         <Router>
         <Routes>
-          <Route path="/" element={<Events />} />
-          <Route path="/events/:eventId" element={<EventDetails />} />
+          <Route path="/" element={<Events currentLang={currentLang}/>} />
+          <Route path="/events/:eventId" element={<EventDetails currentLang={currentLang}/>} />
 
           {/* <Route  path="/home" element={Dashboard} />
     <Route  path="/" element={Login} /> */}

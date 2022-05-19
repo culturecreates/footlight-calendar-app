@@ -17,10 +17,9 @@ import EventItem from "../components/EventItem";
 import SemanticSearch from "../components/SemanticSearch";
 moment.locale("fr-ca");
 
-const Events = function ({ onSelection }) {
+const Events = function ({ currentLang }) {
   const scrollRef = useRef();
   const [locale, setLocale] = useState(zhCN);
-  const [currentLang, setCurrentLang] = useState("fr");
   const [totalPage, setTotalPage] = useState(1);
   const [loading, setLoading] = useState(false);
   const [filter, setFilter] = useState([]);
@@ -50,6 +49,7 @@ const Events = function ({ onSelection }) {
     getCalendarInfo();
   }, []);
   useEffect(() => {
+    console.log(filter)
     getEvents();
   }, [filter]);
 
@@ -98,9 +98,9 @@ const Events = function ({ onSelection }) {
     });
     setPublic(publicArr);
   };
-  const getEvents = (page = 1) => {
+  const getEvents = (page = 1, filterArray=filter) => {
     setLoading(true);
-    ServiceApi.eventList(page,filter)
+    ServiceApi.eventList(page,filterArray)
       .then((response) => {
         if (response && response.data && response.data.data) {
           const events = response.data.data;
@@ -207,9 +207,20 @@ const Events = function ({ onSelection }) {
         inline: "start",
       });
   };
+
+  const selectSemantic=(selectObj)=>{
+      setupEventsFilter(eventsFilter)
+      const searchArray=[selectObj]
+      setFilter(searchArray)
+  }
+
+  const onClearSearch=()=>{
+    setFilter([])
+  }
   return (
       <>
-      <SemanticSearch/>
+      <SemanticSearch onSelection={selectSemantic} onClearSearch={onClearSearch}
+      currentLang={currentLang}/>
     <div className="event-layout">
         
       <div className="side-filter">
@@ -267,7 +278,7 @@ const Events = function ({ onSelection }) {
       <div className="right-events">
         <div ref={scrollRef}></div>
         <div className="selected-filter">
-          {filter.map((item) => (
+          {filter.filter(item=>item.type !== "places" && item.type !== "queryString").map((item) => (
             <SelectionTag
               closeButton
               group={item.type}
@@ -293,7 +304,7 @@ const Events = function ({ onSelection }) {
         )}
         <Row className="events-row">
           {eventList.map((item) => (
-            <Col>
+            <Col key={item.uuid}>
               <EventItem item={item} currentLang={currentLang} />
             </Col>
           ))}
