@@ -10,7 +10,7 @@ const EventContact = function ({ name, values,currentLang }) {
  
   return (
     <div className="event-contact-card">
-      <div className="filter-type">{t(name)}</div>
+      <div className="filter-type">{t(name, { lng: currentLang })}</div>
       {values.map(item=>
       <div className="event-contact-details">{name === "type"?item:item.name[currentLang]}</div>
       )}

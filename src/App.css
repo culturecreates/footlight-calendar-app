@@ -231,3 +231,28 @@
   margin-left: 30px;
   margin-bottom: 20px;
 }
+.search-results{
+  margin-right: 20px;
+  margin-left: 20px;
+}
+.header-text {
+  font-weight: 500;
+  font-size: 14px;
+  line-height: 16px;
+  color: #0071ce;
+  display: inline-flex;
+  align-items: center;
+  padding: 6px 10px;
+  background: #f2eeee;
+  border-radius: 10px;
+}
+
+.active-admin{
+  color: #918a8ad9;
+  margin-right: 10px;
+  margin-left: 10px;
+}
+.active-user{
+  margin-right: 10px;
+  margin-left: 10px;
+}

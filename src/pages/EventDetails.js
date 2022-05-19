@@ -44,7 +44,7 @@ const EventDetails = function ({ currentLang }) {
     <div>
       <div className="left-button" onClick={() => navigate(`/`)}>
         <LeftOutlined className="left-icon" />
-        {t("AllEvents")}
+        {t("AllEvents", { lng: currentLang })}
       </div>
       {eventDetails && (
         <>
@@ -78,12 +78,13 @@ const EventDetails = function ({ currentLang }) {
               <Button danger className="buy-button">
                 Billets
               </Button>
-
+              {eventDetails.audience?.length > 0 && (
               <EventContact
                 name="audience"
                 values={eventDetails.audience}
                 currentLang={currentLang}
               />
+              )}
               {eventDetails.type?.length > 0 && (
                 <EventContact
                   name="type"

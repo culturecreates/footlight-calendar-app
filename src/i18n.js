@@ -14,12 +14,13 @@ i18n
           "Region": "REGION",
           "Types": "TYPES",
           "Publics" : "PUBLICS",
-          "Remove" : "Retirer tous les critères de recherche",
+          "Remove" : "Remove all search criteria",
           "Contact" :"Contact",
           "AllEvents": "All Events",
           "Search": "Search for an event, theme, venue",
           "audiences":"Audiences",
           "additionalType":"Additional Type",
+          "Results":"Search Results",
 
           welcome: "Hello  <strong>World</strong>"
         }
@@ -36,7 +37,9 @@ i18n
             "audiences":"Audiences",
             "audience":"Audience",
             "additionalType":"Additional Type",
-            "Search": "Recherchez un événement, un thème ou un lieu"
+            "Search": "Recherchez un événement, un thème ou un lieu",
+            "Results":"Résultats de recherche",
+
         }
       }
     },

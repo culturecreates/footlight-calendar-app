@@ -107,7 +107,7 @@ const SemanticSearch = function ({ onSelection, onClearSearch,currentLang }) {
       <AutoComplete
       dropdownMatchSelectWidth={252}
       style={{
-        width: 400,
+        width: 420,
       }}
       options={options}
       onSelect={(val, option) => onSelect(val, option)}
@@ -116,7 +116,7 @@ const SemanticSearch = function ({ onSelection, onClearSearch,currentLang }) {
       
       
     >
-      <Input.Search allowClear size="large" placeholder={t("Search")} onClear={onClearSearch}/>
+      <Input.Search allowClear size="large" placeholder={t("Search", { lng: currentLang })} onClear={onClearSearch}/>
     </AutoComplete>
     </div>
   );

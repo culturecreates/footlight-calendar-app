@@ -1,25 +1,21 @@
 import React, { useState, useEffect, useRef } from "react";
-import { Row, Col, ConfigProvider, Pagination, Button } from "antd";
+import { Row, Col, ConfigProvider, Pagination, Button, Empty } from "antd";
 import { useTranslation, Trans } from "react-i18next";
 
 import PropTypes from "prop-types";
 import "../App.css";
-import { CloseOutlined } from "@ant-design/icons";
+import { CloseOutlined,AppstoreOutlined } from "@ant-design/icons";
 import EventCalendar from "../components/EventCalendar";
 import SelectionTag from "../components/SelectionTag";
 import moment from "moment";
 import ServiceApi from "../services/Service";
 import Spinner from "../components/Spinner";
-import enUS from "antd/lib/locale/en_US";
-import zhCN from "antd/lib/locale/fr_CA";
-import "moment/locale/fr-ca";
+
 import EventItem from "../components/EventItem";
 import SemanticSearch from "../components/SemanticSearch";
-moment.locale("fr-ca");
 
-const Events = function ({ currentLang }) {
+const Events = function ({ currentLang,locale }) {
   const scrollRef = useRef();
-  const [locale, setLocale] = useState(zhCN);
   const [totalPage, setTotalPage] = useState(1);
   const [loading, setLoading] = useState(false);
   const [filter, setFilter] = useState([]);
@@ -224,7 +220,7 @@ const Events = function ({ currentLang }) {
     <div className="event-layout">
         
       <div className="side-filter">
-        <div className="filter-type">{t("Region")}</div>
+        <div className="filter-type">{t("Region", { lng: currentLang })}</div>
         <div>
           <Row gutter={16} className="region-row">
             {regions.map((item) => (
@@ -250,7 +246,7 @@ const Events = function ({ currentLang }) {
         <ConfigProvider locale={locale}>
           <EventCalendar onSelection={dateSelection} value={calendarDate} />
         </ConfigProvider>
-        <div className="filter-type">{t("Types")}</div>
+        <div className="filter-type">{t("Types", { lng: currentLang })}</div>
         <div>
           {types.map((item) => (
             <SelectionTag
@@ -262,7 +258,7 @@ const Events = function ({ currentLang }) {
             />
           ))}
         </div>
-        <div className="filter-type">{t("Publics")}</div>
+        <div className="filter-type">{t("Publics", { lng: currentLang })}</div>
         <div>
           {publicFilter.map((item) => (
             <SelectionTag
@@ -277,6 +273,7 @@ const Events = function ({ currentLang }) {
       </div>
       <div className="right-events">
         <div ref={scrollRef}></div>
+        <div className="filter-type"><AppstoreOutlined className="search-results"/>{t("Results", { lng: currentLang })}</div>
         <div className="selected-filter">
           {filter.filter(item=>item.type !== "places" && item.type !== "queryString").map((item) => (
             <SelectionTag
@@ -299,7 +296,7 @@ const Events = function ({ currentLang }) {
               setupEventsFilter(eventsFilter);
             }}
           >
-            {t("Remove")}
+            {t("Remove", { lng: currentLang })}
           </Button>
         )}
         <Row className="events-row">
@@ -318,8 +315,13 @@ const Events = function ({ currentLang }) {
           showSizeChanger={false}
           onChange={(page) => getEvents(page)}
         />
+        {!loading && eventList.length === 0  &&
+      <div>
+      <Empty description={"No Events"} />
+      </div>}
       </div>
       {loading && <Spinner />}
+      
     </div>
     </>
   );
