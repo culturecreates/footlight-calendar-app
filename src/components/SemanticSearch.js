@@ -13,7 +13,7 @@ const SemanticSearch = function ({ onSelection, onClearSearch,currentLang }) {
     const { t, i18n } = useTranslation();
     const renderTitle = (title) => (
         <span className="search-title">
-          {title}
+          {t(title, { lng: currentLang })}
         </span>
       );
       

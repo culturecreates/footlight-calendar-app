@@ -1,5 +1,5 @@
 import React, { useState, useEffect, useRef } from "react";
-import { Row, Col, ConfigProvider, Pagination, Button, Empty } from "antd";
+import { Row, Col, ConfigProvider, Pagination, Button, Empty, DatePicker } from "antd";
 import { useTranslation, Trans } from "react-i18next";
 
 import PropTypes from "prop-types";
@@ -10,7 +10,7 @@ import SelectionTag from "../components/SelectionTag";
 import moment from "moment";
 import ServiceApi from "../services/Service";
 import Spinner from "../components/Spinner";
-
+import { useNavigate } from "react-router-dom";
 import EventItem from "../components/EventItem";
 import SemanticSearch from "../components/SemanticSearch";
 
@@ -37,6 +37,7 @@ const Events = function ({ currentLang,locale }) {
   const [types, setTypes] = useState([]);
   const [eventsFilter, setEventsFilter] = useState();
   const [calendarDate, setCalendarDate] = useState(moment());
+  const navigate = useNavigate();
 
   const { t, i18n } = useTranslation();
 
@@ -45,10 +46,13 @@ const Events = function ({ currentLang,locale }) {
     getCalendarInfo();
   }, []);
   useEffect(() => {
-    console.log(filter)
     getEvents();
   }, [filter]);
-
+  useEffect(() => {
+    if(eventsFilter)
+    setupEventsFilter(eventsFilter)
+  }, [currentLang]);
+ 
   const getCalendarInfo = () => {
     setLoading(true);
     ServiceApi.calendarInfo()
@@ -148,6 +152,7 @@ const Events = function ({ currentLang,locale }) {
       });
   };
   const removeItem = (obj, type) => {
+    console.log("remove")
     const filterArray = filter.filter((item) => item.name !== obj.name);
     setFilter(filterArray);
     if (type === "Date") {
@@ -246,7 +251,7 @@ const Events = function ({ currentLang,locale }) {
         <ConfigProvider locale={locale}>
           <EventCalendar onSelection={dateSelection} value={calendarDate} />
         </ConfigProvider>
-        <div className="filter-type">{t("Types", { lng: currentLang })}</div>
+        <div className="filter-type calendar-top">{t("Types", { lng: currentLang })}</div>
         <div>
           {types.map((item) => (
             <SelectionTag
@@ -291,6 +296,7 @@ const Events = function ({ currentLang,locale }) {
             icon={<CloseOutlined />}
             danger
             onClick={() => {
+              console.log("close")
               setFilter([]);
               setCalendarDate(moment());
               setupEventsFilter(eventsFilter);
@@ -301,7 +307,9 @@ const Events = function ({ currentLang,locale }) {
         )}
         <Row className="events-row">
           {eventList.map((item) => (
-            <Col key={item.uuid}>
+            <Col key={item.uuid} 
+            // onClick={()=>navigate(`/events/${item.uuid}`)}
+            >
               <EventItem item={item} currentLang={currentLang} />
             </Col>
           ))}

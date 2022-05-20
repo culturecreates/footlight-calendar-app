@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from "react";
-import { Button, Calendar } from "antd";
+import { Button, Menu, Dropdown, Space } from "antd";
 import PropTypes from "prop-types";
 import "./EventDetails.css";
 import { useParams } from "react-router-dom";
@@ -10,11 +10,14 @@ import {
   GoogleOutlined,
   PrinterFilled,
   LeftOutlined,
+  DownOutlined,
+  TagsFilled,
 } from "@ant-design/icons";
 import { useTranslation, Trans } from "react-i18next";
 import ServiceApi from "../services/Service";
 import { useNavigate } from "react-router-dom";
 import Spinner from "../components/Spinner";
+import moment from "moment";
 
 const EventDetails = function ({ currentLang }) {
   const { t, i18n } = useTranslation();
@@ -40,6 +43,27 @@ const EventDetails = function ({ currentLang }) {
         setLoading(false);
       });
   };
+  const menu = (
+    <Menu
+      items={eventDetails?.subEvents.map((item, index) => {
+        const obj = {
+          label:
+            new Date(item.startDate).toLocaleDateString(currentLang, {
+              weekday: "long",
+            }) + moment(item.startDate).utc().format(" DD MMM YYYY"),
+          key: index,
+        };
+        return obj;
+      })}
+    />
+  );
+  const getDiffernceinDates=(start,end)=>{
+    const startDate = moment(start);
+const timeEnd = moment(end);
+const diff = timeEnd.diff(startDate);
+const diffDuration = moment.duration(diff);
+return diffDuration.hours() === 0? 24 : diffDuration.hours();
+  }
   return (
     <div>
       <div className="left-button" onClick={() => navigate(`/`)}>
@@ -51,14 +75,55 @@ const EventDetails = function ({ currentLang }) {
           <div className="event-title">{eventDetails.name[currentLang]}</div>
           <div className="event-title-section">
             <div className="event-time-section">
-              <div className="event-time-header">hrrr</div>
-              <div>hrrr</div>
-              <div>hrrr</div>
+              <div className="event-time-header">
+                {new Date(eventDetails.startDate).toLocaleDateString(
+                  currentLang,
+                  { weekday: "long" }
+                ) + moment(eventDetails.startDate).utc().format(" DD MMM YYYY")}
+              </div>
+              <div>{getDiffernceinDates(eventDetails.startDate,eventDetails.endDate)} h</div>
+              <div className="subevent-dropdown">
+                {eventDetails.subEvents?.length>0 &&
+                <>
+                <Dropdown overlay={menu} trigger={["click"]}>
+                  <a className="sub-events" onClick={(e) => e.preventDefault()}>
+                    <Space>
+                      <TagsFilled />
+                      {eventDetails.subEvents?.length}
+                      {t("Different", { lng: currentLang })} date
+                      <DownOutlined />
+                      
+                    </Space>
+                  </a>
+                  
+                </Dropdown>
+
+                <span>&nbsp;</span>
+                </>
+}
+                {new Date(eventDetails.startDate).toLocaleDateString(
+                        currentLang,
+                        { weekday: "long" }
+                      ) +
+                        moment(eventDetails.startDate)
+                          .utc()
+                          .format(" DD MMM") 
+                }
+                <span>&nbsp;</span>{
+                          new Date(eventDetails.endDate).toLocaleDateString(
+                            currentLang,
+                            { weekday: "long" }
+                          ) +
+                            moment(eventDetails.endDate)
+                              .utc()
+                              .format(" DD MMM")
+                          }
+              </div>
             </div>
             <div>
-              <div className="event-time-header">hrrr</div>
+              <div className="event-time-header">Salle d’exposition Âjagemô</div>
               <address>
-                dddf <br /> dfdfgdg <br /> dsfdf
+              150, rue Elgin Ottawa <br /> Ottawa K2P 1L4 <br /> Ottawa K2P 1L4
               </address>
             </div>
           </div>
@@ -79,11 +144,11 @@ const EventDetails = function ({ currentLang }) {
                 Billets
               </Button>
               {eventDetails.audience?.length > 0 && (
-              <EventContact
-                name="audience"
-                values={eventDetails.audience}
-                currentLang={currentLang}
-              />
+                <EventContact
+                  name="audience"
+                  values={eventDetails.audience}
+                  currentLang={currentLang}
+                />
               )}
               {eventDetails.type?.length > 0 && (
                 <EventContact
@@ -100,20 +165,26 @@ const EventDetails = function ({ currentLang }) {
                 />
               )}
             </div>
-            <div>
+            <div style={{marginRight:"40px"}}>
               <div className="event-detail-desc">
                 {eventDetails.description[currentLang]}
               </div>
-              <Button type="primary" className="types-button">
-                Types
-              </Button>
+              {eventDetails.additionalType.map((item) => (
+                <Button type="primary" className="types-button">
+                  {item.name[currentLang]}
+                </Button>
+              ))}
+
               <div className="social-section">
                 PARTAGER{" "}
                 <span>
                   <TwitterOutlined className="social-icons" />{" "}
                   <GoogleOutlined className="social-icons" />
                   <FacebookFilled className="social-icons" />
-                  <PrinterFilled className="social-icons" />
+                  <PrinterFilled
+                    className="social-icons"
+                    onClick={() => window.print()}
+                  />
                 </span>
               </div>
             </div>

@@ -21,7 +21,9 @@ i18n
           "audiences":"Audiences",
           "additionalType":"Additional Type",
           "Results":"Search Results",
-
+          "audience":"Audience",
+          "Type": "Type",
+          "Different": "diiferent",
           welcome: "Hello  <strong>World</strong>"
         }
       },
@@ -39,7 +41,7 @@ i18n
             "additionalType":"Additional Type",
             "Search": "Recherchez un événement, un thème ou un lieu",
             "Results":"Résultats de recherche",
-
+            "Different": "auture",
         }
       }
     },
