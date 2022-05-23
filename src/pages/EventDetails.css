@@ -120,3 +120,9 @@
     color: #999;
     font-weight: 400;
 }
+.contact-address{
+    margin-left: 10px;
+}
+.contact-address a{
+    color: #f04d46;
+}

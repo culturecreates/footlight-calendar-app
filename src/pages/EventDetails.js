@@ -121,10 +121,18 @@ return diffDuration.hours() === 0? 24 : diffDuration.hours();
               </div>
             </div>
             <div>
-              <div className="event-time-header">Salle d’exposition Âjagemô</div>
+              {eventDetails.location &&
+              <>
+              <div className="event-time-header">{eventDetails.location?.name[currentLang]}</div>
+              {eventDetails.location.postalAddress &&
               <address>
-              150, rue Elgin Ottawa <br /> Ottawa K2P 1L4 <br /> Ottawa K2P 1L4
+              {eventDetails.location.postalAddress.addressLocality}, 
+              {eventDetails.location.postalAddress.addressRegion} <br /> {eventDetails.location.postalAddress.postalCode}<br/>
+              {eventDetails.location.postalAddress.streetAddress}
               </address>
+}
+              </>
+}
             </div>
           </div>
           <div className="flex">
@@ -143,6 +151,14 @@ return diffDuration.hours() === 0? 24 : diffDuration.hours();
               <Button danger className="buy-button">
                 Billets
               </Button>
+
+              {eventDetails.contactPoint && (
+                <EventContact
+                  name="contact"
+                  values={eventDetails.contactPoint}
+                  currentLang={currentLang}
+                />
+              )}
               {eventDetails.audience?.length > 0 && (
                 <EventContact
                   name="audience"

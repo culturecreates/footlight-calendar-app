@@ -24,6 +24,7 @@ i18n
           "audience":"Audience",
           "Type": "Type",
           "Different": "diiferent",
+          "contact":"Contact",
           welcome: "Hello  <strong>World</strong>"
         }
       },
@@ -42,6 +43,7 @@ i18n
             "Search": "Recherchez un événement, un thème ou un lieu",
             "Results":"Résultats de recherche",
             "Different": "auture",
+            "contact":"Contact",
         }
       }
     },
