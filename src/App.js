@@ -99,7 +99,7 @@ function App() {
         </Routes>
       </Router>
       </Content>
-      <Footer>Footer</Footer>
+      <Footer></Footer>
     </Layout>
   );
 }

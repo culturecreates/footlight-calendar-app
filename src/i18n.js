@@ -25,6 +25,7 @@ i18n
           "Type": "Type",
           "Different": "diiferent",
           "contact":"Contact",
+          "offers":"Offers",
           welcome: "Hello  <strong>World</strong>"
         }
       },
@@ -44,10 +45,11 @@ i18n
             "Results":"Résultats de recherche",
             "Different": "auture",
             "contact":"Contact",
+            "offers":"Prix",
         }
       }
     },
-    fallbackLng: "fr",
+    fallbackLng: "en",
     debug: true,
 
     // have a common namespace used around the full app

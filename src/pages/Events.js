@@ -10,9 +10,11 @@ import SelectionTag from "../components/SelectionTag";
 import moment from "moment";
 import ServiceApi from "../services/Service";
 import Spinner from "../components/Spinner";
-import { useNavigate } from "react-router-dom";
 import EventItem from "../components/EventItem";
 import SemanticSearch from "../components/SemanticSearch";
+import { useDispatch, useSelector } from "react-redux";
+import { fetchFilter } from "../action";
+
 
 const Events = function ({ currentLang,locale }) {
   const scrollRef = useRef();
@@ -37,14 +39,23 @@ const Events = function ({ currentLang,locale }) {
   const [types, setTypes] = useState([]);
   const [eventsFilter, setEventsFilter] = useState();
   const [calendarDate, setCalendarDate] = useState(moment());
-  const navigate = useNavigate();
+  const dispatch = useDispatch();
+  const filterStore = useSelector((state) => state.filter);
 
   const { t, i18n } = useTranslation();
 
   useEffect(() => {
     moment.locale("fr-ca");
+    if(filterStore && filterStore.data)
+    {
+      setupEventsFilter(filterStore.data);
+      setEventsFilter(filterStore.data);
+    }
+    else
     getCalendarInfo();
+
   }, []);
+  
   useEffect(() => {
     getEvents();
   }, [filter]);
@@ -61,6 +72,11 @@ const Events = function ({ currentLang,locale }) {
           const events = response.data;
           setupEventsFilter(events);
           setEventsFilter(events);
+          const eventData={
+            data:events,
+            selectedValue: null,
+          }
+          dispatch(fetchFilter(eventData));
         }
         setLoading(false);
       })
@@ -105,6 +121,7 @@ const Events = function ({ currentLang,locale }) {
         if (response && response.data && response.data.data) {
           const events = response.data.data;
           setEventList(events);
+         
           //   setTotalPage(response.data.totalPage * 20)
         }
         setLoading(false);

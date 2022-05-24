@@ -35,7 +35,8 @@ const EventDetails = function ({ currentLang }) {
       .then((response) => {
         if (response && response.data && response.data) {
           const events = response.data;
-          setEventDetails(events);
+          if(response.data.StatusCode !== 400)
+           setEventDetails(events);
         }
         setLoading(false);
       })
@@ -57,13 +58,13 @@ const EventDetails = function ({ currentLang }) {
       })}
     />
   );
-  const getDiffernceinDates=(start,end)=>{
+  const getDiffernceinDates = (start, end) => {
     const startDate = moment(start);
-const timeEnd = moment(end);
-const diff = timeEnd.diff(startDate);
-const diffDuration = moment.duration(diff);
-return diffDuration.hours() === 0? 24 : diffDuration.hours();
-  }
+    const timeEnd = moment(end);
+    const diff = timeEnd.diff(startDate);
+    const diffDuration = moment.duration(diff);
+    return diffDuration.hours() === 0 ? 24 : diffDuration.hours();
+  };
   return (
     <div>
       <div className="left-button" onClick={() => navigate(`/`)}>
@@ -81,58 +82,61 @@ return diffDuration.hours() === 0? 24 : diffDuration.hours();
                   { weekday: "long" }
                 ) + moment(eventDetails.startDate).utc().format(" DD MMM YYYY")}
               </div>
-              <div>{getDiffernceinDates(eventDetails.startDate,eventDetails.endDate)} h</div>
+              <div>
+                {eventDetails.endDate ?getDiffernceinDates(
+                  eventDetails.startDate,
+                  eventDetails.endDate 
+                ): 24}{" "}
+                h
+              </div>
               <div className="subevent-dropdown">
-                {eventDetails.subEvents?.length>0 &&
-                <>
-                <Dropdown overlay={menu} trigger={["click"]}>
-                  <a className="sub-events" onClick={(e) => e.preventDefault()}>
-                    <Space>
-                      <TagsFilled />
-                      {eventDetails.subEvents?.length}
-                      {t("Different", { lng: currentLang })} date
-                      <DownOutlined />
-                      
-                    </Space>
-                  </a>
-                  
-                </Dropdown>
+                {eventDetails?.subEvents?.length > 0 && (
+                  <>
+                    <Dropdown overlay={menu} trigger={["click"]}>
+                      <a
+                        className="sub-events"
+                        onClick={(e) => e.preventDefault()}
+                      >
+                        <Space>
+                          <TagsFilled />
+                          {eventDetails.subEvents?.length}
+                          {t("Different", { lng: currentLang })} date
+                          <DownOutlined />
+                        </Space>
+                      </a>
+                    </Dropdown>
 
-                <span>&nbsp;</span>
-                </>
-}
+                    <span>&nbsp;</span>
+                  </>
+                )}
                 {new Date(eventDetails.startDate).toLocaleDateString(
-                        currentLang,
-                        { weekday: "long" }
-                      ) +
-                        moment(eventDetails.startDate)
-                          .utc()
-                          .format(" DD MMM") 
-                }
-                <span>&nbsp;</span>{
-                          new Date(eventDetails.endDate).toLocaleDateString(
-                            currentLang,
-                            { weekday: "long" }
-                          ) +
-                            moment(eventDetails.endDate)
-                              .utc()
-                              .format(" DD MMM")
-                          }
+                  currentLang,
+                  { weekday: "long" }
+                ) + moment(eventDetails.startDate).utc().format(" DD MMM")}
+                <span>&nbsp;</span>
+                {eventDetails.endDate && new Date(eventDetails.endDate).toLocaleDateString(
+                  currentLang,
+                  { weekday: "long" }
+                ) + moment(eventDetails.endDate).utc().format(" DD MMM")}
               </div>
             </div>
             <div>
-              {eventDetails.location &&
-              <>
-              <div className="event-time-header">{eventDetails.location?.name[currentLang]}</div>
-              {eventDetails.location.postalAddress &&
-              <address>
-              {eventDetails.location.postalAddress.addressLocality}, 
-              {eventDetails.location.postalAddress.addressRegion} <br /> {eventDetails.location.postalAddress.postalCode}<br/>
-              {eventDetails.location.postalAddress.streetAddress}
-              </address>
-}
-              </>
-}
+              {eventDetails.location && (
+                <>
+                  <div className="event-time-header">
+                    {eventDetails.location?.name[currentLang]}
+                  </div>
+                  {eventDetails.location.postalAddress && (
+                    <address>
+                      {eventDetails.location.postalAddress.addressLocality},
+                      {eventDetails.location.postalAddress.addressRegion} <br />{" "}
+                      {eventDetails.location.postalAddress.postalCode}
+                      <br />
+                      {eventDetails.location.postalAddress.streetAddress}
+                    </address>
+                  )}
+                </>
+              )}
             </div>
           </div>
           <div className="flex">
@@ -145,13 +149,23 @@ return diffDuration.hours() === 0? 24 : diffDuration.hours();
                     : `url(https://cdn.caligram.com/uploads/event/8J5/medium/6242018236834.png)`,
                 }}
               ></div>
+              {eventDetails.offers && eventDetails.offers.length>0 &&
+              <>
               <Button type="primary" danger className="buy-button">
                 Evenment Facebook
               </Button>
               <Button danger className="buy-button">
                 Billets
               </Button>
-
+              </>
+}
+              {eventDetails.offers && (
+                <EventContact
+                  name="offers"
+                  values={eventDetails.offers}
+                  currentLang={currentLang}
+                />
+              )}
               {eventDetails.contactPoint && (
                 <EventContact
                   name="contact"
@@ -181,11 +195,11 @@ return diffDuration.hours() === 0? 24 : diffDuration.hours();
                 />
               )}
             </div>
-            <div style={{marginRight:"40px"}}>
+            <div style={{ marginRight: "40px" }}>
               <div className="event-detail-desc">
                 {eventDetails.description[currentLang]}
               </div>
-              {eventDetails.additionalType.map((item) => (
+              {eventDetails?.additionalType.map((item) => (
                 <Button type="primary" className="types-button">
                   {item.name[currentLang]}
                 </Button>
