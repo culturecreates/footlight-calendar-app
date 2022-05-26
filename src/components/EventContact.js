@@ -19,7 +19,14 @@ const EventContact = function ({ name, values,currentLang }) {
         <a>{values.url?.uri}</a><br/>
       </div>:
       values.map(item=>
+        <>
       <div className="event-contact-details">{name === "type"?item:item.name[currentLang]}</div>
+      {name === "offers" && item.price &&
+      <div className="event-price">
+        {t("offers", { lng: currentLang })}:{item.price}&nbsp;{item.priceCurrency}
+      </div>
+}
+      </>
       )}
     </div>
   );

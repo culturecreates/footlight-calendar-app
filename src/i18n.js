@@ -13,6 +13,7 @@ i18n
           
           "Region": "REGION",
           "Types": "TYPES",
+          "Type": "Type",
           "Publics" : "PUBLICS",
           "Remove" : "Remove all search criteria",
           "Contact" :"Contact",
@@ -22,10 +23,11 @@ i18n
           "additionalType":"Additional Type",
           "Results":"Search Results",
           "audience":"Audience",
-          "Type": "Type",
           "Different": "diiferent",
           "contact":"Contact",
-          "offers":"Offers",
+          "offers":"Price",
+          "iCal": "RECORD",
+          "socialLink":"SHARE",
           welcome: "Hello  <strong>World</strong>"
         }
       },
@@ -46,6 +48,8 @@ i18n
             "Different": "auture",
             "contact":"Contact",
             "offers":"Prix",
+            "iCal": "ENREGISTRER",
+            "socialLink":"PARTAGER",
         }
       }
     },

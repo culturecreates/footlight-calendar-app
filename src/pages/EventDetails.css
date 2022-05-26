@@ -84,9 +84,17 @@
     margin-right: 10px;
     cursor: pointer;
 }
+.print-icon.anticon{
+    margin-right: 30px;
+}
 .social-section{
     text-align: right;
     margin-top: 25px;
+}
+.social-section a{
+    color: red;
+    margin-left: 20px;
+    font-weight: 700;
 }
 .buy-button{
     width: 100%;
@@ -126,4 +134,10 @@
 }
 .contact-address a{
     color: #f04d46;
+}
+.event-price{
+    font-size: 12px;
+    margin-left: 10px;
+    color: #dea4a4;
+    margin-bottom: 10px;
 }

@@ -18,14 +18,17 @@ import ServiceApi from "../services/Service";
 import { useNavigate } from "react-router-dom";
 import Spinner from "../components/Spinner";
 import moment from "moment";
+import ICalendarLink from "react-icalendar-link";
 
 const EventDetails = function ({ currentLang }) {
   const { t, i18n } = useTranslation();
   const [loading, setLoading] = useState(false);
   const [eventDetails, setEventDetails] = useState();
+  const [eventIcal, setEventIcal] = useState();
   const navigate = useNavigate();
 
   const { eventId } = useParams();
+
   useEffect(() => {
     getEventDetails(eventId);
   }, []);
@@ -35,8 +38,22 @@ const EventDetails = function ({ currentLang }) {
       .then((response) => {
         if (response && response.data && response.data) {
           const events = response.data;
-          if(response.data.StatusCode !== 400)
-           setEventDetails(events);
+          if (response.data.StatusCode !== 400) {
+            const eventTest = {
+              title: events.name[currentLang],
+              description: events.description[currentLang],
+              location: events.location?.name[currentLang],
+              startTime: events.startDate,
+              endTime: events.endDate,
+
+              // attendees: [
+              //   "Hello World <hello@world.com>",
+              //   "Hey <hey@test.com>",
+              // ]
+            };
+            setEventIcal(eventTest);
+            setEventDetails(events);
+          }
         }
         setLoading(false);
       })
@@ -65,6 +82,12 @@ const EventDetails = function ({ currentLang }) {
     const diffDuration = moment.duration(diff);
     return diffDuration.hours() === 0 ? 24 : diffDuration.hours();
   };
+
+
+  const getUriOffers=(data)=>{
+  const obj = data.find(item=>item.url)
+  return obj.url?.uri
+  }
   return (
     <div>
       <div className="left-button" onClick={() => navigate(`/`)}>
@@ -83,10 +106,12 @@ const EventDetails = function ({ currentLang }) {
                 ) + moment(eventDetails.startDate).utc().format(" DD MMM YYYY")}
               </div>
               <div>
-                {eventDetails.endDate ?getDiffernceinDates(
-                  eventDetails.startDate,
-                  eventDetails.endDate 
-                ): 24}{" "}
+                {eventDetails.endDate
+                  ? getDiffernceinDates(
+                      eventDetails.startDate,
+                      eventDetails.endDate
+                    )
+                  : 24}{" "}
                 h
               </div>
               <div className="subevent-dropdown">
@@ -114,10 +139,11 @@ const EventDetails = function ({ currentLang }) {
                   { weekday: "long" }
                 ) + moment(eventDetails.startDate).utc().format(" DD MMM")}
                 <span>&nbsp;</span>
-                {eventDetails.endDate && new Date(eventDetails.endDate).toLocaleDateString(
-                  currentLang,
-                  { weekday: "long" }
-                ) + moment(eventDetails.endDate).utc().format(" DD MMM")}
+                {eventDetails.endDate &&
+                  new Date(eventDetails.endDate).toLocaleDateString(
+                    currentLang,
+                    { weekday: "long" }
+                  ) + moment(eventDetails.endDate).utc().format(" DD MMM")}
               </div>
             </div>
             <div>
@@ -149,16 +175,19 @@ const EventDetails = function ({ currentLang }) {
                     : `url(https://cdn.caligram.com/uploads/event/8J5/medium/6242018236834.png)`,
                 }}
               ></div>
-              {eventDetails.offers && eventDetails.offers.length>0 &&
-              <>
-              <Button type="primary" danger className="buy-button">
-                Evenment Facebook
-              </Button>
-              <Button danger className="buy-button">
-                Billets
-              </Button>
-              </>
+              {eventDetails.offers && eventDetails.offers.length > 0 && (
+                <>
+                  <Button type="primary" danger className="buy-button">
+                    Evenment Facebook
+                  </Button>
+                  {eventDetails.offers.find(item=>item.url) &&
+                  <Button danger className="buy-button">
+                    <a href={getUriOffers(eventDetails.offers)} target="_blank">Billets</a>
+                    
+                  </Button>
 }
+                </>
+              )}
               {eventDetails.offers && (
                 <EventContact
                   name="offers"
@@ -206,15 +235,30 @@ const EventDetails = function ({ currentLang }) {
               ))}
 
               <div className="social-section">
-                PARTAGER{" "}
+                {t("iCal", { lng: currentLang })}
+                {""}
                 <span>
-                  <TwitterOutlined className="social-icons" />{" "}
-                  <GoogleOutlined className="social-icons" />
-                  <FacebookFilled className="social-icons" />
-                  <PrinterFilled
+                  {eventDetails &&
+                <a href={`https://calendar.google.com/calendar/render?action=TEMPLATE&dates=${moment(eventDetails.startDate).utc().format("YYYYDDMMT0000Z")}/${moment(eventDetails.endDate).utc().format("YYYYDDMMT0000Z")}&location=${eventDetails.location?.name[currentLang]}&details=${eventDetails.description[currentLang]}`} target="_blank">
+                  <GoogleOutlined
                     className="social-icons"
+                  />
+                  </a>
+}
+                  <ICalendarLink event={eventIcal}>iCal</ICalendarLink>
+                  <PrinterFilled
+                    className="social-icons print-icon"
                     onClick={() => window.print()}
                   />
+                </span>
+                {t("socialLink", { lng: currentLang })}{" "}
+                <span>
+                  <a href={`https://twitter.com/home?status=${window.location.href}`} target="_blank">
+                  <TwitterOutlined  />
+                  </a>{" "}
+                  <a href={`https://www.facebook.com/sharer/sharer.php?u=${window.location.href}`} target="_blank">
+                  <FacebookFilled  />
+                  </a>                  
                 </span>
               </div>
             </div>
@@ -226,7 +270,6 @@ const EventDetails = function ({ currentLang }) {
   );
 };
 export default EventDetails;
-
 EventDetails.propTypes = {
   onClose: PropTypes.func,
 };

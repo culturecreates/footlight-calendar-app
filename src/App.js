@@ -63,11 +63,15 @@ function App() {
   return (
     <Layout className="events-app-layout">
       <Header className="app-header">
+        <div className="header-links">
+      <div className="footer-title">FootLight</div>
+        <div className="footer-cal">CALENDRIER CULTUREL OUTAOUAIS</div>
       <div className="header-text">
             <div className={isEnglish?"active-admin":"active-user"}>French</div>
             <Switch checked={isEnglish} data-testid="admin-user-switch"
            className="switch-user" onChange={onChange}  />
             <div className={!isEnglish?"active-admin":"active-user"}>English</div> </div>
+            </div>
       </Header>
 
       <Content className="app-content">
@@ -99,7 +103,16 @@ function App() {
         </Routes>
       </Router>
       </Content>
-      <Footer></Footer>
+      <Footer className="app-footer">
+        <div className="footer-links">
+        <div className="footer-title">FootLight</div>
+        <div className="footer-cal">CALENDRIER CULTUREL OUTAOUAIS</div>
+        </div>
+        <div className="footer-copy">
+          <div>©2022 Tous droits réservés&nbsp;&nbsp;&nbsp;&nbsp;Culture Outaouais </div>
+          <div>Propulsé par <span className="footer-name">Footlight</span> </div>
+        </div>
+      </Footer>
     </Layout>
   );
 }
