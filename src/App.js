@@ -1,20 +1,31 @@
-import { Row, Layout, Col, Tag, Card, Radio, ConfigProvider } from "antd";
+import { Row, Layout, Col, Tag, Card, Radio, ConfigProvider, Switch } from "antd";
 import "./App.css";
 import { useTranslation, Trans } from "react-i18next";
 import "antd/dist/antd.min.css";
 import "antd/dist/antd.less";
-import { useState } from "react";
-
+import React,{ useState } from "react";
+import { BrowserRouter as Router, Route, Routes } from "react-router-dom";
 import Events from "./pages/Events";
+import EventDetails from "./pages/EventDetails";
+import moment from "moment";
+import enUS from "antd/lib/locale/en_US";
+import frCA from "antd/lib/locale/fr_CA";
+import "moment/locale/fr-ca";
+moment.locale("fr-ca");
 
 
 const { Header, Footer, Content } = Layout;
 function App() {
-  const [locale, setLocale] = useState();
- 
+  const [locale, setLocale] = useState(frCA);
+  const [currentLang, setCurrentLang] = useState("fr");
+  const [isEnglish, setIsEnglish] = useState(false);
+
   const { t, i18n } = useTranslation();
   const changeLanguage = (lng) => {
     i18n.changeLanguage(lng);
+    setCurrentLang(lng)
+    setLocale(frCA)
+    moment.locale("fr-ca");
   };
  
   // const changeLocale = (e) => {
@@ -26,10 +37,42 @@ function App() {
   //     moment.locale("fr-ca");
   //   }
   // };
+  function onChange(checked) {
+    setIsEnglish(checked)
+    if(!checked){
+      i18n.changeLanguage("fr");
+     setCurrentLang("fr")
+     setLocale(frCA)
+     moment.locale("fr-ca");
+    }
+    
+    // window.location.href = '/user/capability' ;  
+    else
+    {
+      i18n.changeLanguage("en");
+     setCurrentLang("en")
+     setLocale(enUS)
+     moment.locale("en");
+    }
+   
+    // window.location.href = '/admin/segment' ;
+    
+    
+  }
 
   return (
     <Layout className="events-app-layout">
-      <Header className="app-header">Header</Header>
+      <Header className="app-header">
+        <div className="header-links">
+      <div className="footer-title">FootLight</div>
+        <div className="footer-cal">CALENDRIER CULTUREL OUTAOUAIS</div>
+      <div className="header-text">
+            <div className={isEnglish?"active-admin":"active-user"}>French</div>
+            <Switch checked={isEnglish} data-testid="admin-user-switch"
+           className="switch-user" onChange={onChange}  />
+            <div className={!isEnglish?"active-admin":"active-user"}>English</div> </div>
+            </div>
+      </Header>
 
       <Content className="app-content">
         {/* <div className="change-locale">
@@ -50,9 +93,26 @@ function App() {
         </Row>
         
         <Trans i18nKey="welcome">trans</Trans> */}
-       <Events/>
+        <Router>
+        <Routes>
+          <Route path="/" element={<Events currentLang={currentLang} locale={locale}/>} />
+          <Route path="/events/:eventId" element={<EventDetails currentLang={currentLang}/>} />
+
+          {/* <Route  path="/home" element={Dashboard} />
+    <Route  path="/" element={Login} /> */}
+        </Routes>
+      </Router>
       </Content>
-      <Footer>Footer</Footer>
+      <Footer className="app-footer">
+        <div className="footer-links">
+        <div className="footer-title">FootLight</div>
+        <div className="footer-cal">CALENDRIER CULTUREL OUTAOUAIS</div>
+        </div>
+        <div className="footer-copy">
+          <div>©2022 {t("CopyReserve", { lng: currentLang })}&nbsp;&nbsp;&nbsp;&nbsp;Culture Outaouais </div>
+          <div>{t("Powered", { lng: currentLang })} <span className="footer-name">Footlight</span> </div>
+        </div>
+      </Footer>
     </Layout>
   );
 }

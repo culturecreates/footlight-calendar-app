@@ -1,25 +1,23 @@
 import React, { useState, useEffect, useRef } from "react";
-import { Row, Col, ConfigProvider, Pagination, Button } from "antd";
+import { Row, Col, ConfigProvider, Pagination, Button, Empty, DatePicker } from "antd";
 import { useTranslation, Trans } from "react-i18next";
 
 import PropTypes from "prop-types";
 import "../App.css";
-import { CloseOutlined } from "@ant-design/icons";
+import { CloseOutlined,AppstoreOutlined } from "@ant-design/icons";
 import EventCalendar from "../components/EventCalendar";
 import SelectionTag from "../components/SelectionTag";
 import moment from "moment";
 import ServiceApi from "../services/Service";
 import Spinner from "../components/Spinner";
-import enUS from "antd/lib/locale/en_US";
-import zhCN from "antd/lib/locale/fr_CA";
-import "moment/locale/fr-ca";
 import EventItem from "../components/EventItem";
-moment.locale("fr-ca");
+import SemanticSearch from "../components/SemanticSearch";
+import { useDispatch, useSelector } from "react-redux";
+import { fetchFilter } from "../action";
 
-const Events = function ({ onSelection }) {
+
+const Events = function ({ currentLang,locale }) {
   const scrollRef = useRef();
-  const [locale, setLocale] = useState(zhCN);
-  const [currentLang, setCurrentLang] = useState("fr");
   const [totalPage, setTotalPage] = useState(1);
   const [loading, setLoading] = useState(false);
   const [filter, setFilter] = useState([]);
@@ -41,15 +39,31 @@ const Events = function ({ onSelection }) {
   const [types, setTypes] = useState([]);
   const [eventsFilter, setEventsFilter] = useState();
   const [calendarDate, setCalendarDate] = useState(moment());
+  const dispatch = useDispatch();
+  const filterStore = useSelector((state) => state.filter);
 
   const { t, i18n } = useTranslation();
 
   useEffect(() => {
     moment.locale("fr-ca");
-    getEvents();
+    if(filterStore && filterStore.data)
+    {
+      setupEventsFilter(filterStore.data);
+      setEventsFilter(filterStore.data);
+    }
+    else
     getCalendarInfo();
-  }, []);
 
+  }, []);
+  
+  useEffect(() => {
+    getEvents();
+  }, [filter]);
+  useEffect(() => {
+    if(eventsFilter)
+    setupEventsFilter(eventsFilter)
+  }, [currentLang]);
+ 
   const getCalendarInfo = () => {
     setLoading(true);
     ServiceApi.calendarInfo()
@@ -58,6 +72,11 @@ const Events = function ({ onSelection }) {
           const events = response.data;
           setupEventsFilter(events);
           setEventsFilter(events);
+          const eventData={
+            data:events,
+            selectedValue: null,
+          }
+          dispatch(fetchFilter(eventData));
         }
         setLoading(false);
       })
@@ -95,13 +114,14 @@ const Events = function ({ onSelection }) {
     });
     setPublic(publicArr);
   };
-  const getEvents = (page = 1) => {
+  const getEvents = (page = 1, filterArray=filter) => {
     setLoading(true);
-    ServiceApi.eventList(page)
+    ServiceApi.eventList(page,filterArray)
       .then((response) => {
         if (response && response.data && response.data.data) {
           const events = response.data.data;
           setEventList(events);
+         
           //   setTotalPage(response.data.totalPage * 20)
         }
         setLoading(false);
@@ -149,6 +169,7 @@ const Events = function ({ onSelection }) {
       });
   };
   const removeItem = (obj, type) => {
+    console.log("remove")
     const filterArray = filter.filter((item) => item.name !== obj.name);
     setFilter(filterArray);
     if (type === "Date") {
@@ -204,10 +225,24 @@ const Events = function ({ onSelection }) {
         inline: "start",
       });
   };
+
+  const selectSemantic=(selectObj)=>{
+      setupEventsFilter(eventsFilter)
+      const searchArray=[selectObj]
+      setFilter(searchArray)
+  }
+
+  const onClearSearch=()=>{
+    setFilter([])
+  }
   return (
+      <>
+      <SemanticSearch onSelection={selectSemantic} onClearSearch={onClearSearch}
+      currentLang={currentLang}/>
     <div className="event-layout">
+        
       <div className="side-filter">
-        <div className="filter-type">{t("Region")}</div>
+        <div className="filter-type">{t("Region", { lng: currentLang })}</div>
         <div>
           <Row gutter={16} className="region-row">
             {regions.map((item) => (
@@ -233,7 +268,7 @@ const Events = function ({ onSelection }) {
         <ConfigProvider locale={locale}>
           <EventCalendar onSelection={dateSelection} value={calendarDate} />
         </ConfigProvider>
-        <div className="filter-type">{t("Types")}</div>
+        <div className="filter-type calendar-top">{t("Types", { lng: currentLang })}</div>
         <div>
           {types.map((item) => (
             <SelectionTag
@@ -245,7 +280,7 @@ const Events = function ({ onSelection }) {
             />
           ))}
         </div>
-        <div className="filter-type">{t("Publics")}</div>
+        <div className="filter-type">{t("Publics", { lng: currentLang })}</div>
         <div>
           {publicFilter.map((item) => (
             <SelectionTag
@@ -260,8 +295,9 @@ const Events = function ({ onSelection }) {
       </div>
       <div className="right-events">
         <div ref={scrollRef}></div>
+        <div className="filter-type"><AppstoreOutlined className="search-results"/>{t("Results", { lng: currentLang })}</div>
         <div className="selected-filter">
-          {filter.map((item) => (
+          {filter.filter(item=>item.type !== "places" && item.type !== "queryString").map((item) => (
             <SelectionTag
               closeButton
               group={item.type}
@@ -277,17 +313,20 @@ const Events = function ({ onSelection }) {
             icon={<CloseOutlined />}
             danger
             onClick={() => {
+              console.log("close")
               setFilter([]);
               setCalendarDate(moment());
               setupEventsFilter(eventsFilter);
             }}
           >
-            {t("Remove")}
+            {t("Remove", { lng: currentLang })}
           </Button>
         )}
         <Row className="events-row">
           {eventList.map((item) => (
-            <Col>
+            <Col key={item.uuid} 
+            // onClick={()=>navigate(`/events/${item.uuid}`)}
+            >
               <EventItem item={item} currentLang={currentLang} />
             </Col>
           ))}
@@ -301,9 +340,15 @@ const Events = function ({ onSelection }) {
           showSizeChanger={false}
           onChange={(page) => getEvents(page)}
         />
+        {!loading && eventList.length === 0  &&
+      <div>
+      <Empty description={"No Events"} />
+      </div>}
       </div>
       {loading && <Spinner />}
+      
     </div>
+    </>
   );
 };
 export default Events;

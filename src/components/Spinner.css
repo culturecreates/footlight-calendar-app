@@ -24,8 +24,8 @@
 .spin{
     position: fixed;
     display: inline-block;
-    opacity: 73;
-    width: calc(100vw - 335px);
+    opacity: 1073;
+    width: calc(100vw - 35px);
     height: calc(100vh - 161px);
     z-index: 100;
     align-items: center;
