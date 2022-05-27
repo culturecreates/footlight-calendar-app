@@ -14,7 +14,7 @@ i18n
           "Region": "REGION",
           "Types": "TYPES",
           "Type": "Type",
-          "Publics" : "PUBLICS",
+          "Publics" : "AUDIENCES",
           "Remove" : "Remove all search criteria",
           "Contact" :"Contact",
           "AllEvents": "All Events",
@@ -33,6 +33,7 @@ i18n
           "Event":"Event",
           "Powered":"Powered by",
           "CopyReserve":"All rights reserved",
+          "headerText":"OUTAOUAIS CULTURAL CALENDAR",
           welcome: "Hello  <strong>World</strong>"
         }
       },
@@ -45,8 +46,8 @@ i18n
             "Remove" : "Retirer tous les critères de recherche",
             "Contact" :"Contact",
             "AllEvents": "Tous les événements",
-            "audiences":"Audiences",
-            "audience":"Audience",
+            "audiences":"Publics",
+            "audience":"Public",
             "additionalType":"Additional Type",
             "Search": "Recherchez un événement, un thème ou un lieu",
             "Results":"Résultats de recherche",
@@ -60,6 +61,7 @@ i18n
           "Event":"Evenement",
           "Powered":"Propulsé par",
           "CopyReserve":"Tous droits réservés",
+          "headerText":"CALENDRIER CULTUREL OUTAOUAIS"
         }
       }
     },

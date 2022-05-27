@@ -65,7 +65,7 @@ function App() {
       <Header className="app-header">
         <div className="header-links">
       <div className="footer-title">FootLight</div>
-        <div className="footer-cal">CALENDRIER CULTUREL OUTAOUAIS</div>
+        <div className="footer-cal">{t("headerText", { lng: currentLang })}</div>
       <div className="header-text">
             <div className={isEnglish?"active-admin":"active-user"}>French</div>
             <Switch checked={isEnglish} data-testid="admin-user-switch"
