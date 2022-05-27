@@ -28,6 +28,11 @@ i18n
           "offers":"Price",
           "iCal": "RECORD",
           "socialLink":"SHARE",
+          "Online":"Event Online",
+          "Hybrid":"Event Hybrid",
+          "Event":"Event",
+          "Powered":"Powered by",
+          "CopyReserve":"All rights reserved",
           welcome: "Hello  <strong>World</strong>"
         }
       },
@@ -50,6 +55,11 @@ i18n
             "offers":"Prix",
             "iCal": "ENREGISTRER",
             "socialLink":"PARTAGER",
+            "Online":"Evenement Virtuelle",
+          "Hybrid":"Event Hybride",
+          "Event":"Evenement",
+          "Powered":"Propulsé par",
+          "CopyReserve":"Tous droits réservés",
         }
       }
     },

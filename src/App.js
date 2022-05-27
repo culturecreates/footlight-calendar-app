@@ -109,8 +109,8 @@ function App() {
         <div className="footer-cal">CALENDRIER CULTUREL OUTAOUAIS</div>
         </div>
         <div className="footer-copy">
-          <div>©2022 Tous droits réservés&nbsp;&nbsp;&nbsp;&nbsp;Culture Outaouais </div>
-          <div>Propulsé par <span className="footer-name">Footlight</span> </div>
+          <div>©2022 {t("CopyReserve", { lng: currentLang })}&nbsp;&nbsp;&nbsp;&nbsp;Culture Outaouais </div>
+          <div>{t("Powered", { lng: currentLang })} <span className="footer-name">Footlight</span> </div>
         </div>
       </Footer>
     </Layout>

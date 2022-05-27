@@ -3,6 +3,9 @@ import moment from "moment";
 import PropTypes from "prop-types";
 import "../App.css";
 import { useNavigate } from "react-router-dom";
+import {
+  WifiOutlined ,ForkOutlined
+} from "@ant-design/icons";
 
 const EventItem = function ({ item, currentLang }) {
     const navigate = useNavigate();
@@ -31,7 +34,11 @@ const EventItem = function ({ item, currentLang }) {
       </div>
       <div className="event-detail">
         <div className="event-desc">{item.name[currentLang]}</div>
-        <div className="event-name">{item.locationName[currentLang]}</div>
+        <div className="event-name">{item.attendanceMode === "ONLINE" &&<><WifiOutlined rotate={270}/><WifiOutlined rotate={90}
+        style={{marginRight:"15px"}}/></>}
+        {item.attendanceMode === "MIXED" &&<><ForkOutlined  rotate={180}
+        style={{marginRight:"15px",fontSize:"17px"}}/></>}
+        {item.locationName[currentLang]}</div>
       </div>
     </div>
   );

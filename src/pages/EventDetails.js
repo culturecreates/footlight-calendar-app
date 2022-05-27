@@ -12,6 +12,8 @@ import {
   LeftOutlined,
   DownOutlined,
   TagsFilled,
+  WifiOutlined,
+  ForkOutlined
 } from "@ant-design/icons";
 import { useTranslation, Trans } from "react-i18next";
 import ServiceApi from "../services/Service";
@@ -163,6 +165,10 @@ const EventDetails = function ({ currentLang }) {
                   )}
                 </>
               )}
+              {eventDetails.attendanceMode === "ONLINE" &&<><WifiOutlined rotate={270}/><WifiOutlined rotate={90}
+        style={{marginRight:"15px"}}/> {t("Online", { lng: currentLang })}</>}
+        {eventDetails.attendanceMode === "MIXED" &&<><ForkOutlined  rotate={180}
+        style={{marginRight:"15px",fontSize:"17px"}}/> {t("Hybrid", { lng: currentLang })}</>}
             </div>
           </div>
           <div className="flex">
@@ -177,12 +183,15 @@ const EventDetails = function ({ currentLang }) {
               ></div>
               {eventDetails.offers && eventDetails.offers.length > 0 && (
                 <>
+                {eventDetails.facebookUrl &&
                   <Button type="primary" danger className="buy-button">
-                    Evenment Facebook
+                    <a href={eventDetails.facebookUrl} target="_blank" rel="noreferrer">{t("Event", { lng: currentLang })} Facebook</a>
+                  
                   </Button>
+}
                   {eventDetails.offers.find(item=>item.url) &&
                   <Button danger className="buy-button">
-                    <a href={getUriOffers(eventDetails.offers)} target="_blank">Billets</a>
+                    <a href={getUriOffers(eventDetails.offers)} target="_blank" rel="noreferrer">Billets</a>
                     
                   </Button>
 }
@@ -239,7 +248,7 @@ const EventDetails = function ({ currentLang }) {
                 {""}
                 <span>
                   {eventDetails &&
-                <a href={`https://calendar.google.com/calendar/render?action=TEMPLATE&dates=${moment(eventDetails.startDate).utc().format("YYYYDDMMT0000Z")}/${moment(eventDetails.endDate).utc().format("YYYYDDMMT0000Z")}&location=${eventDetails.location?.name[currentLang]}&details=${eventDetails.description[currentLang]}`} target="_blank">
+                <a href={`https://calendar.google.com/calendar/render?action=TEMPLATE&dates=${moment(eventDetails.startDate).utc().format("YYYYDDMMT0000Z")}/${moment(eventDetails.endDate).utc().format("YYYYDDMMT0000Z")}&location=${eventDetails.location?.name[currentLang]}&details=${eventDetails.description[currentLang]}`} target="_blank" rel="noreferrer">
                   <GoogleOutlined
                     className="social-icons"
                   />
@@ -253,10 +262,10 @@ const EventDetails = function ({ currentLang }) {
                 </span>
                 {t("socialLink", { lng: currentLang })}{" "}
                 <span>
-                  <a href={`https://twitter.com/home?status=${window.location.href}`} target="_blank">
+                  <a href={`https://twitter.com/home?status=${window.location.href}`} target="_blank" rel="noreferrer">
                   <TwitterOutlined  />
                   </a>{" "}
-                  <a href={`https://www.facebook.com/sharer/sharer.php?u=${window.location.href}`} target="_blank">
+                  <a href={`https://www.facebook.com/sharer/sharer.php?u=${window.location.href}?imageurl=${eventDetails?.image?.uri}}`} target="_blank" rel="noreferrer">
                   <FacebookFilled  />
                   </a>                  
                 </span>
