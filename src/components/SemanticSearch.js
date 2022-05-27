@@ -99,19 +99,25 @@ const SemanticSearch = function ({ onSelection, onClearSearch,currentLang }) {
       onSelection(selectObj)
     };
     const handleKeyPress = (ev) => {
-      const selectObj = {
-        type: "queryString",
-        name: ev.target.value,
-      };
-      console.log(ev.key)
-      if (ev.key === "Enter")
-      onSelection(selectObj)
+      // const selectObj = {
+      //   type: "queryString",
+      //   name: ev.target.value,
+      // };
+      // if (ev.key === "Enter")
+      // onSelection(selectObj)
       };
       const handleClearPress = () => {
         // handleSearch("")
         // onClearSearch()
-        
+       
         };
+        const handleInputSearch=(value)=>{
+          const selectObj = {
+            type: "queryString",
+            name:value,
+          };
+          onSelection(selectObj)
+        }
   return (
     <div className="semantic-search-div">
       <AutoComplete
@@ -126,7 +132,8 @@ const SemanticSearch = function ({ onSelection, onClearSearch,currentLang }) {
       
       
     >
-      <Input.Search allowClear size="large" placeholder={t("Search", { lng: currentLang })} onClear={handleClearPress}/>
+      <Input.Search allowClear size="large" placeholder={t("Search", { lng: currentLang })} onClear={handleClearPress}
+      onSearch={handleInputSearch}/>
     </AutoComplete>
     </div>
   );
