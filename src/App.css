@@ -6,6 +6,11 @@
   height: 40vmin;
   pointer-events: none;
 }
+.ant-picker-dropdown{
+  width: 295px;
+  top: 585px !important;
+  margin-top: 10px;
+}
 
 @media (prefers-reduced-motion: no-preference) {
   .App-logo {
@@ -14,15 +19,17 @@
 }
 .ant-layout.events-app-layout{
   background-color: #fff;
+  font-family: Cogito,Verdana,Helvetica,sans-serif;
 }
-.app-header{
+.ant-layout-header.app-header{
   position: fixed;
   width: 100%;
   height: 100px;
-  z-index: 100;
+  z-index: 10080;
+  background: #f04d46;
 }
 .app-content{
-  margin-top: 105px;
+  margin-top: 100px;
 }
 .region-col-section{
   position: relative;
@@ -45,7 +52,7 @@
 }
 .region-col{
    
-  font-size: 17px;
+  font-size: 16px;
   line-height: 22px;
   font-weight: 700;
   letter-spacing: -.01em;
@@ -98,8 +105,8 @@
 }
 .event-item{
   background-image: url(https://cdn.caligram.com/uploads/event/8J5/medium/6242018236834.png);
-  width: 310px;
-  height: 260px;
+  width: 350px;
+  height: 295px;
   background-size: cover;
   background-position: 50% 50%;
   margin-bottom: 5.5%;
@@ -107,6 +114,7 @@
   justify-content: space-between;
   display: flex;
   flex-direction: column;
+  cursor: pointer;
 }
 .event-date-section{
   display: flex;
@@ -168,19 +176,25 @@
 }
 .tag-type{
   color: #e59090;
-  font-size: 18px;
+  font-size: 16px;
   margin-right: 7px;
 }
 .tag-name{
-  font-size: 18px;
+  font-size: 16px;
   margin-right: 3px;
+  word-break: break-word;
+    white-space: normal;
 }
 .site-calendar-demo-card {
-  margin-top: 20px;
+  margin-top: 2px;
   margin-left: 10px;
   width: 296px;
   border: 1px solid #f0f0f0;
   border-radius: 2px;
+  visibility: hidden;
+}
+.filter-type.calendar-top{
+  margin-top: 350px;
 }
 
 /* felx filter */
@@ -196,7 +210,7 @@
   line-height: 19px;
   font-weight: 700;
   text-transform: uppercase;
-  margin: 20px 10px 12px;
+  margin: 20px 10px 10px;
   color: #7b7b7b;
 }
 .right-events{
@@ -204,6 +218,8 @@
 }
 .event-layout{
   display: flex;
+  max-width: 1100px;
+  margin: 10px 15px;
 }
 .events-row{
   row-gap: 15px !important;
@@ -220,6 +236,7 @@
 .selected-filter{
   margin-left: 30px;
   margin-bottom: 20px;
+  margin-top: 20px;
 }
 .event-pagination.ant-pagination{
   display: flex;
@@ -229,4 +246,79 @@
 .remove-all{
   margin-left: 30px;
   margin-bottom: 20px;
+}
+.search-results{
+  margin-right: 20px;
+  margin-left: 20px;
+}
+.header-text {
+  font-weight: 500;
+  font-size: 14px;
+  line-height: 16px;
+  color: #0071ce;
+  display: inline-flex;
+  align-items: center;
+  padding: 6px 10px;
+  background: #f2eeee;
+  border-radius: 10px;
+  /* position: ; */
+  top: 15px;
+  right: 20px;
+}
+
+.active-admin{
+  color: #918a8ad9;
+  margin-right: 10px;
+  margin-left: 10px;
+}
+.active-user{
+  margin-right: 10px;
+  margin-left: 10px;
+}
+/* calendar */
+.ant-picker-header-super-prev-btn,
+.ant-picker-header-super-next-btn{
+  display: none;
+}
+.ant-picker-header-next-btn,
+.ant-picker-header-prev-btn{
+  color: red !important;
+}
+.footer-copy{
+  display: flex;
+  justify-content: space-between;
+  padding: 25px 30px;
+  background: #fff;
+  font-size: 12px;
+  color: gray;
+}
+.footer-links{
+  display: flex;
+  justify-content: space-between;
+  padding: 35px 30px;
+  color: #fff;
+  background: #b2b4b6;
+  align-items: center;
+}
+.footer-title{
+  font-size: 33px;
+  font-weight: 700;
+  color: #fff;
+}
+.footer-cal{
+  font-size: 16px;
+  color: #fff;
+}
+.footer-name{
+  color: red;
+}
+.app-footer.ant-layout-footer{
+  padding: 0px;
+}
+.header-links{
+  display: flex;
+  justify-content: space-between;
+  color: #fff;
+  align-items: center;
+  height: 100%;
 }

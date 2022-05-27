@@ -2,8 +2,17 @@ import React from "react";
 import moment from "moment";
 import PropTypes from "prop-types";
 import "../App.css";
+import { useNavigate } from "react-router-dom";
+import {
+  WifiOutlined ,ForkOutlined
+} from "@ant-design/icons";
 
 const EventItem = function ({ item, currentLang }) {
+    const navigate = useNavigate();
+    const redirectionToDetails=()=>{
+        
+        navigate(`/events/${item.uuid}`);
+    }
   return (
     <div
       className="event-item"
@@ -12,6 +21,7 @@ const EventItem = function ({ item, currentLang }) {
           ? `url(${item?.image?.uri})`
           : `url(https://cdn.caligram.com/uploads/event/8J5/medium/6242018236834.png)`,
       }}
+      onClick={()=>redirectionToDetails()}
     >
       <div>
         <div className="event-date">
@@ -24,7 +34,11 @@ const EventItem = function ({ item, currentLang }) {
       </div>
       <div className="event-detail">
         <div className="event-desc">{item.name[currentLang]}</div>
-        <div className="event-name">{item.locationName[currentLang]}</div>
+        <div className="event-name">{item.attendanceMode === "ONLINE" &&<><WifiOutlined rotate={270}/><WifiOutlined rotate={90}
+        style={{marginRight:"15px"}}/></>}
+        {item.attendanceMode === "MIXED" &&<><ForkOutlined  rotate={180}
+        style={{marginRight:"15px",fontSize:"17px"}}/></>}
+        {item.locationName[currentLang]}</div>
       </div>
     </div>
   );
