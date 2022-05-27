@@ -23,6 +23,7 @@ const Events = function ({ currentLang,locale }) {
   const [filter, setFilter] = useState([]);
   const [eventList, setEventList] = useState([]);
   const [regions, setRegions] = useState([]);
+  const [searchUpdate, setSearchUpdate] = useState();
   const colors = [
     "#b2b4b6",
     "#fcb043",
@@ -134,9 +135,10 @@ const Events = function ({ currentLang,locale }) {
   };
 
   const selectTag = (item, type = "Public") => {
+    setSearchUpdate(item)
     item.selected = true;
     item.type = type;
-    setFilter([...filter, item]);
+    setFilter([...filter.filter(item=>item.from !== "search"), item]);
 
     if (type === "Region") {
       const newArr = regions.map((object) => {
@@ -240,7 +242,7 @@ const Events = function ({ currentLang,locale }) {
   return (
       <>
       <SemanticSearch onSelection={selectSemantic} onClearSearch={onClearSearch}
-      currentLang={currentLang}/>
+      currentLang={currentLang} searchUpdate={searchUpdate}/>
     <div className="event-layout">
         
       <div className="side-filter">
@@ -299,7 +301,7 @@ const Events = function ({ currentLang,locale }) {
         <div ref={scrollRef}></div>
         <div className="filter-type"><AppstoreOutlined className="search-results"/>{t("Results", { lng: currentLang })}</div>
         <div className="selected-filter">
-          {filter.filter(item=>item.type !== "places" && item.type !== "queryString").map((item) => (
+          {filter.filter(item=>item.from !== "search" && item.type !== "queryString").map((item) => (
             <SelectionTag
               closeButton
               group={item.type}

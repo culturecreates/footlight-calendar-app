@@ -106,7 +106,7 @@ function App() {
       <Footer className="app-footer">
         <div className="footer-links">
         <div className="footer-title">FootLight</div>
-        <div className="footer-cal">CALENDRIER CULTUREL OUTAOUAIS</div>
+        <div className="footer-cal">{t("headerText", { lng: currentLang })}</div>
         </div>
         <div className="footer-copy">
           <div>©2022 {t("CopyReserve", { lng: currentLang })}&nbsp;&nbsp;&nbsp;&nbsp;Culture Outaouais </div>
