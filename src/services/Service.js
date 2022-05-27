@@ -16,30 +16,31 @@ export default class ServiceApi {
     
     });
   }
-  static searchSuggesion(value) {
+  static searchSuggesion(value,lng) {
     return Axios({
       url: `search-suggestion`,
       method: "GET",
       params:{
-        "language":"EN",
+        "language":lng,
          "search-key": value
       }
     });
   }
-  static eventList(page=1,filterArray=[]) {
+  static eventList(page=1,filterArray=[],lng) {
     console.log(filterArray,filterArray.find((o) => o.type === "queryString")&&filterArray.find((o) => o.type === "queryString").name)
     return Axios({
       url: `events/list`,
       method: "GET",
       params:{
+         "language":lng,
           page:page,
           limit: 20,
-          audiences:filterArray.filter(item=>item.type === "Public").map(item=>item.name),
-          types:filterArray.filter(item=>item.type === "Type").map(item=>item.name),
+          audiences:filterArray.filter(item=>(item.type === "Public" || item.type === "audiences")).map(item=>item.name),
+          types:filterArray.filter(item=>(item.type === "Type" || item.type === "types")).map(item=>item.name),
           venues: filterArray.filter(item=>item.type === "places").map(item=>item.name),
           query:filterArray.find((o) => o.type === "queryString")&&filterArray.find((o) => o.type === "queryString").name, 
           organizations: filterArray.filter(item=>item.type === "organizations").map(item=>item.name),
-          range: filterArray.find((o) => o.type === "Date")&&this.convertDate(filterArray.find((o) => o.type === "Date").name)
+          "date-filter": filterArray.find((o) => o.type === "Date")&&this.convertDate(filterArray.find((o) => o.type === "Date").name)
           
       }
     });

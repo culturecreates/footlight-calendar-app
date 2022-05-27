@@ -61,7 +61,9 @@ const Events = function ({ currentLang,locale }) {
   }, [filter]);
   useEffect(() => {
     if(eventsFilter)
-    setupEventsFilter(eventsFilter)
+     setupEventsFilter(eventsFilter)
+
+     setFilter([])
   }, [currentLang]);
  
   const getCalendarInfo = () => {
@@ -116,7 +118,7 @@ const Events = function ({ currentLang,locale }) {
   };
   const getEvents = (page = 1, filterArray=filter) => {
     setLoading(true);
-    ServiceApi.eventList(page,filterArray)
+    ServiceApi.eventList(page,filterArray,currentLang==="en"?"EN":"FR")
       .then((response) => {
         if (response && response.data && response.data.data) {
           const events = response.data.data;

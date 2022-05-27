@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import { Input, AutoComplete } from 'antd';
 import PropTypes from "prop-types";
 import "./SemanticSearch.css";
@@ -10,10 +10,12 @@ import { useTranslation, Trans } from "react-i18next";
 const SemanticSearch = function ({ onSelection, onClearSearch,currentLang }) {
     const [options, setOptions] = useState([]);
 
+    useEffect(()=>{setOptions([])},[currentLang])
+
     const { t, i18n } = useTranslation();
-    const renderTitle = (title) => (
+    const renderTitle = (title,lng) => (
         <span className="search-title">
-          {t(title, { lng: currentLang })}
+          {t(title, { lng: lng })}
         </span>
       );
       
@@ -33,38 +35,38 @@ const SemanticSearch = function ({ onSelection, onClearSearch,currentLang }) {
           </div>
         ),
       });
-    const searchResult = (query) =>{
+    const searchResult = (query,lng) =>{
         
-        ServiceApi.searchSuggesion(query)
+        ServiceApi.searchSuggesion(query,lng==="en"?"EN":"FR")
         .then((response) => {
           if (response && response.data && response.data.data) {
             const events = response.data.data;
             const array=[
                 {
-                    label: renderTitle('audiences'),
+                    label: renderTitle('audiences',lng),
                     options: events.audiences.map(item=>{
-                        const obj=renderItem(item.name[currentLang],"audiences")
+                        const obj=renderItem(item.name[lng],"audiences")
                         return obj
                       })
                   },
                   {
-                    label: renderTitle('organizations'),
+                    label: renderTitle('organizations',lng),
                     options: events.organizations.map(item=>{
-                        const obj=renderItem(item.name[currentLang],"organizations")
+                        const obj=renderItem(item.name[lng],"organizations")
                         return obj
                       })
                   },
                   {
-                    label: renderTitle('places'),
+                    label: renderTitle('places',lng),
                     options: events.places.map(item=>{
-                        const obj=renderItem(item.name[currentLang],"places",item.uuid)
+                        const obj=renderItem(item.name[lng],"places",item.uuid)
                         return obj
                       })
                   },
                   {
-                    label: renderTitle('types'),
+                    label: renderTitle('types',lng),
                     options: events.types.map(item=>{
-                        const obj=renderItem(item.name[currentLang],"types")
+                        const obj=renderItem(item.name[lng],"types")
                         return obj
                       })
                   },
@@ -81,16 +83,19 @@ const SemanticSearch = function ({ onSelection, onClearSearch,currentLang }) {
     const handleSearch = (value) => {
       console.log(value)
       if(value.length === 0)
-       onClearSearch()
+       {setOptions([])
+         onClearSearch()}
       else 
-       debounceFn(value)
+       debounceFn(value,currentLang)
     };
     const debounceFn = useCallback(_debounce(searchResult, 1000), []);
     const onSelect = (value,options) => {
       const selectObj = {
         type: options.options,
         name: options.key,
+        from:"search"
       };
+      console.log(selectObj)
       onSelection(selectObj)
     };
     const handleKeyPress = (ev) => {
@@ -102,6 +107,11 @@ const SemanticSearch = function ({ onSelection, onClearSearch,currentLang }) {
       if (ev.key === "Enter")
       onSelection(selectObj)
       };
+      const handleClearPress = () => {
+        // handleSearch("")
+        // onClearSearch()
+        
+        };
   return (
     <div className="semantic-search-div">
       <AutoComplete
@@ -116,7 +126,7 @@ const SemanticSearch = function ({ onSelection, onClearSearch,currentLang }) {
       
       
     >
-      <Input.Search allowClear size="large" placeholder={t("Search", { lng: currentLang })} onClear={onClearSearch}/>
+      <Input.Search allowClear size="large" placeholder={t("Search", { lng: currentLang })} onClear={handleClearPress}/>
     </AutoComplete>
     </div>
   );
