@@ -37,7 +37,7 @@ export default class ServiceApi {
           limit: 20,
           audiences:filterArray.filter(item=>(item.type === "Public" || item.type === "audiences")).map(item=>item.name),
           types:filterArray.filter(item=>(item.type === "Type" || item.type === "types")).map(item=>item.name),
-          venues: filterArray.filter(item=>item.type === "places").map(item=>item.name),
+          venues: filterArray.filter(item=>(item.type === "places" || item.type === "Region")).map(item=>item.name),
           query:filterArray.find((o) => o.type === "queryString")&&filterArray.find((o) => o.type === "queryString").name, 
           organizations: filterArray.filter(item=>item.type === "organizations").map(item=>item.name),
           "date-filter": filterArray.find((o) => o.type === "Date")&&this.convertDate(filterArray.find((o) => o.type === "Date").name)

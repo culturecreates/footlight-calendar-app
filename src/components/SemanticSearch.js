@@ -7,10 +7,13 @@ import _debounce from 'lodash/debounce';
 import ServiceApi from "../services/Service";
 import { useTranslation, Trans } from "react-i18next";
 
-const SemanticSearch = function ({ onSelection, onClearSearch,currentLang }) {
+const SemanticSearch = function ({ onSelection, onClearSearch,currentLang,searchUpdate="" }) {
     const [options, setOptions] = useState([]);
+    const [searchKey, setSearchKey] = useState(searchUpdate)
 
     useEffect(()=>{setOptions([])},[currentLang])
+    useEffect(()=>{
+      setSearchKey("")},[searchUpdate])
 
     const { t, i18n } = useTranslation();
     const renderTitle = (title,lng) => (
@@ -22,7 +25,9 @@ const SemanticSearch = function ({ onSelection, onClearSearch,currentLang }) {
       const renderItem = (title,types,uuid="") => ({
         value: title,
         options:types,
-        key: types === "places"?uuid:title,
+        key: title,
+
+        // key: types === "places"?uuid:title,
         label: (
           <div
             style={{
@@ -81,7 +86,7 @@ const SemanticSearch = function ({ onSelection, onClearSearch,currentLang }) {
         });
     }
     const handleSearch = (value) => {
-      console.log(value)
+      setSearchKey(value)
       if(value.length === 0)
        {setOptions([])
          onClearSearch()}
@@ -95,7 +100,7 @@ const SemanticSearch = function ({ onSelection, onClearSearch,currentLang }) {
         name: options.key,
         from:"search"
       };
-      console.log(selectObj)
+      setSearchKey(value)
       onSelection(selectObj)
     };
     const handleKeyPress = (ev) => {
@@ -115,6 +120,7 @@ const SemanticSearch = function ({ onSelection, onClearSearch,currentLang }) {
           const selectObj = {
             type: "queryString",
             name:value,
+            from:"search"
           };
           onSelection(selectObj)
         }
@@ -129,11 +135,11 @@ const SemanticSearch = function ({ onSelection, onClearSearch,currentLang }) {
       onSelect={(val, option) => onSelect(val, option)}
       onSearch={handleSearch}
       onKeyPress={handleKeyPress}
-      
+      value={searchKey}
       
     >
       <Input.Search allowClear size="large" placeholder={t("Search", { lng: currentLang })} onClear={handleClearPress}
-      onSearch={handleInputSearch}/>
+      onSearch={handleInputSearch} value={searchKey}/>
     </AutoComplete>
     </div>
   );
