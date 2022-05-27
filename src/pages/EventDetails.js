@@ -237,7 +237,7 @@ const EventDetails = function ({ currentLang }) {
               <div className="event-detail-desc">
                 {eventDetails.description[currentLang]}
               </div>
-              {eventDetails?.additionalType.map((item) => (
+              {eventDetails?.additionalType?.map((item) => (
                 <Button type="primary" className="types-button">
                   {item.name[currentLang]}
                 </Button>
