@@ -27,8 +27,11 @@ const EventItem = function ({ item, currentLang }) {
         <div className="event-date">
           <div className="event-date-section">
             <div>{moment(item.startDate).utc().format("DDMMM")}</div>
+            {item.endDate &&
+            <>
             <div>&nbsp;-&nbsp;</div>
             <div>{moment(item.endDate).utc().format("DDMMM")}</div>
+            </>}
           </div>
         </div>
       </div>

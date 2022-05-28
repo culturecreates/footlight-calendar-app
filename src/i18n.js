@@ -34,6 +34,8 @@ i18n
           "Powered":"Powered by",
           "CopyReserve":"All rights reserved",
           "headerText":"OUTAOUAIS CULTURAL CALENDAR",
+          "to":"to",
+          "tickets":"Tickets",
           welcome: "Hello  <strong>World</strong>"
         }
       },
@@ -61,7 +63,10 @@ i18n
           "Event":"Evenement",
           "Powered":"Propulsé par",
           "CopyReserve":"Tous droits réservés",
-          "headerText":"CALENDRIER CULTUREL OUTAOUAIS"
+          "headerText":"CALENDRIER CULTUREL OUTAOUAIS",
+          "to":"au",
+          "tickets":"Billets"
+
         }
       }
     },

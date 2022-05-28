@@ -1,4 +1,4 @@
-import { Row, Layout, Col, Tag, Card, Radio, ConfigProvider, Switch } from "antd";
+import { Row, Layout, Col, Tag, Card, Radio, ConfigProvider, Switch, Image } from "antd";
 import "./App.css";
 import { useTranslation, Trans } from "react-i18next";
 import "antd/dist/antd.min.css";
@@ -64,8 +64,13 @@ function App() {
     <Layout className="events-app-layout">
       <Header className="app-header">
         <div className="header-links">
+        <Image
+    width={200}
+    preview={false}
+    src="https://toutculture.ca/images/logo_header.svg"
+  />
       <div className="footer-title">FootLight</div>
-        <div className="footer-cal">{t("headerText", { lng: currentLang })}</div>
+        {/* <div className="footer-cal">{t("headerText", { lng: currentLang })}</div> */}
       <div className="header-text">
             <div className={isEnglish?"active-admin":"active-user"}>French</div>
             <Switch checked={isEnglish} data-testid="admin-user-switch"

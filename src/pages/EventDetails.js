@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from "react";
-import { Button, Menu, Dropdown, Space } from "antd";
+import { Button, Menu, Dropdown, Space, Row, Col } from "antd";
 import PropTypes from "prop-types";
 import "./EventDetails.css";
 import { useParams } from "react-router-dom";
@@ -70,7 +70,7 @@ const EventDetails = function ({ currentLang }) {
           label:
             new Date(item.startDate).toLocaleDateString(currentLang, {
               weekday: "long",
-            }) + moment(item.startDate).utc().format(" DD MMM YYYY"),
+            }) + moment(item.startDate).utc().format(" DD MMM YYYY")+" - "+ moment(item.startDate).utc().format("hh:mm A"),
           key: index,
         };
         return obj;
@@ -92,13 +92,16 @@ const EventDetails = function ({ currentLang }) {
   }
   return (
     <div>
-      <div className="left-button" onClick={() => navigate(`/`)}>
+    <div className="main-event-layout">
+    <div style={{ justifyContent:"center" }}>
+      <div className="left-button" onClick={() => navigate(`/`)}
+      style={{ maxWidth: "1100px" }}>
         <LeftOutlined className="left-icon" />
         {t("AllEvents", { lng: currentLang })}
       </div>
       {eventDetails && (
         <>
-          <div className="event-title">{eventDetails.name[currentLang]}</div>
+          <div className="event-title" style={{ maxWidth: "1100px" }}>{eventDetails.name[currentLang]}</div>
           <div className="event-title-section">
             <div className="event-time-section">
               <div className="event-time-header">
@@ -108,13 +111,7 @@ const EventDetails = function ({ currentLang }) {
                 ) + moment(eventDetails.startDate).utc().format(" DD MMM YYYY")}
               </div>
               <div>
-                {eventDetails.endDate
-                  ? getDiffernceinDates(
-                      eventDetails.startDate,
-                      eventDetails.endDate
-                    )
-                  : 24}{" "}
-                h
+                {moment(eventDetails.startDate).utc().format("hh:mm A")}
               </div>
               <div className="subevent-dropdown">
                 {eventDetails?.subEvents?.length > 0 && (
@@ -140,7 +137,7 @@ const EventDetails = function ({ currentLang }) {
                   currentLang,
                   { weekday: "long" }
                 ) + moment(eventDetails.startDate).utc().format(" DD MMM")}
-                <span>&nbsp;</span>
+                <span>&nbsp;{t("to", { lng: currentLang })} </span>
                 {eventDetails.endDate &&
                   new Date(eventDetails.endDate).toLocaleDateString(
                     currentLang,
@@ -165,14 +162,14 @@ const EventDetails = function ({ currentLang }) {
                   )}
                 </>
               )}
-              {eventDetails.attendanceMode === "ONLINE" &&<><WifiOutlined rotate={270}/><WifiOutlined rotate={90}
-        style={{marginRight:"15px"}}/> {t("Online", { lng: currentLang })}</>}
-        {eventDetails.attendanceMode === "MIXED" &&<><ForkOutlined  rotate={180}
-        style={{marginRight:"15px",fontSize:"17px"}}/> {t("Hybrid", { lng: currentLang })}</>}
+              {eventDetails.attendanceMode === "ONLINE" &&<div className="virrtual-event"><WifiOutlined rotate={270}/><WifiOutlined rotate={90}
+        style={{marginRight:"10px"}}/> {t("Online", { lng: currentLang })}</div>}
+        {eventDetails.attendanceMode === "MIXED" &&<div className="virrtual-event"><ForkOutlined  rotate={180}
+        style={{marginRight:"10px",fontSize:"17px"}}/> {t("Hybrid", { lng: currentLang })}</div>}
             </div>
           </div>
-          <div className="flex">
-            <div className="image-and-contact">
+          <Row style={{ marginRight: "40px",marginLeft:"40px", maxWidth:"1100px" }}>
+            <Col flex="0 1 320px">
               <div
                 className="event-item"
                 style={{
@@ -191,7 +188,7 @@ const EventDetails = function ({ currentLang }) {
 }
                   {eventDetails.offers.find(item=>item.url) &&
                   <Button danger className="buy-button">
-                    <a href={getUriOffers(eventDetails.offers)} target="_blank" rel="noreferrer">Billets</a>
+                    <a href={getUriOffers(eventDetails.offers)} target="_blank" rel="noreferrer">{t("tickets", { lng: currentLang })}</a>
                     
                   </Button>
 }
@@ -232,8 +229,8 @@ const EventDetails = function ({ currentLang }) {
                   currentLang={currentLang}
                 />
               )}
-            </div>
-            <div style={{ marginRight: "40px" }}>
+            </Col>
+            <Col flex="1 1 400px" style={{ marginRight: "40px",marginLeft:"40px" }}>
               <div className="event-detail-desc">
                 {eventDetails.description[currentLang]}
               </div>
@@ -270,11 +267,13 @@ const EventDetails = function ({ currentLang }) {
                   </a>                  
                 </span>
               </div>
-            </div>
-          </div>
+            </Col>
+          </Row>
         </>
       )}
       {loading && <Spinner />}
+    </div>
+    </div>
     </div>
   );
 };
