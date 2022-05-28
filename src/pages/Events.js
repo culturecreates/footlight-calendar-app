@@ -1,7 +1,7 @@
 import React, { useState, useEffect, useRef } from "react";
 import { Row, Col, ConfigProvider, Pagination, Button, Empty, DatePicker } from "antd";
 import { useTranslation, Trans } from "react-i18next";
-
+import "./Event.css";
 import PropTypes from "prop-types";
 import "../App.css";
 import { CloseOutlined,AppstoreOutlined } from "@ant-design/icons";
@@ -243,9 +243,14 @@ const Events = function ({ currentLang,locale }) {
       <>
       <SemanticSearch onSelection={selectSemantic} onClearSearch={onClearSearch}
       currentLang={currentLang} searchUpdate={searchUpdate}/>
-    <div className="event-layout">
+      <div className="main-event-layout">
+      {eventsFilter &&
+      <Row className="event-layout">
+      
+    
+   
         
-      <div className="side-filter">
+      <Col flex="0 1 320px">
         <div className="filter-type">{t("Region", { lng: currentLang })}</div>
         <div>
           <Row gutter={16} className="region-row">
@@ -269,9 +274,11 @@ const Events = function ({ currentLang,locale }) {
             ))}
           </Row>
         </div>
-        <ConfigProvider locale={locale}>
+        
+         <ConfigProvider locale={locale}>
           <EventCalendar onSelection={dateSelection} value={calendarDate} />
         </ConfigProvider>
+
         <div className="filter-type calendar-top">{t("Types", { lng: currentLang })}</div>
         <div>
           {types.map((item) => (
@@ -295,9 +302,9 @@ const Events = function ({ currentLang,locale }) {
               removeItem={removeItem}
             />
           ))}
-        </div>
-      </div>
-      <div className="right-events">
+        </div> 
+      </Col>
+      <Col flex="1 1 400px">
         <div ref={scrollRef}></div>
         <div className="filter-type"><AppstoreOutlined className="search-results"/>{t("Results", { lng: currentLang })}</div>
         <div className="selected-filter">
@@ -329,7 +336,7 @@ const Events = function ({ currentLang,locale }) {
         <Row className="events-row">
           {eventList.map((item) => (
             <Col key={item.uuid} 
-            // onClick={()=>navigate(`/events/${item.uuid}`)}
+           
             >
               <EventItem item={item} currentLang={currentLang} />
             </Col>
@@ -348,9 +355,12 @@ const Events = function ({ currentLang,locale }) {
       <div>
       <Empty description={"No Events"} />
       </div>}
-      </div>
-      {loading && <Spinner />}
+      </Col>
+     
       
+      </Row>
+}
+{loading && <Spinner />}
     </div>
     </>
   );
