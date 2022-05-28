@@ -111,13 +111,7 @@ const EventDetails = function ({ currentLang }) {
                 ) + moment(eventDetails.startDate).utc().format(" DD MMM YYYY")}
               </div>
               <div>
-                {eventDetails.endDate
-                  ? getDiffernceinDates(
-                      eventDetails.startDate,
-                      eventDetails.endDate
-                    )
-                  : 24}{" "}
-                h
+                {moment(eventDetails.startDate).utc().format("hh:mm A")}
               </div>
               <div className="subevent-dropdown">
                 {eventDetails?.subEvents?.length > 0 && (
