@@ -1,0 +1,92 @@
+.side-menu-div{
+    justify-content: space-between;
+    display: flex;
+    align-items: center;
+}
+.dashboard-sider .ant-layout-sider-children{
+    height: unset;
+}
+.dashboard-sider.ant-layout-sider,
+.dashboard-sider .ant-menu{
+    background: #131212;
+}
+
+.dashboard-sider .ant-menu-item-selected, .dashboard-sider .ant-menu-item-selected a, .dashboard-sider .ant-menu-item-selected a:hover{
+    color: #fff !important;
+}
+.dashboard-sider .ant-menu:not(.ant-menu-horizontal) .ant-menu-item-selected {
+    background-color: #e96f0a;
+}
+.dashboard-sider .ant-menu-item a{
+     color: #837d7d;
+     font-weight: 700;
+     font-size: 16px;
+}
+.app-text{
+    color: #fff;
+    font-size: 19px;
+    margin-top: 20px;
+    margin-left: 23px;
+}
+.image-name{
+    display: flex;
+    align-items: center;
+}
+.image-name span{
+    margin-right: 10px;
+}
+.admin-event-header{
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin: 0px 20px;
+}
+.admin-event-header .semantic-search-div{
+    background: unset;
+}
+.flex-align{
+    display: flex;
+    align-items: center;
+}
+.admin-event-header .ant-btn-primary{
+    border-color: #db7f07;
+    background: #db7f07;
+    margin-left: 10px;
+}
+.header-title{
+    color: #000;
+    font-size: 22px;
+    font-weight: 700;
+    line-height: 25px;
+    
+    padding: 20px;
+}
+.ql-toolbar.ql-snow,.ql-editor{
+    background: #fff;
+}
+.ql-editor{
+    min-height: 250px;
+}
+.update-select-title{
+    font-size: 16px;
+    line-height: 19px;
+    font-weight: 500;
+    margin-bottom: 5px;
+}
+.date-div{
+    margin-right: 25px;
+}
+.add-event-layout{
+    padding: 20px;
+}
+.ant-breadcrumb{
+    margin: 15px;
+    font-size: 16px;
+    font-weight: 600;
+}
+.ant-breadcrumb-link{
+    cursor: pointer;
+}
+.event-table .ant-table-body{
+    overflow: auto !important;
+}

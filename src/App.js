@@ -11,6 +11,7 @@ import moment from "moment";
 import enUS from "antd/lib/locale/en_US";
 import frCA from "antd/lib/locale/fr_CA";
 import "moment/locale/fr-ca";
+import AdminDashboard from "./pages/AdminDasboard";
 moment.locale("fr-ca");
 
 
@@ -80,31 +81,13 @@ function App() {
       </Header>
 
       <Content className="app-content">
-        {/* <div className="change-locale">
-          <span style={{ marginRight: 16 }}>Change locale of components: </span>
-          <Radio.Group value={locale} onChange={changeLocale}>
-            <Radio.Button key="en" value={enUS}>
-              English
-            </Radio.Button>
-            <Radio.Button key="fr" value={zhCN}>
-              中文
-            </Radio.Button>
-          </Radio.Group>
-        </div> */}
-         {/* <h2>{t("Welcome to React")}</h2>
-        <Row>
-        <button onClick={() => changeLanguage("de")}>de</button>
-        <button onClick={() => changeLanguage("en")}>en</button>
-        </Row>
-        
-        <Trans i18nKey="welcome">trans</Trans> */}
+       
         <Router>
         <Routes>
           <Route path="/" element={<Events currentLang={currentLang} locale={locale}/>} />
           <Route path="/events/:eventId" element={<EventDetails currentLang={currentLang}/>} />
 
-          {/* <Route  path="/home" element={Dashboard} />
-    <Route  path="/" element={Login} /> */}
+          <Route path="/admin/*" element={<AdminDashboard currentLang={currentLang} locale={locale}/>} />
         </Routes>
       </Router>
       </Content>

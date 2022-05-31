@@ -6,7 +6,7 @@
   height: 40vmin;
   pointer-events: none;
 }
-.ant-picker-dropdown{
+.calendar-dropdown.ant-picker-dropdown{
   width: 295px;
   top: 585px !important;
   margin-top: 10px;
