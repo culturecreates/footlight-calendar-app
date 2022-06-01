@@ -32,7 +32,7 @@ const AdminDashboard = function ({ item, currentLang }) {
        
       }, [location]);
   return (
-    <Layout className="dashboard-layout">
+    <Layout className="dashboard-layout-home">
     <Sider width={250} className="dashboard-sider">
       {/* <img src={WalmartIcon} alt="logo" className="dashboard-logo" /> */}
       <div className="app-text">{ "Culture Outaouais"}</div>

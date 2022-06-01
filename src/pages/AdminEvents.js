@@ -65,7 +65,7 @@ const AdminEvents = function ({ currentLang }) {
       title: "Published",
       dataIndex: "hasDependency",
       key: "hasDependency",
-     width:100,
+     width:120,
       render: (e, record) => (
         <Switch
           data-testid={`map-${record.id}`}
@@ -111,10 +111,10 @@ const AdminEvents = function ({ currentLang }) {
     
   </Breadcrumb>
 }
-      <div className="admin-event-header">
-        <div className="header-title">Events</div>
+      <Row className="admin-event-header">
+        <Col className="header-title" flex="0 1 300px">Events</Col>
         {!isAdd &&
-        <div className="flex-align">
+        <Col className="flex-align">
           <SemanticSearch
             onSelection={selectSemantic}
             onClearSearch={getEvents}
@@ -124,9 +124,9 @@ const AdminEvents = function ({ currentLang }) {
           onClick={()=>setIsAdd(true)}>
             Add Event
           </Button>
-        </div>
+        </Col>
 }
-      </div>
+      </Row>
       <Card className="segment-card">
         {!isAdd ? <Table
            

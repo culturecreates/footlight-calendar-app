@@ -12,6 +12,11 @@ import {
   Row,
   Col,
 } from "antd";
+import { FileImageOutlined } from '@ant-design/icons';
+
+
+import ImgCrop from 'antd-img-crop';
+import { Upload } from 'antd';
 import ReactQuill, { Quill } from "react-quill";
 import "react-quill/dist/quill.snow.css";
 import { adminSideMenuLinks, convertDateFormat } from "../utils/Utility";
@@ -20,11 +25,20 @@ var Size = Quill.import("attributors/style/size");
 Size.whitelist = ["12px", "16px", "18px"];
 const { Header, Content, Sider } = Layout;
 const { Option } = Select;
-
+const { Dragger } = Upload;
+const getSrcFromFile = (file) => {
+  return new Promise((resolve) => {
+    const reader = new FileReader();
+    reader.readAsDataURL(file.originFileObj);
+    reader.onload = () => resolve(reader.result);
+  });
+};
 const AddEvent = function ({ currentLang }) {
   const [isDisable, setdisable] = useState(true);
   const [selectList, setSelectList] = useState([]);
   const [htmlFile, setHtmlFile] = useState("");
+  const [fileList, setFileList] = useState([
+  ]);
   const [form] = Form.useForm();
 
   const [startDisable, setStartDisable] = useState(
@@ -136,6 +150,22 @@ const AddEvent = function ({ currentLang }) {
   const handleChange = (value, option) => {};
   const handleChangeDesc = (html) => {
     setHtmlFile(html);
+  };
+  
+  const onChange = (info) => {
+    setFileList(info.fileList);
+  };
+  const onPreview = async (file) => {
+    const src = file.url || (await getSrcFromFile(file));
+    const imgWindow = window.open(src);
+
+    if (imgWindow) {
+      const image = new Image();
+      image.src = src;
+      imgWindow.document.write(image.outerHTML);
+    } else {
+      window.location.href = src;
+    }
   };
   return (
     <Layout className="add-event-layout">
@@ -252,7 +282,27 @@ const AddEvent = function ({ currentLang }) {
           </Select>
         </Form.Item>
         </Col>
-        <Col flex="0 1 320px"></Col>
+        <Col className="upload-col">
+        <ImgCrop grid rotate>
+      <Dragger
+        // action="https://www.mocky.io/v2/5cc8019d300000980a055e76"
+        listType="picture-card"
+        className={fileList.length>0?"event-upload":"ant-event-upload"}
+        fileList={fileList}
+        onChange={onChange}
+        onPreview={onPreview}
+        aspect="2/2"
+      >
+        <p className="ant-upload-drag-icon">
+        <FileImageOutlined />
+    </p>
+    <p className="ant-upload-text">Select Files to upload</p>
+    <p className="ant-upload-hint">
+      or Drag and Drop files to upload
+    </p>
+      </Dragger>
+    </ImgCrop>
+        </Col>
         </Row>
         <Form.Item name={"desc"} rules={[{ required: true }]}>
           <ReactQuill
