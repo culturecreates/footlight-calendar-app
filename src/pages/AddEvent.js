@@ -49,7 +49,7 @@ const AddEvent = function ({ currentLang }) {
   const modules = {
     toolbar: [
       [{ header: "1" }, { header: "2" }, { font: [] }],
-      [{ size: ["14px", "16px", "18px"] }],
+      // [{ size: ["14px", "px", "18px"] }],
       ["bold", "italic", "underline", "strike", "blockquote"],
       [
         { list: "ordered" },
@@ -283,7 +283,7 @@ const AddEvent = function ({ currentLang }) {
         </Form.Item>
         </Col>
         <Col className="upload-col">
-        <ImgCrop grid rotate>
+        <ImgCrop grid modalTitle="Event File">
       <Dragger
         // action="https://www.mocky.io/v2/5cc8019d300000980a055e76"
         listType="picture-card"
@@ -291,7 +291,7 @@ const AddEvent = function ({ currentLang }) {
         fileList={fileList}
         onChange={onChange}
         onPreview={onPreview}
-        aspect="2/2"
+        aspect="3/3"
       >
         <p className="ant-upload-drag-icon">
         <FileImageOutlined />

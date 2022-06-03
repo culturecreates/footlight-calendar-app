@@ -2,19 +2,10 @@ import React, { useState, useEffect } from "react";
 import moment from "moment";
 import PropTypes from "prop-types";
 import { Layout, Card, Table, Button, Switch, Avatar, Breadcrumb, Col, Row } from "antd";
-
+import { useTranslation, Trans } from "react-i18next";
 import "./AdminDashboard.css";
 import { PlusOutlined, ForkOutlined } from "@ant-design/icons";
-import {
-  Link,
-  Route,
-  Routes,
-  useLocation,
-  useNavigate,
-} from "react-router-dom";
-import EventCalendar from "../components/EventCalendar";
-import { adminSideMenuLinks } from "../utils/Utility";
-import Events from "./Events";
+import { useNavigate } from "react-router-dom";
 import Spinner from "../components/Spinner";
 import ServiceApi from "../services/Service";
 import SemanticSearch from "../components/SemanticSearch";
@@ -28,9 +19,12 @@ const AdminEvents = function ({ currentLang }) {
   const [isAdd, setIsAdd] = useState(false);
   const [totalPage, setTotalPage] = useState(1);
   const [defaultPage, setDefaultPage] = useState(1);
+  const navigate = useNavigate();
+  const { t, i18n } = useTranslation();
+
   const eventTableHeader = [
     {
-      title: "Name",
+      title: t("Name", { lng: currentLang }),
       dataIndex: "name",
       key: "name",
       render: (e, record) => (
@@ -45,7 +39,7 @@ const AdminEvents = function ({ currentLang }) {
       ),
     },
     {
-      title: "Start Date",
+      title: t("StartDate", { lng: currentLang }),
       dataIndex: "startDate",
       key: "startDate",
       width: 200,
@@ -56,27 +50,29 @@ const AdminEvents = function ({ currentLang }) {
     },
 
     {
-      title: "Location",
+      title: t("Location", { lng: currentLang }),
       dataIndex: "hasLegacyCapability",
       key: "hasLegacyCapability",
       render: (e, record) => <div>{record.locationName[currentLang]}</div>,
     },
     {
-      title: "Published",
+      title: t("Published", { lng: currentLang }),
       dataIndex: "hasDependency",
       key: "hasDependency",
      width:120,
       render: (e, record) => (
         <Switch
-          data-testid={`map-${record.id}`}
-          onChange={(checked) => handleDelete(record, checked)}
+          className="publish-switch"
+          onChange={(checked,event) => handleDelete(checked,record, event)}
           defaultChecked={false}
         />
       ),
     },
   ];
 
-  const handleDelete = () => {};
+  const handleDelete = (checked,record,event) => {
+    event.stopPropagation()
+  };
   useEffect(() => {
     getEvents();
   }, []);
@@ -106,13 +102,13 @@ const AdminEvents = function ({ currentLang }) {
     <Layout className="dashboard-layout">
       {isAdd &&
        <Breadcrumb separator=">">
-    <Breadcrumb.Item onClick={()=>setIsAdd(false)}>Events</Breadcrumb.Item>
-    <Breadcrumb.Item >Add Event</Breadcrumb.Item>
+    <Breadcrumb.Item onClick={()=>setIsAdd(false)}>{t("Events", { lng: currentLang })}</Breadcrumb.Item>
+    <Breadcrumb.Item >{t("AddEvent", { lng: currentLang })}</Breadcrumb.Item>
     
   </Breadcrumb>
 }
       <Row className="admin-event-header">
-        <Col className="header-title" flex="0 1 300px">Events</Col>
+        <Col className="header-title" flex="0 1 300px">{t("Events", { lng: currentLang })}</Col>
         {!isAdd &&
         <Col className="flex-align">
           <SemanticSearch
@@ -122,7 +118,7 @@ const AdminEvents = function ({ currentLang }) {
           />
           <Button type="primary" icon={<PlusOutlined />} size={"large"}
           onClick={()=>setIsAdd(true)}>
-            Add Event
+            Add {t("Event", { lng: currentLang })}
           </Button>
         </Col>
 }
@@ -150,6 +146,8 @@ const AdminEvents = function ({ currentLang }) {
               onRow={(record, rowIndex) => {
                 return {
                   onClick: (event) => {
+                    event.stopPropagation()
+                    navigate(`/admin/events/${record.uuid}`);
                     // setSelectedProduct(record);
                   }, // click row
                 };

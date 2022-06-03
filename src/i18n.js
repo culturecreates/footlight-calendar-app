@@ -36,6 +36,13 @@ i18n
           "headerText":"OUTAOUAIS CULTURAL CALENDAR",
           "to":"to",
           "tickets":"Tickets",
+          "Events":"Events",
+          "Places":"Places",
+          "AddEvent":"Add Event",
+          "Name":"Name",
+          "Location":"Location",
+          "StartDate":"Start Date",
+          "Published":"Published",
           welcome: "Hello  <strong>World</strong>"
         }
       },
@@ -65,7 +72,14 @@ i18n
           "CopyReserve":"Tous droits réservés",
           "headerText":"CALENDRIER CULTUREL OUTAOUAIS",
           "to":"au",
-          "tickets":"Billets"
+          "tickets":"Billets",
+          "Events":"Evenements",
+          "Places":"Lieu",
+          "AddEvent":"Ajouter Evenement",
+          "Name":"Nom",
+          "Location":"Emplacement",
+          "StartDate":"Date de Début",
+          "Published":"Publié"
 
         }
       }

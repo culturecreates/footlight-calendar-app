@@ -18,12 +18,14 @@ import EventCalendar from "../components/EventCalendar";
 import { adminSideMenuLinks } from "../utils/Utility";
 import Events from "./Events";
 import AdminEvents from "./AdminEvents";
+import EventDetails from "./EventDetails";
+import { useTranslation, Trans } from "react-i18next";
 
 const { Header, Content, Sider } = Layout;
 
 const AdminDashboard = function ({ item, currentLang }) {
     const [routePath, setRoutePath] = useState("/admin/events");
-
+    const { t, i18n } = useTranslation();
     const navigate = useNavigate();
     const location = useLocation();
     const sideMenuLinks= adminSideMenuLinks;
@@ -46,7 +48,7 @@ const AdminDashboard = function ({ item, currentLang }) {
           <Menu.Item key={item.link} className="side-menu-item">
             <div className="side-menu-div">
              
-              <Link to={item.link}>{item.name}</Link>
+              <Link to={item.link}>{t(item.name, { lng: currentLang })}</Link>
               {routePath.includes(item.link) && (
                 <RightOutlined className="selected-right-arrow" />
               )}
@@ -63,6 +65,7 @@ const AdminDashboard = function ({ item, currentLang }) {
         <Routes>
           <Route path="events" element={<AdminEvents currentLang={currentLang} />} />
           <Route path="admin/events" element={<Events />} />
+          <Route path="events/:eventId" element={<EventDetails currentLang={currentLang}/>} />
         </Routes>
       </Content>
     </Layout>
