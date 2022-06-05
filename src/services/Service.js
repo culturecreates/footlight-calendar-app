@@ -16,6 +16,14 @@ export default class ServiceApi {
     
     });
   }
+
+  static getAllPlaces() {
+    return Axios({
+      url: `places`,
+      method: "GET",
+    
+    });
+  }
   static searchSuggesion(value,lng) {
     return Axios({
       url: `search-suggestion`,

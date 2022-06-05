@@ -154,7 +154,7 @@ const AdminEvents = function ({ currentLang }) {
               }}
             /> 
             :
-        <AddEvent />
+        <AddEvent currentLang={currentLang}/>
             }
       </Card>
       {loading && <Spinner />}

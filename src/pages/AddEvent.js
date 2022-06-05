@@ -20,6 +20,7 @@ import { Upload } from 'antd';
 import ReactQuill, { Quill } from "react-quill";
 import "react-quill/dist/quill.snow.css";
 import { adminSideMenuLinks, convertDateFormat } from "../utils/Utility";
+import ServiceApi from "../services/Service";
 
 var Size = Quill.import("attributors/style/size");
 Size.whitelist = ["12px", "16px", "18px"];
@@ -39,6 +40,7 @@ const AddEvent = function ({ currentLang }) {
   const [htmlFile, setHtmlFile] = useState("");
   const [fileList, setFileList] = useState([
   ]);
+  const [placeList, setPlaceList] = useState([]);
   const [form] = Form.useForm();
 
   const [startDisable, setStartDisable] = useState(
@@ -46,6 +48,22 @@ const AddEvent = function ({ currentLang }) {
   );
   const [endDisable, setEndDisable] = useState(form.getFieldsValue().StartDate);
 
+  useEffect(()=>{
+  getAllPlaces();
+  },[])
+  const getAllPlaces=()=>{
+    ServiceApi.getAllPlaces()
+    .then((response) => {
+      if (response && response.data && response.data.data) {
+        const events = response.data.data;
+        setPlaceList(events);
+
+        //   setTotalPage(response.data.totalPage * 20)
+      }
+    })
+    .catch((error) => {
+    });
+  }
   const modules = {
     toolbar: [
       [{ header: "1" }, { header: "2" }, { font: [] }],
@@ -125,7 +143,28 @@ const AddEvent = function ({ currentLang }) {
     "video",
   ];
 
-  const handleSubmit = () => {};
+  const handleSubmit = (values) => {
+    // values.startTime.set({h: 11, m: 11});
+    const eventObj={
+      name:{
+        fr:values.title,
+      },
+      description:{
+        fr:values.desc,
+      },
+      StartDate:moment(values.startDate).utc().format("yyyy-MM-dd'T'HH:mm:ss.SSS'Z'"),
+      locationId: {
+        place: {
+          entityId: values.location
+        },
+        virtualLocation: {
+          entityId: "string"
+        }
+      },
+    
+    }
+    console.log(values,eventObj)
+  };
 
   useEffect(() => {
     form.setFieldsValue({
@@ -174,7 +213,7 @@ const AddEvent = function ({ currentLang }) {
         layout="vertical"
         className="update-status-form"
         data-testid="status-update-form"
-        onFinish={() => handleSubmit()}
+        onFinish={ handleSubmit}
       >
         <Row >
       
@@ -253,7 +292,7 @@ const AddEvent = function ({ currentLang }) {
         
         <div className="update-select-title">{"Location"}</div>
 
-        <Form.Item name={"segmentList"} rules={[{ required: true }]}>
+        <Form.Item name={"location"} >
           <Select
             data-testid="update-two-select-dropdown"
             placeholder={`Select Location`}
@@ -269,14 +308,14 @@ const AddEvent = function ({ currentLang }) {
             // defaultValue={selectList && selectList[0].name}
             // value={itemValue}
           >
-            {selectList &&
-              selectList.map((item) => (
+            {placeList &&
+              placeList.map((item) => (
                 <Option
                   data-testid="update-two-select-option"
-                  value={item.id}
-                  key={item.id}
+                  value={item.uuid}
+                  key={item.name[currentLang]}
                 >
-                  {item.name}
+                  {item.name[currentLang]}
                 </Option>
               ))}
           </Select>
@@ -304,6 +343,7 @@ const AddEvent = function ({ currentLang }) {
     </ImgCrop>
         </Col>
         </Row>
+        <div className="update-select-title">{"Descreption"}</div>
         <Form.Item name={"desc"} rules={[{ required: true }]}>
           <ReactQuill
             theme={"snow"}
@@ -315,9 +355,13 @@ const AddEvent = function ({ currentLang }) {
             onChange={handleChangeDesc}
           />
         </Form.Item>
-        <Form.Item shouldUpdate>
+        <Form.Item>
+          
           <Button type="primary" htmlType="submit" size="large">
             Submit
+          </Button>
+          <Button   size="large">
+            Clear
           </Button>
         </Form.Item>
       </Form>

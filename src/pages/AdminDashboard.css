@@ -132,7 +132,18 @@
     background: #23a543;
 }
 
-.img-crop-modal .ant-modal-header,
+.img-crop-modal .ant-modal-header
+{
+    background: #a0a199;
+    border-bottom: 1px solid #f2de08; 
+}
 .img-crop-modal .ant-modal-content{
     background: #a0a199;
+}
+.img-crop-modal .ant-modal-footer{
+    border-top: 1px solid #f2de08;
+}
+.img-crop-modal .ant-btn-primary{
+    background: #de711e;
+    border-color: #de711e;
 }
