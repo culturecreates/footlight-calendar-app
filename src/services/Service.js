@@ -19,7 +19,7 @@ export default class ServiceApi {
 
   static getAllPlaces() {
     return Axios({
-      url: `places`,
+      url: `all-venues`,
       method: "GET",
     
     });
@@ -62,8 +62,29 @@ export default class ServiceApi {
     });
   }
 
- 
+  static addEvent(payload) {
+    return Axios({
+      url: `events`,
+      method: "POST",
+      data: JSON.stringify(payload),
 
+    });
+  }
+  static imageUpload(id,payload) {
+    console.log(payload)
+    const formdata = new FormData()
+    formdata.append("file",payload)
+  
+    return Axios({
+      url: `events/${id}/image-upload`,
+      method: "POST",
+      headers: {
+        'Content-Type': 'multipart/form-data'
+      },
+      data: formdata
+
+    });
+  }
   
 
   

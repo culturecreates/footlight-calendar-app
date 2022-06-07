@@ -143,7 +143,21 @@
 .img-crop-modal .ant-modal-footer{
     border-top: 1px solid #f2de08;
 }
+.submit-items .ant-btn-primary,
 .img-crop-modal .ant-btn-primary{
     background: #de711e;
     border-color: #de711e;
+}
+.submit-items .ant-form-item-control-input-content{
+    justify-content: center;
+    display: flex;
+}
+.submit-items .ant-btn{
+    margin: 0px 20px;
+}
+.ant-radio-group label{
+    font-size: 16px;
+}
+.ant-radio-group {
+    margin-bottom: 15px;
 }

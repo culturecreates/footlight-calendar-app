@@ -10,20 +10,16 @@ import {
   Select,
   DatePicker,
   Row,
-  Col,
+  Col,Radio
 } from "antd";
-import { FileImageOutlined } from '@ant-design/icons';
-
-
-import ImgCrop from 'antd-img-crop';
-import { Upload } from 'antd';
-import ReactQuill, { Quill } from "react-quill";
-import "react-quill/dist/quill.snow.css";
+import { FileImageOutlined,CheckOutlined,CloseOutlined } from "@ant-design/icons";
+import { useTranslation, Trans } from "react-i18next";
+import ImgCrop from "antd-img-crop";
+import { Upload } from "antd";
 import { adminSideMenuLinks, convertDateFormat } from "../utils/Utility";
 import ServiceApi from "../services/Service";
+import EventEditor from "../components/EventEditor";
 
-var Size = Quill.import("attributors/style/size");
-Size.whitelist = ["12px", "16px", "18px"];
 const { Header, Content, Sider } = Layout;
 const { Option } = Select;
 const { Dragger } = Upload;
@@ -36,134 +32,82 @@ const getSrcFromFile = (file) => {
 };
 const AddEvent = function ({ currentLang }) {
   const [isDisable, setdisable] = useState(true);
-  const [selectList, setSelectList] = useState([]);
-  const [htmlFile, setHtmlFile] = useState("");
-  const [fileList, setFileList] = useState([
-  ]);
+  const [allLocations, setAllLocations] = useState();
+  const [eventType, setEventType] = useState("offline");
+  const [fileList, setFileList] = useState([]);
   const [placeList, setPlaceList] = useState([]);
   const [form] = Form.useForm();
 
-  const [startDisable, setStartDisable] = useState(
-    form.getFieldsValue().StartDate
-  );
-  const [endDisable, setEndDisable] = useState(form.getFieldsValue().StartDate);
+  const [startDisable, setStartDisable] = useState();
+  const [endDisable, setEndDisable] = useState();
+  const { t, i18n } = useTranslation();
 
-  useEffect(()=>{
-  getAllPlaces();
-  },[])
-  const getAllPlaces=()=>{
+  useEffect(() => {
+    getAllPlaces();
+  }, []);
+  const getAllPlaces = () => {
     ServiceApi.getAllPlaces()
-    .then((response) => {
-      if (response && response.data && response.data.data) {
-        const events = response.data.data;
-        setPlaceList(events);
+      .then((response) => {
+        if (response && response.data && response.data.data) {
+          const events = response.data.data;
+          setPlaceList(events.places);
+          setAllLocations(events)
 
-        //   setTotalPage(response.data.totalPage * 20)
-      }
-    })
-    .catch((error) => {
-    });
-  }
-  const modules = {
-    toolbar: [
-      [{ header: "1" }, { header: "2" }, { font: [] }],
-      // [{ size: ["14px", "px", "18px"] }],
-      ["bold", "italic", "underline", "strike", "blockquote"],
-      [
-        { list: "ordered" },
-        { list: "bullet" },
-        { indent: "-1" },
-        { indent: "+1" },
-        {
-          color: [
-            "#000000",
-            "#e60000",
-            "#ff9900",
-            "#ffff00",
-            "#008a00",
-            "#0066cc",
-            "#9933ff",
-            "#ffffff",
-            "#facccc",
-            "#ffebcc",
-            "#ffffcc",
-            "#cce8cc",
-            "#cce0f5",
-            "#ebd6ff",
-            "#bbbbbb",
-            "#f06666",
-            "#ffc266",
-            "#ffff66",
-            "#66b966",
-            "#66a3e0",
-            "#c285ff",
-            "#888888",
-            "#a10000",
-            "#b26b00",
-            "#b2b200",
-            "#006100",
-            "#0047b2",
-            "#6b24b2",
-            "#444444",
-            "#5c0000",
-            "#663d00",
-            "#666600",
-            "#003700",
-            "#002966",
-            "#3d1466",
-          ],
-        },
-      ],
-      ["link", "image", "video"],
-      ["clean"],
-    ],
-    clipboard: {
-      // toggle to add extra line breaks when pasting HTML:
-      matchVisual: false,
-    },
+          //   setTotalPage(response.data.totalPage * 20)
+        }
+      })
+      .catch((error) => {});
   };
-  /*
-   * Quill editor formats
-   * See https://quilljs.com/docs/formats/
-   */
-  const formats = [
-    "header",
-    "font",
-    "size",
-    "bold",
-    "italic",
-    "underline",
-    "strike",
-    "blockquote",
-    "list",
-    "bullet",
-    "indent",
-    "link",
-    "image",
-    "video",
-  ];
 
   const handleSubmit = (values) => {
-    // values.startTime.set({h: 11, m: 11});
-    const eventObj={
-      name:{
-        fr:values.title,
+     values.startDate.set({h: values.startTime.get('hour'), m: values.startTime.get('minute')});
+     values.endDate.set({h: values.endTime.get('hour'), m: values.endTime.get('minute')});
+    
+    const eventObj = {
+      name: {
+        fr: values.title,
       },
-      description:{
-        fr:values.desc,
+      description: {
+        fr: values.desc,
       },
-      StartDate:moment(values.startDate).utc().format("yyyy-MM-dd'T'HH:mm:ss.SSS'Z'"),
+      startDate: moment(values.startDate)
+        .format("YYYY-MM-DDTHH:mm:ss"),
+        endDate: moment(values.endDate)
+        .format("YYYY-MM-DDTHH:mm:ss"),
       locationId: {
         place: {
-          entityId: values.location
+          entityId: eventType==="offline"? values.location:null,
         },
         virtualLocation: {
-          entityId: "string"
-        }
+          entityId: eventType==="online"? values.location:null,
+        },
       },
+    };
+
+    // ServiceApi.imageUpload("629ed8484ffd7b0066173377", fileList[0].originFileObj)
+    //     .then((response) => {
+    //       if (response && response.data && response.data.data) {
+           
     
-    }
-    console.log(values,eventObj)
+    //         //   setTotalPage(response.data.totalPage * 20)
+    //       }
+    //     })
+
+    ServiceApi.addEvent(eventObj)
+    .then((response) => {
+      if (response && response.data) {
+       
+        ServiceApi.imageUpload(response.data.id, fileList[0].originFileObj)
+        .then((response) => {
+          if (response && response.data && response.data.data) {
+           
+          }
+        })
+        .catch((error) => {});
+      }
+    })
+    .catch((error) => {});
+    
   };
 
   useEffect(() => {
@@ -176,22 +120,30 @@ const AddEvent = function ({ currentLang }) {
   const onChangeStart = (date, dateString) => {
     setdisable(false);
     setStartDisable(
-      moment(new Date(convertDateFormat(dateString)), "MM-DD-YYYY")
+      moment(dateString, "MM-DD-YYYY")
     );
   };
   const onChangeEnd = (date, dateString) => {
     setdisable(false);
 
     setEndDisable(
-      moment(new Date(convertDateFormat(dateString)), "MM-DD-YYYY")
+      moment(dateString, "MM-DD-YYYY")
     );
   };
-  const handleChange = (value, option) => {};
-  const handleChangeDesc = (html) => {
-    setHtmlFile(html);
+  const handleChange = (e, option) => {
+    if(e.target.value === 2)
+    {
+      setEventType("offline")
+      setPlaceList(allLocations.virtualLocations)
+    }
+    else
+    {
+      setEventType("online")
+      setPlaceList(allLocations.places)}
   };
-  
+
   const onChange = (info) => {
+    console.log(info.fileList)
     setFileList(info.fileList);
   };
   const onPreview = async (file) => {
@@ -213,156 +165,149 @@ const AddEvent = function ({ currentLang }) {
         layout="vertical"
         className="update-status-form"
         data-testid="status-update-form"
-        onFinish={ handleSubmit}
+        onFinish={handleSubmit}
       >
-        <Row >
-      
-    
-   
-        
-      <Col flex="0 1 400px">
-        <div className="update-select-title">
-          Event Name
-        </div>
-        <Form.Item
-          name="title"
-          className="status-comment-item"
-          rules={[
-            {
-              required: true,
-              message: "Event name required",
-              whitespace: true,
-            },
-          ]}
-        >
-          <Input placeholder="Enter Event Name" className="replace-input" />
-        </Form.Item>
-        <div className="flex-align">
-          <div className="date-div">
-            <div className="update-select-title">
-              Start Date
-            </div>
+        <Row>
+          <Col flex="0 1 400px">
+            <div className="update-select-title">{t("Event", { lng: currentLang })+" "+t("Name", { lng: currentLang })}</div>
             <Form.Item
-              name="startDate"
+              name="title"
               className="status-comment-item"
-              rules={[{ required: true, message: "Dev Pct Complete required" }]}
+              rules={[
+                {
+                  required: true,
+                  message: "Event name required",
+                  whitespace: true,
+                },
+              ]}
             >
-              <DatePicker format="MM-DD-YYYY" />
+              <Input placeholder="Enter Event Name" className="replace-input" />
             </Form.Item>
-          </div>
-          <div>
-            <div className="update-select-title">
-              Start Time
-            </div>
-            <Form.Item
-              name="startTime"
-              className="status-comment-item"
-              rules={[{ required: true, message: "Dev Pct Complete required" }]}
-            >
-              <TimePicker />
-            </Form.Item>
-          </div>
-        </div>
-        <div className="flex-align">
-          <div className="date-div">
-            <div className="update-select-title">
-              End Date
-            </div>
-            <Form.Item
-              name="endDate"
-              className="status-comment-item"
-              rules={[{ required: true, message: "Dev Pct Complete required" }]}
-            >
-              <DatePicker format="MM-DD-YYYY" />
-            </Form.Item>
-          </div>
-          <div>
-            <div className="update-select-title ">
-              End Time
-            </div>
-            <Form.Item
-              name="endTime"
-              className="status-comment-item"
-              rules={[{ required: true, message: "Dev Pct Complete required" }]}
-            >
-              <TimePicker />
-            </Form.Item>
-          </div>
-        </div>
-        
-        <div className="update-select-title">{"Location"}</div>
-
-        <Form.Item name={"location"} >
-          <Select
-            data-testid="update-two-select-dropdown"
-            placeholder={`Select Location`}
-            key="updateDropdownKey"
-            className="search-select"
-            optionFilterProp="children"
-            showSearch
-            filterOption={(input, option) =>
-              option.children &&
-              option.children.toLowerCase().indexOf(input.toLowerCase()) >= 0
-            }
-            onChange={handleChange}
-            // defaultValue={selectList && selectList[0].name}
-            // value={itemValue}
-          >
-            {placeList &&
-              placeList.map((item) => (
-                <Option
-                  data-testid="update-two-select-option"
-                  value={item.uuid}
-                  key={item.name[currentLang]}
+            <div className="flex-align">
+              <div className="date-div">
+                <div className="update-select-title">{t("StartDate", { lng: currentLang })}</div>
+                <Form.Item
+                  name="startDate"
+                  className="status-comment-item"
+                  rules={[
+                    { required: true, message: "Start date required" },
+                  ]}
                 >
-                  {item.name[currentLang]}
-                </Option>
-              ))}
-          </Select>
-        </Form.Item>
-        </Col>
-        <Col className="upload-col">
-        <ImgCrop grid modalTitle="Event File">
-      <Dragger
-        // action="https://www.mocky.io/v2/5cc8019d300000980a055e76"
-        listType="picture-card"
-        className={fileList.length>0?"event-upload":"ant-event-upload"}
-        fileList={fileList}
-        onChange={onChange}
-        onPreview={onPreview}
-        aspect="3/3"
-      >
-        <p className="ant-upload-drag-icon">
-        <FileImageOutlined />
-    </p>
-    <p className="ant-upload-text">Select Files to upload</p>
-    <p className="ant-upload-hint">
-      or Drag and Drop files to upload
-    </p>
-      </Dragger>
-    </ImgCrop>
-        </Col>
+                  <DatePicker onChange={onChangeStart} format="MM-DD-YYYY"
+            disabledDate={d =>!isDisable ? !d || d.isAfter(endDisable) :undefined } />
+                </Form.Item>
+              </div>
+              <div>
+                <div className="update-select-title">Start Time</div>
+                <Form.Item
+                  name="startTime"
+                  className="status-comment-item"
+                  rules={[
+                    { required: true, message: "Start time required" },
+                  ]}
+                >
+                  <TimePicker />
+                </Form.Item>
+              </div>
+            </div>
+            <div className="flex-align">
+              <div className="date-div">
+                <div className="update-select-title">End Date</div>
+                <Form.Item
+                  name="endDate"
+                  className="status-comment-item"
+                  rules={[
+                    { required: true, message: "End date required" },
+                  ]}
+                >
+                  <DatePicker format="MM-DD-YYYY" onChange={onChangeEnd} 
+            disabledDate={d =>!isDisable ? !d || d.isSameOrBefore(startDisable) : undefined}/>
+                </Form.Item>
+              </div>
+              <div>
+                <div className="update-select-title ">End Time</div>
+                <Form.Item
+                  name="endTime"
+                  className="status-comment-item"
+                  rules={[
+                    { required: true, message: "End time required" },
+                  ]}
+                >
+                  <TimePicker />
+                </Form.Item>
+              </div>
+            </div>
+            <Radio.Group name="radiogroup" defaultValue={1} onChange={(e,i) => handleChange(e,i)}>
+    <Radio value={1}>Offline</Radio>
+    <Radio value={2}>Virtual</Radio>
+    
+  </Radio.Group>
+            <div className="update-select-title">{t("Location", { lng: currentLang })}</div>
+
+            <Form.Item name={"location"} rules={[{ required: true }]}>
+              <Select
+                data-testid="update-two-select-dropdown"
+                placeholder={`Select Location`}
+                key="updateDropdownKey"
+                className="search-select"
+                optionFilterProp="children"
+                showSearch
+                filterOption={(input, option) =>
+                  option.children &&
+                  option.children.toLowerCase().indexOf(input.toLowerCase()) >=
+                    0
+                }
+                // onChange={handleChange}
+                // defaultValue={selectList && selectList[0].name}
+                // value={itemValue}
+              >
+                {placeList &&
+                  placeList.map((item) => (
+                    <Option
+                      data-testid="update-two-select-option"
+                      value={item.uuid}
+                      key={item.name[currentLang]}
+                    >
+                      {item.name[currentLang]}
+                    </Option>
+                  ))}
+              </Select>
+            </Form.Item>
+          </Col>
+          <Col className="upload-col">
+            <ImgCrop grid modalTitle="Event File">
+              <Dragger
+                // action="https://www.mocky.io/v2/5cc8019d300000980a055e76"
+                listType="picture-card"
+                className={
+                  fileList.length > 0 ? "event-upload" : "ant-event-upload"
+                }
+                fileList={fileList}
+                onChange={onChange}
+                onPreview={onPreview}
+                aspect="3/3"
+              >
+                <p className="ant-upload-drag-icon">
+                  <FileImageOutlined />
+                </p>
+                <p className="ant-upload-text">Select Files to upload</p>
+                <p className="ant-upload-hint">
+                  or Drag and Drop files to upload
+                </p>
+              </Dragger>
+            </ImgCrop>
+          </Col>
         </Row>
         <div className="update-select-title">{"Descreption"}</div>
-        <Form.Item name={"desc"} rules={[{ required: true }]}>
-          <ReactQuill
-            theme={"snow"}
-            value={htmlFile || ""}
-            bounds={".app"}
-            placeholder="Add event descreption"
-            modules={modules}
-            formats={formats}
-            onChange={handleChangeDesc}
-          />
-        </Form.Item>
-        <Form.Item>
+
+        <EventEditor />
+
+        <Form.Item className="submit-items">
+        <Button size="large" icon={<CloseOutlined />} onClick={()=>form.resetFields()}>Cancel</Button>
+          <Button type="primary" htmlType="submit" size="large" icon={<CheckOutlined />}>
+            Save
+          </Button>
           
-          <Button type="primary" htmlType="submit" size="large">
-            Submit
-          </Button>
-          <Button   size="large">
-            Clear
-          </Button>
         </Form.Item>
       </Form>
     </Layout>

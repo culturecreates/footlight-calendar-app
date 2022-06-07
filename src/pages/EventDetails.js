@@ -22,7 +22,7 @@ import Spinner from "../components/Spinner";
 import moment from "moment";
 import ICalendarLink from "react-icalendar-link";
 
-const EventDetails = function ({ currentLang }) {
+const EventDetails = function ({ currentLang,isAdmin=false }) {
   const { t, i18n } = useTranslation();
   const [loading, setLoading] = useState(false);
   const [eventDetails, setEventDetails] = useState();
@@ -94,7 +94,7 @@ const EventDetails = function ({ currentLang }) {
     <div>
     <div className="main-event-layout">
     <div style={{ justifyContent:"center" }}>
-      <div className="left-button" onClick={() => navigate(`/`)}
+      <div className="left-button" onClick={() => navigate(isAdmin?'/admin/events':`/`)}
       style={{ maxWidth: "1100px" }}>
         <LeftOutlined className="left-icon" />
         {t("AllEvents", { lng: currentLang })}
