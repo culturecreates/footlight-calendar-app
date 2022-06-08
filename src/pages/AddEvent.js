@@ -116,7 +116,7 @@ const AddEvent = function ({ currentLang, eventDetails }) {
         .then((response) => {
           if (response && response.data) {
             if(isUpload && fileList.length>0)
-            ServiceApi.imageUpload(response.data.id, fileList[0].originFileObj)
+            ServiceApi.imageUpload(eventDetails.uuid, fileList[0].originFileObj)
               .then((response) => {
                 message.success("Event Updated Successfully")
                 navigate(`/admin/events`)
