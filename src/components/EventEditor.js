@@ -98,9 +98,9 @@ const EventEditor = function ({currentLang
     theme={"snow"}
     value={htmlFile || ""}
     bounds={".app"}
-    placeholder="Add event descreption"
+    placeholder="Add event descieption"
     modules={modules}
-    formats={formats}
+    // formats={formats}
     onChange={handleChangeDesc}
   />
   </Form.Item>

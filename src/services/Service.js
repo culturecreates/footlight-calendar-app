@@ -70,6 +70,14 @@ export default class ServiceApi {
 
     });
   }
+  static updateEvent(payload,id) {
+    return Axios({
+      url: `events/${id}`,
+      method: "PATCH",
+      data: JSON.stringify(payload),
+
+    });
+  }
   static imageUpload(id,payload) {
     console.log(payload)
     const formdata = new FormData()
@@ -77,7 +85,7 @@ export default class ServiceApi {
   
     return Axios({
       url: `events/${id}/image-upload`,
-      method: "POST",
+      method: "PATCH",
       headers: {
         'Content-Type': 'multipart/form-data'
       },

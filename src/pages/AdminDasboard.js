@@ -64,7 +64,7 @@ const AdminDashboard = function ({ item, currentLang }) {
        
         <Routes>
           <Route path="events" element={<AdminEvents currentLang={currentLang} />} />
-          <Route path="admin/events" element={<Events />} />
+          <Route path="add-event" element={<AdminEvents currentLang={currentLang} />} />
           <Route path="events/:eventId" element={<EventDetails currentLang={currentLang} isAdmin/>} />
         </Routes>
       </Content>

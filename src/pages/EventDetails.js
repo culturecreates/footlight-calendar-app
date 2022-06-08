@@ -43,10 +43,10 @@ const EventDetails = function ({ currentLang,isAdmin=false }) {
           if (response.data.StatusCode !== 400) {
             const eventTest = {
               title: events.name[currentLang],
-              description: events.description[currentLang],
+              description: events.description ? events.description[currentLang]:undefined,
               location: events.location?.name[currentLang],
-              startTime: events.startDate,
-              endTime: events.endDate,
+              startTime: events.startDate?events.startDate :undefined,
+              endTime: events.endDate?events.endDate:undefined,
 
               // attendees: [
               //   "Hello World <hello@world.com>",
@@ -231,8 +231,8 @@ const EventDetails = function ({ currentLang,isAdmin=false }) {
               )}
             </Col>
             <Col flex="1 1 400px" style={{ marginRight: "40px",marginLeft:"40px" }}>
-              <div className="event-detail-desc">
-                {eventDetails.description[currentLang]}
+              <div className="event-detail-desc" dangerouslySetInnerHTML={{__html: eventDetails.description&& eventDetails.description[currentLang]}}>
+                {/* {eventDetails.description&& eventDetails.description[currentLang]} */}
               </div>
               {eventDetails?.additionalType?.map((item) => (
                 <Button type="primary" className="types-button">
@@ -244,7 +244,7 @@ const EventDetails = function ({ currentLang,isAdmin=false }) {
                 {t("iCal", { lng: currentLang })}
                 {""}
                 <span>
-                  {eventDetails &&
+                  {eventDetails && eventDetails.startDate &&
                 <a href={`https://calendar.google.com/calendar/render?action=TEMPLATE&dates=${moment(eventDetails.startDate).utc().format("YYYYDDMMT0000Z")}/${moment(eventDetails.endDate).utc().format("YYYYDDMMT0000Z")}&location=${eventDetails.location?.name[currentLang]}&details=${eventDetails.description[currentLang]}`} target="_blank" rel="noreferrer">
                   <GoogleOutlined
                     className="social-icons"

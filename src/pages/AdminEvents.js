@@ -5,13 +5,12 @@ import { Layout, Card, Table, Button, Switch, Avatar, Breadcrumb, Col, Row } fro
 import { useTranslation, Trans } from "react-i18next";
 import "./AdminDashboard.css";
 import { PlusOutlined, ForkOutlined } from "@ant-design/icons";
-import { useNavigate } from "react-router-dom";
+import { useNavigate,useLocation } from "react-router-dom";
 import Spinner from "../components/Spinner";
 import ServiceApi from "../services/Service";
 import SemanticSearch from "../components/SemanticSearch";
 import AddEvent from "./AddEvent";
 
-const { Header, Content, Sider } = Layout;
 
 const AdminEvents = function ({ currentLang }) {
   const [eventList, setEventList] = useState([]);
@@ -19,7 +18,10 @@ const AdminEvents = function ({ currentLang }) {
   const [isAdd, setIsAdd] = useState(false);
   const [totalPage, setTotalPage] = useState(1);
   const [defaultPage, setDefaultPage] = useState(1);
+  const [eventDetails, setEventDetails] = useState()
   const navigate = useNavigate();
+  const location = useLocation();
+
   const { t, i18n } = useTranslation();
 
   const eventTableHeader = [
@@ -73,9 +75,45 @@ const AdminEvents = function ({ currentLang }) {
   const handleDelete = (checked,record,event) => {
     event.stopPropagation()
   };
+ 
+
   useEffect(() => {
-    getEvents();
-  }, []);
+    if(location.pathname.includes("admin/add-event"))
+    {
+      setIsAdd(true)
+      const search = window.location.search;
+    const params = new URLSearchParams(search);
+    const eventId = params.get("id");
+    if(eventId)
+    getEventDetails(eventId)
+    }
+    else
+    {
+      setIsAdd(false)
+      getEvents();
+      setEventDetails()
+    }
+   
+  }, [location]);
+
+  const getEventDetails = (id) => {
+    setLoading(true);
+    ServiceApi.getEventDetail(id)
+      .then((response) => {
+        if (response && response.data && response.data) {
+          const events = response.data;
+          setEventDetails(events)
+          if (response.data.StatusCode !== 400) {
+             
+          }
+        }
+        setLoading(false);
+      })
+      .catch((error) => {
+        setLoading(false);
+      });
+  };
+
   const getEvents = (page = 1, filterArray = []) => {
     setLoading(true);
     ServiceApi.eventList(page, filterArray, currentLang === "en" ? "EN" : "FR")
@@ -83,8 +121,8 @@ const AdminEvents = function ({ currentLang }) {
         if (response && response.data && response.data.data) {
           const events = response.data.data;
           setEventList(events);
-
-          //   setTotalPage(response.data.totalPage * 20)
+            if(response.data.totalCount)
+            setTotalPage(response.data.totalCount)
         }
         setLoading(false);
       })
@@ -102,7 +140,7 @@ const AdminEvents = function ({ currentLang }) {
     <Layout className="dashboard-layout">
       {isAdd &&
        <Breadcrumb separator=">">
-    <Breadcrumb.Item onClick={()=>setIsAdd(false)}>{t("Events", { lng: currentLang })}</Breadcrumb.Item>
+    <Breadcrumb.Item onClick={()=>navigate(`/admin/events`)}>{t("Events", { lng: currentLang })}</Breadcrumb.Item>
     <Breadcrumb.Item >{t("AddEvent", { lng: currentLang })}</Breadcrumb.Item>
     
   </Breadcrumb>
@@ -117,7 +155,7 @@ const AdminEvents = function ({ currentLang }) {
             currentLang={currentLang}
           />
           <Button type="primary" icon={<PlusOutlined />} size={"large"}
-          onClick={()=>setIsAdd(true)}>
+          onClick={()=>navigate(`/admin/add-event`)}>
             Add {t("Event", { lng: currentLang })}
           </Button>
         </Col>
@@ -134,7 +172,7 @@ const AdminEvents = function ({ currentLang }) {
                 onChange: page =>{
                   setDefaultPage(page)
                   getEvents(
-                    page-1
+                    page
                   )
                 },
                 current: defaultPage,
@@ -147,14 +185,14 @@ const AdminEvents = function ({ currentLang }) {
                 return {
                   onClick: (event) => {
                     event.stopPropagation()
-                    navigate(`/admin/events/${record.uuid}`);
+                    navigate(`/admin/add-event/?id=${record.uuid}`);
                     // setSelectedProduct(record);
                   }, // click row
                 };
               }}
             /> 
             :
-        <AddEvent currentLang={currentLang}/>
+        <AddEvent currentLang={currentLang} eventDetails={eventDetails}/>
             }
       </Card>
       {loading && <Spinner />}

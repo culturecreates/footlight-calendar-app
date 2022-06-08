@@ -10,17 +10,24 @@ import {
   Select,
   DatePicker,
   Row,
-  Col,Radio
+  Col,
+  Radio,
+  message,
 } from "antd";
-import { FileImageOutlined,CheckOutlined,CloseOutlined } from "@ant-design/icons";
+import {
+  FileImageOutlined,
+  CheckOutlined,
+  CloseOutlined,
+  PlusOutlined,
+} from "@ant-design/icons";
 import { useTranslation, Trans } from "react-i18next";
 import ImgCrop from "antd-img-crop";
 import { Upload } from "antd";
-import { adminSideMenuLinks, convertDateFormat } from "../utils/Utility";
 import ServiceApi from "../services/Service";
 import EventEditor from "../components/EventEditor";
+import { useNavigate } from "react-router-dom";
 
-const { Header, Content, Sider } = Layout;
+
 const { Option } = Select;
 const { Dragger } = Upload;
 const getSrcFromFile = (file) => {
@@ -30,17 +37,31 @@ const getSrcFromFile = (file) => {
     reader.onload = () => resolve(reader.result);
   });
 };
-const AddEvent = function ({ currentLang }) {
+const AddEvent = function ({ currentLang, eventDetails }) {
   const [isDisable, setdisable] = useState(true);
+  const [isEndDate, setIsEndDate] = useState(false);
   const [allLocations, setAllLocations] = useState();
   const [eventType, setEventType] = useState("offline");
   const [fileList, setFileList] = useState([]);
   const [placeList, setPlaceList] = useState([]);
+  const [isUpload,setIsUpload] = useState(false)
   const [form] = Form.useForm();
+  const navigate = useNavigate();
+
 
   const [startDisable, setStartDisable] = useState();
   const [endDisable, setEndDisable] = useState();
   const { t, i18n } = useTranslation();
+
+  const propsImg = {
+    width: 500, //裁剪宽度
+    height: 300, //裁剪高度
+    resize: true, //裁剪是否可以调整大小
+    resizeAndDrag: true, //裁剪是否可以调整大小、可拖动
+    modalTitle: "Event Image", //弹窗标题
+    modalWidth: 600,
+    grid: true, //弹窗宽度
+  };
 
   useEffect(() => {
     getAllPlaces();
@@ -51,7 +72,7 @@ const AddEvent = function ({ currentLang }) {
         if (response && response.data && response.data.data) {
           const events = response.data.data;
           setPlaceList(events.places);
-          setAllLocations(events)
+          setAllLocations(events);
 
           //   setTotalPage(response.data.totalPage * 20)
         }
@@ -60,9 +81,15 @@ const AddEvent = function ({ currentLang }) {
   };
 
   const handleSubmit = (values) => {
-     values.startDate.set({h: values.startTime.get('hour'), m: values.startTime.get('minute')});
-     values.endDate.set({h: values.endTime.get('hour'), m: values.endTime.get('minute')});
-    
+    values.startDate.set({
+      h: values.startTime.get("hour"),
+      m: values.startTime.get("minute"),
+    });
+    values.endDate.set({
+      h: values.endTime.get("hour"),
+      m: values.endTime.get("minute"),
+    });
+
     const eventObj = {
       name: {
         fr: values.title,
@@ -70,80 +97,106 @@ const AddEvent = function ({ currentLang }) {
       description: {
         fr: values.desc,
       },
-      startDate: moment(values.startDate)
-        .format("YYYY-MM-DDTHH:mm:ss"),
-        endDate: moment(values.endDate)
-        .format("YYYY-MM-DDTHH:mm:ss"),
+      startDate: moment(values.startDate).format("YYYY-MM-DDTHH:mm:ss"),
+
       locationId: {
         place: {
-          entityId: eventType==="offline"? values.location:null,
+          entityId: eventType === "offline" ? values.location : null,
         },
         virtualLocation: {
-          entityId: eventType==="online"? values.location:null,
+          entityId: eventType === "online" ? values.location : null,
         },
       },
     };
+    if (isEndDate)
+      eventObj.endDate = moment(values.endDate).format("YYYY-MM-DDTHH:mm:ss");
 
-    // ServiceApi.imageUpload("629ed8484ffd7b0066173377", fileList[0].originFileObj)
-    //     .then((response) => {
-    //       if (response && response.data && response.data.data) {
-           
-    
-    //         //   setTotalPage(response.data.totalPage * 20)
-    //       }
-    //     })
-
-    ServiceApi.addEvent(eventObj)
-    .then((response) => {
-      if (response && response.data) {
-       
-        ServiceApi.imageUpload(response.data.id, fileList[0].originFileObj)
+    if (eventDetails)
+      ServiceApi.updateEvent(eventObj, eventDetails.uuid)
         .then((response) => {
-          if (response && response.data && response.data.data) {
-           
+          if (response && response.data) {
+            if(isUpload && fileList.length>0)
+            ServiceApi.imageUpload(response.data.id, fileList[0].originFileObj)
+              .then((response) => {
+                message.success("Event Updated Successfully")
+                navigate(`/admin/events`)
+              })
+              .catch((error) => {});
+              else 
+              {message.success("Event Updated Successfully")
+              navigate(`/admin/events`)}
+          }
+          
+          
+        })
+        .catch((error) => {});
+    else
+      ServiceApi.addEvent(eventObj)
+        .then((response) => {
+          if (response && response.data) {
+            if(isUpload && fileList.length>0)
+            ServiceApi.imageUpload(response.data.id, fileList[0].originFileObj)
+              .then((response) => {
+                message.success("Event Created Successfully")
+                navigate(`/admin/events`)
+              })
+              .catch((error) => {});
+             else 
+             { message.success("Event Created Successfully")
+             navigate(`/admin/events`)}
           }
         })
         .catch((error) => {});
-      }
-    })
-    .catch((error) => {});
-    
   };
 
   useEffect(() => {
-    form.setFieldsValue({
-      desc: "",
-      techSegmentName: "",
-    });
-  }, []);
+    if (eventDetails) {
+      if (eventDetails.endDate) setIsEndDate(true);
+      form.setFieldsValue({
+        desc: eventDetails.description[currentLang],
+        location: eventDetails.location.uuid,
+        startDate: moment(new Date(eventDetails.startDate), "DD-MM-YYYY"),
+        endDate: moment(new Date(eventDetails.endDate), "DD-MM-YYYY"),
+        title: eventDetails.name[currentLang],
+        endTime: moment(new Date(eventDetails.endDate), "HH-mm-ss"),
+        startTime: moment(new Date(eventDetails.startDate), "HH-mm-ss"),
+      });
+      if (eventDetails.image) {
+        const obj = {
+          uid: "-1",
+          name: "image.png",
+          status: "done",
+          url: eventDetails.image.uri,
+        };
+        setFileList([obj]);
+      } else setFileList([]);
+    } else
+      form.setFieldsValue({
+        desc: "",
+      });
+  }, [eventDetails]);
 
   const onChangeStart = (date, dateString) => {
     setdisable(false);
-    setStartDisable(
-      moment(dateString, "MM-DD-YYYY")
-    );
+    setStartDisable(moment(dateString, "MM-DD-YYYY"));
   };
   const onChangeEnd = (date, dateString) => {
     setdisable(false);
 
-    setEndDisable(
-      moment(dateString, "MM-DD-YYYY")
-    );
+    setEndDisable(moment(dateString, "MM-DD-YYYY"));
   };
   const handleChange = (e, option) => {
-    if(e.target.value === 2)
-    {
-      setEventType("offline")
-      setPlaceList(allLocations.virtualLocations)
+    if (e.target.value === 2) {
+      setEventType("offline");
+      setPlaceList(allLocations.virtualLocations);
+    } else {
+      setEventType("online");
+      setPlaceList(allLocations.places);
     }
-    else
-    {
-      setEventType("online")
-      setPlaceList(allLocations.places)}
   };
 
   const onChange = (info) => {
-    console.log(info.fileList)
+    setIsUpload(true)
     setFileList(info.fileList);
   };
   const onPreview = async (file) => {
@@ -168,8 +221,12 @@ const AddEvent = function ({ currentLang }) {
         onFinish={handleSubmit}
       >
         <Row>
-          <Col flex="0 1 400px">
-            <div className="update-select-title">{t("Event", { lng: currentLang })+" "+t("Name", { lng: currentLang })}</div>
+          <Col flex="0 1 450px">
+            <div className="update-select-title">
+              {t("Event", { lng: currentLang }) +
+                " " +
+                t("Name", { lng: currentLang })}
+            </div>
             <Form.Item
               name="title"
               className="status-comment-item"
@@ -185,64 +242,94 @@ const AddEvent = function ({ currentLang }) {
             </Form.Item>
             <div className="flex-align">
               <div className="date-div">
-                <div className="update-select-title">{t("StartDate", { lng: currentLang })}</div>
+                <div className="update-select-title">
+                  {t("StartDate", { lng: currentLang })}
+                </div>
                 <Form.Item
                   name="startDate"
                   className="status-comment-item"
-                  rules={[
-                    { required: true, message: "Start date required" },
-                  ]}
+                  rules={[{ required: true, message: "Start date required" }]}
                 >
-                  <DatePicker onChange={onChangeStart} format="MM-DD-YYYY"
-            disabledDate={d =>!isDisable ? !d || d.isAfter(endDisable) :undefined } />
+                  <DatePicker
+                    onChange={onChangeStart}
+                    format="MM-DD-YYYY"
+                    disabledDate={(d) =>
+                      !isDisable ? !d || d.isAfter(endDisable) : undefined
+                    }
+                  />
                 </Form.Item>
               </div>
               <div>
-                <div className="update-select-title">Start Time</div>
+                <div className="update-select-title">
+                  {t("StartTime", { lng: currentLang })}
+                </div>
                 <Form.Item
                   name="startTime"
                   className="status-comment-item"
-                  rules={[
-                    { required: true, message: "Start time required" },
-                  ]}
+                  rules={[{ required: true, message: "Start time required" }]}
                 >
                   <TimePicker />
                 </Form.Item>
               </div>
             </div>
-            <div className="flex-align">
-              <div className="date-div">
-                <div className="update-select-title">End Date</div>
-                <Form.Item
-                  name="endDate"
-                  className="status-comment-item"
-                  rules={[
-                    { required: true, message: "End date required" },
-                  ]}
-                >
-                  <DatePicker format="MM-DD-YYYY" onChange={onChangeEnd} 
-            disabledDate={d =>!isDisable ? !d || d.isSameOrBefore(startDisable) : undefined}/>
-                </Form.Item>
+            {!isEndDate && (
+              <Button
+                className="add-end-date-btn"
+                icon={<PlusOutlined />}
+                onClick={() => setIsEndDate(true)}
+              >
+                {t("EndDate", { lng: currentLang })}
+              </Button>
+            )}
+            {isEndDate && (
+              <div className="flex-align">
+                <div className="date-div">
+                  <div className="update-select-title">
+                    {t("EndDate", { lng: currentLang })}
+                  </div>
+                  <Form.Item
+                    name="endDate"
+                    className="status-comment-item"
+                    rules={[{ required: true, message: "End date required" }]}
+                  >
+                    <DatePicker
+                      format="MM-DD-YYYY"
+                      onChange={onChangeEnd}
+                      disabledDate={(d) =>
+                        !isDisable
+                          ? !d || d.isSameOrBefore(startDisable)
+                          : undefined
+                      }
+                    />
+                  </Form.Item>
+                </div>
+                <div>
+                  <div className="update-select-title ">
+                    {t("EndTime", { lng: currentLang })}
+                  </div>
+                  <Form.Item
+                    name="endTime"
+                    className="status-comment-item"
+                    rules={[{ required: true, message: "End time required" }]}
+                  >
+                    <TimePicker />
+                  </Form.Item>
+                </div>
               </div>
-              <div>
-                <div className="update-select-title ">End Time</div>
-                <Form.Item
-                  name="endTime"
-                  className="status-comment-item"
-                  rules={[
-                    { required: true, message: "End time required" },
-                  ]}
-                >
-                  <TimePicker />
-                </Form.Item>
-              </div>
+            )}
+            <div>
+              <Radio.Group
+                name="radiogroup"
+                defaultValue={1}
+                onChange={(e, i) => handleChange(e, i)}
+              >
+                <Radio value={1}>{t("Offline", { lng: currentLang })}</Radio>
+                <Radio value={2}>{t("Online", { lng: currentLang })}</Radio>
+              </Radio.Group>
             </div>
-            <Radio.Group name="radiogroup" defaultValue={1} onChange={(e,i) => handleChange(e,i)}>
-    <Radio value={1}>Offline</Radio>
-    <Radio value={2}>Virtual</Radio>
-    
-  </Radio.Group>
-            <div className="update-select-title">{t("Location", { lng: currentLang })}</div>
+            <div className="update-select-title">
+              {t("Location", { lng: currentLang })}
+            </div>
 
             <Form.Item name={"location"} rules={[{ required: true }]}>
               <Select
@@ -275,39 +362,56 @@ const AddEvent = function ({ currentLang }) {
             </Form.Item>
           </Col>
           <Col className="upload-col">
-            <ImgCrop grid modalTitle="Event File">
-              <Dragger
-                // action="https://www.mocky.io/v2/5cc8019d300000980a055e76"
-                listType="picture-card"
-                className={
-                  fileList.length > 0 ? "event-upload" : "ant-event-upload"
-                }
-                fileList={fileList}
-                onChange={onChange}
-                onPreview={onPreview}
-                aspect="3/3"
-              >
-                <p className="ant-upload-drag-icon">
-                  <FileImageOutlined />
-                </p>
-                <p className="ant-upload-text">Select Files to upload</p>
-                <p className="ant-upload-hint">
-                  or Drag and Drop files to upload
-                </p>
-              </Dragger>
-            </ImgCrop>
+            {/* <ImgCrop {...propsImg}> */}
+            <Dragger
+              // action="https://www.mocky.io/v2/5cc8019d300000980a055e76"
+              listType="picture-card"
+              className={
+                fileList.length > 0 ? "event-upload" : "ant-event-upload"
+              }
+              fileList={fileList}
+              onChange={onChange}
+              onPreview={onPreview}
+              aspect="3/3"
+            >
+              <p className="ant-upload-drag-icon">
+                <FileImageOutlined />
+              </p>
+              <p className="ant-upload-text">
+                {t("FileUpload", { lng: currentLang })}
+              </p>
+              <p className="ant-upload-hint">
+                {t("DragAndDrop", { lng: currentLang })}
+              </p>
+            </Dragger>
+            {/* </ImgCrop> */}
           </Col>
         </Row>
-        <div className="update-select-title">{"Descreption"}</div>
+        <div className="update-select-title">{"Description"}</div>
 
         <EventEditor />
 
         <Form.Item className="submit-items">
-        <Button size="large" icon={<CloseOutlined />} onClick={()=>form.resetFields()}>Cancel</Button>
-          <Button type="primary" htmlType="submit" size="large" icon={<CheckOutlined />}>
+          <Button
+            size="large"
+            icon={<CloseOutlined />}
+            onClick={() => {
+              form.resetFields();
+              form.setFieldsValue({
+                desc: "",
+              });
+            }}
+          >
+            Cancel
+          </Button>
+          <Button
+            type="primary"
+            htmlType="submit"
+            size="large"
+            icon={<CheckOutlined />}
+          >
             Save
           </Button>
-          
         </Form.Item>
       </Form>
     </Layout>

@@ -29,6 +29,7 @@ i18n
           "iCal": "RECORD",
           "socialLink":"SHARE",
           "Online":"Event Online",
+          "Offline":"Event Offline",
           "Hybrid":"Event Hybrid",
           "Event":"Event",
           "Powered":"Powered by",
@@ -43,6 +44,11 @@ i18n
           "Location":"Location",
           "StartDate":"Start Date",
           "Published":"Published",
+          "FileUpload":"Select Files to upload",
+          "DragAndDrop":"or Drag and Drop files to upload",
+          "EndDate":"End Date",
+          "EndTime":"End Time",
+          "StartTime":"Heure de début",
           welcome: "Hello  <strong>World</strong>"
         }
       },
@@ -66,6 +72,7 @@ i18n
             "iCal": "ENREGISTRER",
             "socialLink":"PARTAGER",
             "Online":"Evenement Virtuelle",
+            "Offline":"Evenement hors-ligne",
           "Hybrid":"Event Hybride",
           "Event":"Evenement",
           "Powered":"Propulsé par",
@@ -79,7 +86,12 @@ i18n
           "Name":"Nom",
           "Location":"Emplacement",
           "StartDate":"Date de Début",
-          "Published":"Publié"
+          "Published":"Publié",
+          "FileUpload":"Sélectionnez les fichiers à télécharger",
+          "DragAndDrop":"ou glisser-déposer des fichiers à télécharger",
+          "EndDate":"Date de fin",
+          "EndTime":"Heure de finFin",
+          "StartTime":"Heure de finFin"
 
         }
       }
