@@ -164,3 +164,9 @@
 .add-end-date-btn{
     margin-bottom: 20px;
 }
+.location-search-input{
+    width: 100%;
+    border: 1px solid #d9d9d9;
+    padding: 4px 11px;
+
+}

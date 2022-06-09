@@ -19,6 +19,7 @@ import {
   CheckOutlined,
   CloseOutlined,
   PlusOutlined,
+  MinusOutlined
 } from "@ant-design/icons";
 import { useTranslation, Trans } from "react-i18next";
 import ImgCrop from "antd-img-crop";
@@ -272,15 +273,15 @@ const AddEvent = function ({ currentLang, eventDetails }) {
                 </Form.Item>
               </div>
             </div>
-            {!isEndDate && (
+           
               <Button
                 className="add-end-date-btn"
-                icon={<PlusOutlined />}
-                onClick={() => setIsEndDate(true)}
+                icon={isEndDate?<MinusOutlined />:<PlusOutlined />}
+                onClick={() => setIsEndDate(!isEndDate)}
               >
-                {t("EndDate", { lng: currentLang })}
+                {t("EndDateTime", { lng: currentLang })}
               </Button>
-            )}
+          
             {isEndDate && (
               <div className="flex-align">
                 <div className="date-div">

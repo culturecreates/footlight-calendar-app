@@ -62,6 +62,14 @@ export default class ServiceApi {
     });
   }
 
+  static getPlaceDetail(id) {
+    return Axios({
+      url: `places/${id}`,
+      method: "GET",
+
+    });
+  }
+
   static addEvent(payload) {
     return Axios({
       url: `events`,
@@ -94,6 +102,40 @@ export default class ServiceApi {
     });
   }
   
+  static addPostalAddress(payload) {
+    return Axios({
+      url: `postal-addresses`,
+      method: "POST",
+      data: JSON.stringify(payload),
+
+    });
+  }
+
+  static addPlace(payload) {
+    return Axios({
+      url: `places`,
+      method: "POST",
+      data: JSON.stringify(payload),
+
+    });
+  }
+
+  static updatePostalAddress(payload,id) {
+    return Axios({
+      url: `postal-addresses/${id}`,
+      method: "PATCH",
+      data: JSON.stringify(payload),
+
+    });
+  }
+  static updatePlace(payload,id) {
+    return Axios({
+      url: `places/${id}`,
+      method: "PATCH",
+      data: JSON.stringify(payload),
+
+    });
+  }
 
   
 }

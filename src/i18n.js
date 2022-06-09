@@ -49,6 +49,14 @@ i18n
           "EndDate":"End Date",
           "EndTime":"End Time",
           "StartTime":"Heure de début",
+          "PlaceName":"Place Name",
+          "Country":"Country",
+          "Locality":"Locality",
+          "PostalCode":"Postal Code",
+          "Street Address":"Street Address",
+          "ContainedInPlace":"Contained In Place",
+          "AddPlace":"Add Place",
+          "EndDateTime":"End Date Time",
           welcome: "Hello  <strong>World</strong>"
         }
       },
@@ -91,7 +99,15 @@ i18n
           "DragAndDrop":"ou glisser-déposer des fichiers à télécharger",
           "EndDate":"Date de fin",
           "EndTime":"Heure de finFin",
-          "StartTime":"Heure de finFin"
+          "StartTime":"Heure de finFin",
+          "PlaceName":"Toponymie",
+          "Country":"Pays",
+          "Locality":"Localité",
+          "PostalCode":"Code postal",
+          "Street Address":"Adresse municipale",
+          "ContainedInPlace":"Contenu en place",
+          "AddPlace":"Ajouter un lieu",
+          "EndDateTime":"Date de fin Heure"
 
         }
       }
