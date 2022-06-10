@@ -50,8 +50,8 @@ const AddEvent = function ({ currentLang, eventDetails }) {
   const navigate = useNavigate();
 
 
-  const [startDisable, setStartDisable] = useState();
-  const [endDisable, setEndDisable] = useState();
+  const [startDisable, setStartDisable] = useState(moment().format("YYYY-MM-DD"));
+  const [endDisable, setEndDisable] = useState(moment().format("YYYY-MM-DD"));
   const { t, i18n } = useTranslation();
 
   const propsImg = {
@@ -212,6 +212,12 @@ const AddEvent = function ({ currentLang, eventDetails }) {
       window.location.href = src;
     }
   };
+
+  const disabledDate = (current) => {
+    // Can not select days before today and today
+    let customDate = moment().format("YYYY-MM-DD");
+              return current && current < moment(customDate, "YYYY-MM-DD");
+  };
   return (
     <Layout className="add-event-layout">
       <Form
@@ -254,8 +260,9 @@ const AddEvent = function ({ currentLang, eventDetails }) {
                   <DatePicker
                     onChange={onChangeStart}
                     format="MM-DD-YYYY"
+                    // disabledDate={disabledDate}
                     disabledDate={(d) =>
-                      !isDisable ? !d || d.isAfter(endDisable) : undefined
+                       !d || d.isBefore(endDisable) 
                     }
                   />
                 </Form.Item>
@@ -297,9 +304,8 @@ const AddEvent = function ({ currentLang, eventDetails }) {
                       format="MM-DD-YYYY"
                       onChange={onChangeEnd}
                       disabledDate={(d) =>
-                        !isDisable
-                          ? !d || d.isSameOrBefore(startDisable)
-                          : undefined
+                         !d || d.isSameOrBefore(startDisable)
+                          
                       }
                     />
                   </Form.Item>
