@@ -86,6 +86,7 @@ const AddEvent = function ({ currentLang, eventDetails }) {
       h: values.startTime.get("hour"),
       m: values.startTime.get("minute"),
     });
+    if (isEndDate)
     values.endDate.set({
       h: values.endTime.get("hour"),
       m: values.endTime.get("minute"),
@@ -380,6 +381,7 @@ const AddEvent = function ({ currentLang, eventDetails }) {
               onChange={onChange}
               onPreview={onPreview}
               aspect="3/3"
+              accept="image/*"
             >
               <p className="ant-upload-drag-icon">
                 <FileImageOutlined />
