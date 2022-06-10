@@ -22,7 +22,7 @@ import Spinner from "../components/Spinner";
 import moment from "moment";
 import ICalendarLink from "react-icalendar-link";
 
-const EventDetails = function ({ currentLang }) {
+const EventDetails = function ({ currentLang,isAdmin=false }) {
   const { t, i18n } = useTranslation();
   const [loading, setLoading] = useState(false);
   const [eventDetails, setEventDetails] = useState();
@@ -43,10 +43,10 @@ const EventDetails = function ({ currentLang }) {
           if (response.data.StatusCode !== 400) {
             const eventTest = {
               title: events.name[currentLang],
-              description: events.description[currentLang],
+              description: events.description ? events.description[currentLang]:undefined,
               location: events.location?.name[currentLang],
-              startTime: events.startDate,
-              endTime: events.endDate,
+              startTime: events.startDate?events.startDate :undefined,
+              endTime: events.endDate?events.endDate:undefined,
 
               // attendees: [
               //   "Hello World <hello@world.com>",
@@ -94,7 +94,7 @@ const EventDetails = function ({ currentLang }) {
     <div>
     <div className="main-event-layout">
     <div style={{ justifyContent:"center" }}>
-      <div className="left-button" onClick={() => navigate(`/`)}
+      <div className="left-button" onClick={() => navigate(isAdmin?'/admin/events':`/`)}
       style={{ maxWidth: "1100px" }}>
         <LeftOutlined className="left-icon" />
         {t("AllEvents", { lng: currentLang })}
@@ -231,8 +231,8 @@ const EventDetails = function ({ currentLang }) {
               )}
             </Col>
             <Col flex="1 1 400px" style={{ marginRight: "40px",marginLeft:"40px" }}>
-              <div className="event-detail-desc">
-                {eventDetails.description[currentLang]}
+              <div className="event-detail-desc" dangerouslySetInnerHTML={{__html: eventDetails.description&& eventDetails.description[currentLang]}}>
+                {/* {eventDetails.description&& eventDetails.description[currentLang]} */}
               </div>
               {eventDetails?.additionalType?.map((item) => (
                 <Button type="primary" className="types-button">
@@ -244,7 +244,7 @@ const EventDetails = function ({ currentLang }) {
                 {t("iCal", { lng: currentLang })}
                 {""}
                 <span>
-                  {eventDetails &&
+                  {eventDetails && eventDetails.startDate &&
                 <a href={`https://calendar.google.com/calendar/render?action=TEMPLATE&dates=${moment(eventDetails.startDate).utc().format("YYYYDDMMT0000Z")}/${moment(eventDetails.endDate).utc().format("YYYYDDMMT0000Z")}&location=${eventDetails.location?.name[currentLang]}&details=${eventDetails.description[currentLang]}`} target="_blank" rel="noreferrer">
                   <GoogleOutlined
                     className="social-icons"

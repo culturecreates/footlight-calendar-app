@@ -16,6 +16,14 @@ export default class ServiceApi {
     
     });
   }
+
+  static getAllPlaces() {
+    return Axios({
+      url: `all-venues`,
+      method: "GET",
+    
+    });
+  }
   static searchSuggesion(value,lng) {
     return Axios({
       url: `search-suggestion`,
@@ -54,9 +62,80 @@ export default class ServiceApi {
     });
   }
 
- 
+  static getPlaceDetail(id) {
+    return Axios({
+      url: `places/${id}`,
+      method: "GET",
 
+    });
+  }
+
+  static addEvent(payload) {
+    return Axios({
+      url: `events`,
+      method: "POST",
+      data: JSON.stringify(payload),
+
+    });
+  }
+  static updateEvent(payload,id) {
+    return Axios({
+      url: `events/${id}`,
+      method: "PATCH",
+      data: JSON.stringify(payload),
+
+    });
+  }
+  static imageUpload(id,payload) {
+    console.log(payload)
+    const formdata = new FormData()
+    formdata.append("file",payload)
   
+    return Axios({
+      url: `events/${id}/image-upload`,
+      method: "PATCH",
+      headers: {
+        'Content-Type': 'multipart/form-data'
+      },
+      data: formdata
+
+    });
+  }
+  
+  static addPostalAddress(payload) {
+    return Axios({
+      url: `postal-addresses`,
+      method: "POST",
+      data: JSON.stringify(payload),
+
+    });
+  }
+
+  static addPlace(payload) {
+    return Axios({
+      url: `places`,
+      method: "POST",
+      data: JSON.stringify(payload),
+
+    });
+  }
+
+  static updatePostalAddress(payload,id) {
+    return Axios({
+      url: `postal-addresses/${id}`,
+      method: "PATCH",
+      data: JSON.stringify(payload),
+
+    });
+  }
+  static updatePlace(payload,id) {
+    return Axios({
+      url: `places/${id}`,
+      method: "PATCH",
+      data: JSON.stringify(payload),
+
+    });
+  }
 
   
 }
