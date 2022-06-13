@@ -174,7 +174,7 @@ const EventDetails = function ({ currentLang,isAdmin=false }) {
                 className="event-item"
                 style={{
                   backgroundImage: eventDetails?.image
-                    ? `url(${eventDetails?.image?.uri})`
+                    ? `url(${eventDetails?.image?.thumbnail?.uri})`
                     : `url(https://cdn.caligram.com/uploads/event/8J5/medium/6242018236834.png)`,
                 }}
               ></div>

@@ -32,7 +32,7 @@ const AdminEvents = function ({ currentLang }) {
       render: (e, record) => (
         <Row className="image-name">
           <Col flex="0 1 50px">
-          <Avatar size="large" src={record?.image?.uri} />
+          <Avatar size="large" src={record?.image?.thumbnail?.uri} />
           </Col>
           <Col flex="1 1 150px">
           {record.name[currentLang]}

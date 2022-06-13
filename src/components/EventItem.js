@@ -18,7 +18,7 @@ const EventItem = function ({ item, currentLang }) {
       className="event-item"
       style={{
         backgroundImage: item.image
-          ? `url(${item?.image?.uri})`
+          ? `url(${item?.image?.thumbnail?.uri})`
           : `url(https://cdn.caligram.com/uploads/event/8J5/medium/6242018236834.png)`,
       }}
       onClick={()=>redirectionToDetails()}
