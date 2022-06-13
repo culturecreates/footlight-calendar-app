@@ -86,11 +86,11 @@ export default class ServiceApi {
 
     });
   }
-  static imageUpload(id,payload) {
-    console.log(payload)
+  static imageUpload(id,payload,compressedFile) {
     const formdata = new FormData()
-    formdata.append("file",payload)
-  
+    // formdata.append("files",[payload,new File([compressedFile], "name")])
+    formdata.append("files",payload)
+    formdata.append("files",new File([compressedFile], "compressed"+compressedFile.name))
     return Axios({
       url: `events/${id}/image-upload`,
       method: "PATCH",

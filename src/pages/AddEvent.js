@@ -27,7 +27,8 @@ import { Upload } from "antd";
 import ServiceApi from "../services/Service";
 import EventEditor from "../components/EventEditor";
 import { useNavigate } from "react-router-dom";
-
+import RecurringEvent from "../components/RecurringEvent";
+import Compressor from 'compressorjs';
 
 const { Option } = Select;
 const { Dragger } = Upload;
@@ -39,13 +40,14 @@ const getSrcFromFile = (file) => {
   });
 };
 const AddEvent = function ({ currentLang, eventDetails }) {
-  const [isDisable, setdisable] = useState(true);
+  const [formValue, setFormVaue] = useState();
   const [isEndDate, setIsEndDate] = useState(false);
   const [allLocations, setAllLocations] = useState();
   const [eventType, setEventType] = useState("offline");
   const [fileList, setFileList] = useState([]);
   const [placeList, setPlaceList] = useState([]);
   const [isUpload,setIsUpload] = useState(false)
+  const [compressedFile, setCompressedFile] = useState(null);
   const [form] = Form.useForm();
   const navigate = useNavigate();
 
@@ -118,7 +120,7 @@ const AddEvent = function ({ currentLang, eventDetails }) {
         .then((response) => {
           if (response && response.data) {
             if(isUpload && fileList.length>0)
-            ServiceApi.imageUpload(eventDetails.uuid, fileList[0].originFileObj)
+            ServiceApi.imageUpload(eventDetails.uuid, fileList[0].originFileObj,compressedFile)
               .then((response) => {
                 message.success("Event Updated Successfully")
                 navigate(`/admin/events`)
@@ -137,7 +139,7 @@ const AddEvent = function ({ currentLang, eventDetails }) {
         .then((response) => {
           if (response && response.data) {
             if(isUpload && fileList.length>0)
-            ServiceApi.imageUpload(response.data.id, fileList[0].originFileObj)
+            ServiceApi.imageUpload(response.data.id, fileList[0].originFileObj,compressedFile)
               .then((response) => {
                 message.success("Event Created Successfully")
                 navigate(`/admin/events`)
@@ -168,7 +170,7 @@ const AddEvent = function ({ currentLang, eventDetails }) {
           uid: "-1",
           name: "image.png",
           status: "done",
-          url: eventDetails.image.uri,
+          url: eventDetails.image?.thumbnail?.uri,
         };
         setFileList([obj]);
       } else setFileList([]);
@@ -179,11 +181,9 @@ const AddEvent = function ({ currentLang, eventDetails }) {
   }, [eventDetails]);
 
   const onChangeStart = (date, dateString) => {
-    setdisable(false);
     setStartDisable(moment(dateString, "MM-DD-YYYY"));
   };
   const onChangeEnd = (date, dateString) => {
-    setdisable(false);
 
     setEndDisable(moment(dateString, "MM-DD-YYYY"));
   };
@@ -200,6 +200,16 @@ const AddEvent = function ({ currentLang, eventDetails }) {
   const onChange = (info) => {
     setIsUpload(true)
     setFileList(info.fileList);
+    new Compressor(info.fileList[0].originFileObj, {
+      // quality: 0.8, // 0.6 can also be used, but its not recommended to go below.
+      convertSize: 200000,
+      success: (compressedResult) => {
+        // compressedResult has the compressed file.
+        // Use the compressed file to upload the images to your server.        
+        setCompressedFile(compressedResult)
+        console.log()
+      },
+    });
   };
   const onPreview = async (file) => {
     const src = file.url || (await getSrcFromFile(file));
@@ -227,6 +237,10 @@ const AddEvent = function ({ currentLang, eventDetails }) {
         className="update-status-form"
         data-testid="status-update-form"
         onFinish={handleSubmit}
+        onFieldsChange={() => {
+          setFormVaue(form.getFieldsValue())
+          
+        }}
       >
         <Row>
           <Col flex="0 1 450px">
@@ -289,6 +303,15 @@ const AddEvent = function ({ currentLang, eventDetails }) {
               >
                 {t("EndDateTime", { lng: currentLang })}
               </Button>
+
+              <Button
+                className="add-end-date-btn"
+                icon={isEndDate?<MinusOutlined />:<PlusOutlined />}
+                onClick={() => setIsEndDate(!isEndDate)}
+              >
+                {t("Recurring Event", { lng: currentLang })}
+              </Button>
+              {/* <RecurringEvent formFields={formValue}/> */}
           
             {isEndDate && (
               <div className="flex-align">
