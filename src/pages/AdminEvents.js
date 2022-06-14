@@ -48,7 +48,8 @@ const AdminEvents = function ({ currentLang }) {
       render: (e, record) => (
         <div>{moment(record.startDate).utc().format("DD-MM-YYYY")}</div>
       ),
-      sorter: (a, b) => moment(a.startDate).isAfter(),
+      sorter: (a, b) => new Date(moment(a.startDate, "MMMM Do YYYY, h:mm:ss a").format("LLL")) -
+      new Date(moment(b.startDate, "MMMM Do YYYY, h:mm:ss a").format("LLL")),
     },
 
     {
