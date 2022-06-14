@@ -304,13 +304,13 @@ const AddEvent = function ({ currentLang, eventDetails }) {
                 {t("EndDateTime", { lng: currentLang })}
               </Button>
 
-              <Button
+              {/* <Button
                 className="add-end-date-btn"
                 icon={isEndDate?<MinusOutlined />:<PlusOutlined />}
                 onClick={() => setIsEndDate(!isEndDate)}
               >
                 {t("Recurring Event", { lng: currentLang })}
-              </Button>
+              </Button> */}
               {/* <RecurringEvent formFields={formValue}/> */}
           
             {isEndDate && (

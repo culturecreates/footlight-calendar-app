@@ -163,8 +163,8 @@ const AddPlaces = function ({ currentLang,placeDetails }) {
         containedInPlace: placeDetails.containedInPlace,
 
         streetAddress: placeDetails.postalAddress?.streetAddress,
-        latitude: ''+placeDetails.latitude.latitude,
-        longitude: ''+placeDetails.latitude.longitude,
+        latitude: placeDetails.latitude && ''+placeDetails.latitude.latitude,
+        longitude: placeDetails.latitude && ''+placeDetails.latitude.longitude,
         description: placeDetails.description && placeDetails.description[currentLang]
       });
       
@@ -240,12 +240,19 @@ const AddPlaces = function ({ currentLang,placeDetails }) {
                     </div>
                   )}
                 </PlacesAutocomplete>
-              ) : (
+              ) : item.type === "area"?
+                <Input.TextArea
+                  placeholder={item.placeHolder}
+                  className="replace-input"
+                  rows={4}
+                />
+                :
                 <Input
                   placeholder={item.placeHolder}
                   className="replace-input"
+                  
                 />
-              )}
+              }
             </Form.Item>
           </>
         ))}
