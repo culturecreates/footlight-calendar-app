@@ -311,7 +311,7 @@ const AddEvent = function ({ currentLang, eventDetails }) {
               >
                 {t("Recurring Event", { lng: currentLang })}
               </Button> */}
-              {/* <RecurringEvent formFields={formValue}/> */}
+              <RecurringEvent formFields={formValue}/>
           
             {isEndDate && (
               <div className="flex-align">

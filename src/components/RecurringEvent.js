@@ -2,6 +2,9 @@ import { Card, DatePicker, Form, Select, TimePicker } from "antd";
 import { useTranslation, Trans } from "react-i18next";
 import moment from "moment";
 import { useEffect, useState } from "react";
+import { daysOfWeek } from "../utils/Utility";
+import "./RecurringEvent.css"
+import RecurringModal from "./RecurringModal";
 
 const { Option } = Select;
 const RecurringEvent = function ({ currentLang = "fr" ,formFields}) {
@@ -9,6 +12,8 @@ const RecurringEvent = function ({ currentLang = "fr" ,formFields}) {
     moment().format("YYYY-MM-DD")
   );
   const [endDisable, setEndDisable] = useState(moment().format("YYYY-MM-DD"));
+  const [nummberofDates, setNumberofDates]=useState(0)
+  const [isModalVisible, setIsModalVisible] = useState(false);
   const { t, i18n } = useTranslation();
 
   const onChangeStart = (date, dateString) => {
@@ -30,7 +35,7 @@ const RecurringEvent = function ({ currentLang = "fr" ,formFields}) {
          date.push(m.format('DD/MM/YYYY'));
      }
 
-     console.log(date.length,date)
+     setNumberofDates(date.length)
    
   }
   return (
@@ -59,6 +64,32 @@ const RecurringEvent = function ({ currentLang = "fr" ,formFields}) {
           <Option value="daily">Daily</Option>
           <Option value="weekly">Weekly</Option>
           <Option value="custom">Custom</Option>
+        </Select>
+      </Form.Item>
+      <div className="update-select-title">
+        {t("Days Of Week", { lng: currentLang })}
+      </div>
+      <Form.Item
+        name="daysOfWeek"
+        className="status-comment-item"
+        rules={[{ required: true, message: "Start date required" }]}
+      >
+        <Select
+          style={{ width: 337 }}
+          placeholder={`Select Days`}
+          key="updateDropdownKey"
+          className="search-select"
+          optionFilterProp="children"
+          showSearch
+          mode="multiple"
+          filterOption={(input, option) =>
+            option.children &&
+            option.children.toLowerCase().indexOf(input.toLowerCase()) >= 0
+          }
+        >
+            {daysOfWeek.map(item =>
+          <Option value={item.value} key={item.value}>{item.name}</Option>)}
+          
         </Select>
       </Form.Item>
       <div className="flex-align">
@@ -122,6 +153,11 @@ const RecurringEvent = function ({ currentLang = "fr" ,formFields}) {
           </Form.Item>
         </div>
       </div>
+      <div className="customize-div">
+          <div>{nummberofDates +" Dates"}</div>
+          <div onClick={()=>setIsModalVisible(true)}>Customize</div>
+      </div>
+      <RecurringModal isModalVisible={isModalVisible} setIsModalVisible={setIsModalVisible}/>
     </Card>
   );
 };
