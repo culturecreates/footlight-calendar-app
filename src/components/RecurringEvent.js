@@ -2,10 +2,12 @@ import { Card, DatePicker, Form, Select, TimePicker } from "antd";
 import { useTranslation, Trans } from "react-i18next";
 import moment from "moment";
 import { useEffect, useState } from "react";
-import { daysOfWeek } from "../utils/Utility";
+import { daysOfWeek, timeZone } from "../utils/Utility";
 import "./RecurringEvent.css"
 import RecurringModal from "./RecurringModal";
-
+import {
+    EditOutlined
+  } from "@ant-design/icons";
 const { Option } = Select;
 const RecurringEvent = function ({ currentLang = "fr" ,formFields}) {
   const [startDisable, setStartDisable] = useState(
@@ -39,7 +41,7 @@ const RecurringEvent = function ({ currentLang = "fr" ,formFields}) {
    
   }
   return (
-    <Card>
+    <Card className="recurring-card">
       <div className="update-select-title">
         {t("Frequency", { lng: currentLang })}
       </div>
@@ -54,19 +56,15 @@ const RecurringEvent = function ({ currentLang = "fr" ,formFields}) {
           key="updateDropdownKey"
           className="search-select"
           optionFilterProp="children"
-          defaultValue="daily"
-          showSearch
-          filterOption={(input, option) =>
-            option.children &&
-            option.children.toLowerCase().indexOf(input.toLowerCase()) >= 0
-          }
+          defaultValue="DAILY"
+      
         >
-          <Option value="daily">Daily</Option>
-          <Option value="weekly">Weekly</Option>
-          <Option value="custom">Custom</Option>
+          <Option value="DAILY">Daily</Option>
+          <Option value="WEEKLY">Weekly</Option>
+          <Option value="CUSTOM">Custom</Option>
         </Select>
       </Form.Item>
-      <div className="update-select-title">
+      {/* <div className="update-select-title">
         {t("Days Of Week", { lng: currentLang })}
       </div>
       <Form.Item
@@ -91,7 +89,7 @@ const RecurringEvent = function ({ currentLang = "fr" ,formFields}) {
           <Option value={item.value} key={item.value}>{item.name}</Option>)}
           
         </Select>
-      </Form.Item>
+      </Form.Item> */}
       <div className="flex-align">
         <div className="date-div">
           <div className="update-select-title">
@@ -119,7 +117,7 @@ const RecurringEvent = function ({ currentLang = "fr" ,formFields}) {
             className="status-comment-item"
             rules={[{ required: true, message: "Start time required" }]}
           >
-            <TimePicker />
+<TimePicker format="HH:mm"/>
           </Form.Item>
         </div>
       </div>
@@ -149,13 +147,25 @@ const RecurringEvent = function ({ currentLang = "fr" ,formFields}) {
             className="status-comment-item"
             rules={[{ required: true, message: "End time required" }]}
           >
-            <TimePicker />
+            <TimePicker format="HH:mm"/>
           </Form.Item>
         </div>
       </div>
       <div className="customize-div">
-          <div>{nummberofDates +" Dates"}</div>
-          <div onClick={()=>setIsModalVisible(true)}>Customize</div>
+      {nummberofDates !==0 &&
+          <div> {nummberofDates +" Dates"}</div>}
+          <Form.Item
+            name="timeZone"
+            className="timezone-item"
+            rules={[{ required: true, message: "End time required" }]}
+          >
+          <Select defaultValue="Canada/Eastern" className="time-zone-select" bordered={false}>
+              {timeZone.map(item=>
+      <Option value={item.value} key={item.value}>{item.name}</Option>)}
+      
+    </Select>
+    </Form.Item>
+          {/* <div onClick={()=>setIsModalVisible(true)} className="customize"><EditOutlined />Customize</div> */}
       </div>
       <RecurringModal isModalVisible={isModalVisible} setIsModalVisible={setIsModalVisible}/>
     </Card>

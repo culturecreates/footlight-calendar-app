@@ -99,7 +99,7 @@ const AdminEvents = function ({ currentLang }) {
 
   const getEventDetails = (id) => {
     setLoading(true);
-    ServiceApi.getEventDetail(id)
+    ServiceApi.getEventDetail(id,true)
       .then((response) => {
         if (response && response.data && response.data) {
           const events = response.data;

@@ -160,7 +160,7 @@ const AddPlaces = function ({ currentLang,placeDetails }) {
         addressLocality: placeDetails.postalAddress?.addressLocality,
         addressRegion:placeDetails.postalAddress?.addressRegion,
         postalCode: placeDetails.postalAddress?.postalCode,
-        containedInPlace: placeDetails.containedInPlace,
+        containedInPlace: placeDetails.containedInPlace && placeDetails.containedInPlace[currentLang],
 
         streetAddress: placeDetails.postalAddress?.streetAddress,
         latitude: placeDetails.latitude && ''+placeDetails.latitude.latitude,

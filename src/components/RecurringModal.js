@@ -20,7 +20,7 @@ const RecurringModal = ({isModalVisible,setIsModalVisible}) => {
   return (
    
       <Modal title="Basic Modal" visible={isModalVisible} onOk={handleOk} onCancel={handleCancel}>
-       <Calendar language="fr" />)
+       <Calendar language="fr" minDate={new Date()} enableRangeSelection={true}/>)
       </Modal>
 
   );
