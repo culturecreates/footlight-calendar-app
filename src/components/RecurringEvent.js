@@ -111,22 +111,7 @@ const RecurringEvent = function ({ currentLang = "fr" ,formFields}) {
               disabledDate={(d) => !d || d.isBefore(endDisable)}
             />
           </Form.Item>
-        </div>
-        <div>
-          <div className="update-select-title">
-            {t("StartTime", { lng: currentLang })}
-          </div>
-          <Form.Item
-            name="startTimeRecur"
-            className="status-comment-item"
-            rules={[{ required: true, message: "Start time required" }]}
-          >
-<TimePicker format="HH:mm"/>
-          </Form.Item>
-        </div>
-      </div>
-      <div className="flex-align">
-        <div className="date-div">
+        </div> <div className="date-div">
           <div className="update-select-title">
             {t("EndDate", { lng: currentLang })}
           </div>
@@ -142,14 +127,29 @@ const RecurringEvent = function ({ currentLang = "fr" ,formFields}) {
             />
           </Form.Item>
         </div>
-        <div>
+       
+      </div>
+      <div className="flex-align">
+      <div className="date-div">
+          <div className="update-select-title">
+            {t("StartTime", { lng: currentLang })}
+          </div>
+          <Form.Item
+            name="startTimeRecur"
+            className="status-comment-item"
+            rules={[{ required: true, message: "Start time required" }]}
+          >
+<TimePicker format="HH:mm"/>
+          </Form.Item>
+        </div>
+        <div className="date-div">
           <div className="update-select-title ">
             {t("EndTime", { lng: currentLang })}
           </div>
           <Form.Item
             name="endTimeRecur"
             className="status-comment-item"
-            rules={[{ required: true, message: "End time required" }]}
+            rules={[{ required: false, message: "End time required" }]}
           >
             <TimePicker format="HH:mm"/>
           </Form.Item>

@@ -107,6 +107,8 @@ const AddEvent = function ({ currentLang, eventDetails }) {
   //   }
   // },[allLocations,eventDetails])
   const handleSubmit = (values) => {
+    if(!isRecurring)
+    {
     values.startDate.set({
       h: values.startTime.get("hour"),
       m: values.startTime.get("minute"),
@@ -116,7 +118,7 @@ const AddEvent = function ({ currentLang, eventDetails }) {
         h: values.endTime.get("hour"),
         m: values.endTime.get("minute"),
       });
-
+    }
     const eventObj = {
       name: {
         fr: values.title,
@@ -124,7 +126,7 @@ const AddEvent = function ({ currentLang, eventDetails }) {
       description: {
         fr: values.desc,
       },
-      startDate: moment(values.startDate).format("YYYY-MM-DDTHH:mm:ss"),
+      startDate: !isRecurring ?moment(values.startDate).format("YYYY-MM-DDTHH:mm:ss"): undefined,
 
       locationId: {
         place: {
@@ -135,7 +137,7 @@ const AddEvent = function ({ currentLang, eventDetails }) {
         },
       },
     };
-    if (isEndDate)
+    if (isEndDate && !isRecurring)
       eventObj.endDate = moment(values.endDate).format("YYYY-MM-DDTHH:mm:ss");
       if(isRecurring)
       {const recurEvent = {
@@ -200,14 +202,14 @@ const AddEvent = function ({ currentLang, eventDetails }) {
     if (eventDetails) {
       if (eventDetails.endDate) setIsEndDate(true);
       if(placeStore!==null)
-      setPlaceList(eventDetails?.attendanceMode !=="OFFLINE"?placeStore.virtualLocation:placeStore.places);
+      setPlaceList(eventDetails?.eventAttendanceMode !=="OFFLINE"?placeStore.virtualLocation:placeStore.places);
 
       form.setFieldsValue({
-        desc: eventDetails.description?eventDetails.description[currentLang]:"",
+        desc: eventDetails.description?eventDetails.description["fr"]:"",
         location: eventDetails.location?.uuid,
         startDate: moment(new Date(eventDetails.startDate), "DD-MM-YYYY"),
         endDate: moment(new Date(eventDetails.endDate), "DD-MM-YYYY"),
-        title: eventDetails.name[currentLang],
+        title: eventDetails.name["fr"],
         endTime: moment(new Date(eventDetails.endDate), "HH-mm-ss"),
         startTime: moment(new Date(eventDetails.startDate), "HH-mm-ss"),
       });
@@ -226,8 +228,8 @@ const AddEvent = function ({ currentLang, eventDetails }) {
           frequency: eventDetails.recurringEvent?.frequency,
           startDateRecur: moment(new Date(eventDetails.recurringEvent?.startDate), "DD-MM-YYYY"),
           endDateRecur: moment(new Date(eventDetails.recurringEvent?.endDate), "DD-MM-YYYY"),
-          startTimeRecur: moment(new Date(eventDetails.recurringEvent?.startDate), "HH:mm"),
-          endTimeRecur: moment(new Date(eventDetails.recurringEvent?.startDate), "HH:mm"),
+          startTimeRecur: moment(eventDetails.recurringEvent?.startTime, "HH:mm"),
+          endTimeRecur: moment(eventDetails.recurringEvent?.endTime, "HH:mm"),
           timeZone: eventDetails.recurringEvent?.timeZone,
           daysOfWeek:eventDetails.recurringEvent?.days
         })
@@ -321,6 +323,7 @@ const AddEvent = function ({ currentLang, eventDetails }) {
             >
               <Input placeholder="Enter Event Name" className="replace-input" />
             </Form.Item>
+            {!isRecurring &&
             <div className="flex-align">
               <div className="date-div">
                 <div className="update-select-title">
@@ -352,6 +355,8 @@ const AddEvent = function ({ currentLang, eventDetails }) {
                 </Form.Item>
               </div>
             </div>
+}
+{!isRecurring &&
             <div>
               <Button
                 className="add-end-date-btn"
@@ -361,8 +366,8 @@ const AddEvent = function ({ currentLang, eventDetails }) {
                 {t("EndDateTime", { lng: currentLang })}
               </Button>
             </div>
-
-            {isEndDate && (
+}
+            {isEndDate && !isRecurring && (
               <div className="flex-align">
                 <div className="date-div">
                   <div className="update-select-title">
@@ -399,7 +404,7 @@ const AddEvent = function ({ currentLang, eventDetails }) {
               icon={isRecurring ? <MinusOutlined /> : <PlusOutlined />}
               onClick={() => setIsRecurring(!isRecurring)}
             >
-              {t("Recurring Event", { lng: currentLang })}
+              {t("RecurringEvent", { lng: currentLang })}
             </Button>
             {isRecurring && <RecurringEvent currentLang={currentLang} formFields={formValue} />}
             <div>
@@ -438,9 +443,9 @@ const AddEvent = function ({ currentLang, eventDetails }) {
                     <Option
                       data-testid="update-two-select-option"
                       value={item.uuid}
-                      key={item.name[currentLang]}
+                      key={item.name["fr"]}
                     >
-                      {item.name[currentLang]}
+                      {item.name["fr"]}
                     </Option>
                   ))}
               </Select>

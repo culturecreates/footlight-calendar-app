@@ -48,7 +48,7 @@ i18n
           "DragAndDrop":"or Drag and Drop files to upload",
           "EndDate":"End Date",
           "EndTime":"End Time",
-          "StartTime":"Heure de début",
+          "StartTime":"Start Time",
           "PlaceName":"Place Name",
           "Country":"Country",
           "Locality":"Locality",
@@ -57,11 +57,15 @@ i18n
           "ContainedInPlace":"Contained In Place",
           "AddPlace":"Add Place",
           "EndDateTime":"End Date Time",
+          "RecurringEvent":"Recurring Event",
+          "Frequency":"Frequency",
           welcome: "Hello  <strong>World</strong>"
         }
       },
       fr: {
         translations: {
+          "Frequency":"Fréquence",
+          "RecurringEvent":"Evénement Récurrent",
             "Types": "Types",
             "Type": "Type",
             "Region": "OUTAOUAIS",
