@@ -95,7 +95,6 @@ const AddEvent = function ({ currentLang, eventDetails }) {
     }
   },[allLocations,eventDetails])
   const handleSubmit = (values) => {
-   
     values.startDate.set({
       h: values.startTime.get("hour"),
       m: values.startTime.get("minute"),
@@ -134,6 +133,7 @@ const AddEvent = function ({ currentLang, eventDetails }) {
         startTime: moment(values.startTimeRecur).format("HH:mm"),
         endTime: moment(values.endTimeRecur).format("HH:mm"),
         timeZone: values.timeZone,
+        days:values.frequency==="WEEKLY"?values.daysOfWeek:undefined
       }; 
       eventObj.recurringEvent= recurEvent;
     } 
@@ -215,6 +215,7 @@ const AddEvent = function ({ currentLang, eventDetails }) {
           startTimeRecur: moment(new Date(eventDetails.recurringEvent?.startDate), "HH:mm"),
           endTimeRecur: moment(new Date(eventDetails.recurringEvent?.startDate), "HH:mm"),
           timeZone: eventDetails.recurringEvent?.timeZone,
+          daysOfWeek:eventDetails.recurringEvent?.days
         })
         setIsRecurring(true)
       }

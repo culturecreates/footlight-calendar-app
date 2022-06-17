@@ -133,23 +133,23 @@ export const adminSideMenuLinks = [
   export const daysOfWeek=[
       {
         name:"Monday",
-        value:"monday"
+        value:"Monday"
       },
       {
         name:"Tuesday",
-        value:"tuesday"
+        value:"Tuesday"
       },
       {
         name:"Wednesday",
-        value:"wednesday"
+        value:"Wednesday"
       },
       {
         name:"Thursday",
-        value:"thursday"
+        value:"Thursday"
       },
       {
         name:"Friday",
-        value:"friday"
+        value:"Friday"
       },
       {
         name:"Saturday",

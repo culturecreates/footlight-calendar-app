@@ -64,7 +64,9 @@ const RecurringEvent = function ({ currentLang = "fr" ,formFields}) {
           <Option value="CUSTOM">Custom</Option>
         </Select>
       </Form.Item>
-      {/* <div className="update-select-title">
+      {formFields && formFields.frequency==="WEEKLY" &&
+      <>
+      <div className="update-select-title">
         {t("Days Of Week", { lng: currentLang })}
       </div>
       <Form.Item
@@ -89,7 +91,9 @@ const RecurringEvent = function ({ currentLang = "fr" ,formFields}) {
           <Option value={item.value} key={item.value}>{item.name}</Option>)}
           
         </Select>
-      </Form.Item> */}
+      </Form.Item>
+      </>
+}
       <div className="flex-align">
         <div className="date-div">
           <div className="update-select-title">
