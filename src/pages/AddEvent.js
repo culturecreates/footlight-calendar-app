@@ -34,6 +34,7 @@ import { fetchPlace } from "../action";
 
 const { Option } = Select;
 const { Dragger } = Upload;
+// moment.tz.setDefault('Europe/Berlin')
 const getSrcFromFile = (file) => {
   return new Promise((resolve) => {
     const reader = new FileReader();
@@ -208,10 +209,10 @@ const AddEvent = function ({ currentLang, eventDetails }) {
         desc: eventDetails.description?eventDetails.description["fr"]:"",
         location: eventDetails.location?.uuid,
         startDate: moment(new Date(eventDetails.startDate), "DD-MM-YYYY"),
-        endDate: moment(new Date(eventDetails.endDate), "DD-MM-YYYY"),
+        endDate: eventDetails.endDate ? moment(new Date(eventDetails.endDate), "DD-MM-YYYY"):undefined,
         title: eventDetails.name["fr"],
-        endTime: moment(new Date(eventDetails.endDate), "HH-mm-ss"),
-        startTime: moment(new Date(eventDetails.startDate), "HH-mm-ss"),
+        endTime: eventDetails.endDate ? moment(eventDetails.endDate.substring(11,20), "HH-mm-ss"): undefined,
+        startTime: moment(eventDetails.startDate.substring(11,20), "HH-mm-ss"),
       });
       if (eventDetails.image) {
         const obj = {
@@ -242,7 +243,7 @@ const AddEvent = function ({ currentLang, eventDetails }) {
         desc: "",
       });
   }, [eventDetails]);
-
+  // a.substring(11,20)
   const onChangeStart = (date, dateString) => {
     setStartDisable(moment(dateString, "MM-DD-YYYY"));
   };
@@ -351,7 +352,7 @@ const AddEvent = function ({ currentLang, eventDetails }) {
                   className="status-comment-item"
                   rules={[{ required: true, message: "Start time required" }]}
                 >
-                  <TimePicker />
+                  <TimePicker format="HH:mm:ss"/>
                 </Form.Item>
               </div>
             </div>
@@ -394,7 +395,7 @@ const AddEvent = function ({ currentLang, eventDetails }) {
                     className="status-comment-item"
                     rules={[{ required: true, message: "End time required" }]}
                   >
-                    <TimePicker />
+                    <TimePicker format="HH:mm:ss"/>
                   </Form.Item>
                 </div>
               </div>
