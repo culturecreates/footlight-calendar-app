@@ -11,7 +11,8 @@ import ServiceApi from "../services/Service";
 import SemanticSearch from "../components/SemanticSearch";
 import AddEvent from "./AddEvent";
 import AddPlaces from "./AddPlaces";
-
+import { useDispatch, useSelector } from "react-redux";
+import { fetchPlace } from "../action";
 
 const AdminPlaces = function ({ currentLang }) {
   const [placeList, setPlaceList] = useState([]);
@@ -24,6 +25,7 @@ const AdminPlaces = function ({ currentLang }) {
   const location = useLocation();
 
   const { t, i18n } = useTranslation();
+  const dispatch = useDispatch();
 
   const eventTableHeader = [
     {
@@ -89,6 +91,7 @@ const AdminPlaces = function ({ currentLang }) {
       .then((response) => {
         if (response && response.data && response.data.data) {
           const events = response.data.data.places;
+          dispatch(fetchPlace(response.data.data));
           setPlaceList(events);
             if(response.data.totalCount)
             setTotalPage(response.data.totalCount)

@@ -54,11 +54,13 @@ export default class ServiceApi {
     });
   }
 
-  static getEventDetail(id) {
+  static getEventDetail(id,isAdmin= false) {
     return Axios({
       url: `events/${id}`,
       method: "GET",
-
+      params:{
+        isAdmin:true
+      }
     });
   }
 
@@ -66,6 +68,7 @@ export default class ServiceApi {
     return Axios({
       url: `places/${id}`,
       method: "GET",
+      
 
     });
   }

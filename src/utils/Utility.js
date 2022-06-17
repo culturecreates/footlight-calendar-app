@@ -92,3 +92,72 @@ export const adminSideMenuLinks = [
     
     
   ];
+
+  export const timeZone =[
+    {
+      name:"Canada/Newfoundland (GMT-2:30)",
+      value:"Canada/Newfoundland"
+    },
+    {
+      name:"Canada/Atlantic (GMT-3)",
+      value:"Canada/Atlantic"
+    },
+    {
+      name:"Canada/Eastern (GMT-4)",
+      value:"Canada/Eastern"
+    },
+    {
+      name:"Canada/Central (GMT-5)",
+      value:"Canada/Central"
+    },
+		{
+      name:"Canada/Mountain (GMT-6)",
+      value:"Canada/Mountain"
+    },	
+		{
+      name:"Canada/Saskatchewan (GMT-6)",
+      value:"Canada/Saskatchewan"
+    },		
+		{
+      name:"Canada/Yukon (GMT-7)",
+      value:"Canada/Yukon"
+    },	
+		{
+      name:"Canada/Pacific (GMT-7)",
+      value:"Canada/Pacific"
+    },	
+			
+			
+			
+  ]
+  export const daysOfWeek=[
+      {
+        name:"Monday",
+        value:"Monday"
+      },
+      {
+        name:"Tuesday",
+        value:"Tuesday"
+      },
+      {
+        name:"Wednesday",
+        value:"Wednesday"
+      },
+      {
+        name:"Thursday",
+        value:"Thursday"
+      },
+      {
+        name:"Friday",
+        value:"Friday"
+      },
+      {
+        name:"Saturday",
+        value:"saturday"
+      },
+      {
+        name:"Sunday",
+        value:"sunday"
+      },
+    ]
+  

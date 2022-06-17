@@ -10,6 +10,8 @@ import Spinner from "../components/Spinner";
 import ServiceApi from "../services/Service";
 import SemanticSearch from "../components/SemanticSearch";
 import AddEvent from "./AddEvent";
+import { useDispatch, useSelector } from "react-redux";
+import { fetchPlace } from "../action";
 
 
 const AdminEvents = function ({ currentLang }) {
@@ -23,6 +25,31 @@ const AdminEvents = function ({ currentLang }) {
   const location = useLocation();
 
   const { t, i18n } = useTranslation();
+  const dispatch = useDispatch();
+  const placeStore = useSelector((state) => state.place);
+
+  useEffect(() => {
+    if( placeStore==null)
+    {
+      getAllPlaces()
+    }
+    
+  }, []);
+  const getAllPlaces = () => {
+    ServiceApi.getAllPlaces()
+      .then((response) => {
+        if (response && response.data && response.data.data) {
+          const events = response.data.data;
+         
+          
+          dispatch(fetchPlace(events));
+
+          //   setTotalPage(response.data.totalPage * 20)
+        }
+      })
+      .catch((error) => {});
+  };
+
 
   const eventTableHeader = [
     {
@@ -99,7 +126,7 @@ const AdminEvents = function ({ currentLang }) {
 
   const getEventDetails = (id) => {
     setLoading(true);
-    ServiceApi.getEventDetail(id)
+    ServiceApi.getEventDetail(id,true)
       .then((response) => {
         if (response && response.data && response.data) {
           const events = response.data;

@@ -1,0 +1,26 @@
+.customize-div{
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+}
+.customize{
+    color: #0740d3;
+    cursor: pointer;
+}
+.recurring-card{
+    margin-bottom: 15px;
+}
+.time-zone-select.ant-select{
+    min-width: 120px;
+    color: #0740d3;
+    max-width: 225px;
+}
+.time-zone-select.ant-select .ant-select-arrow{
+    color: #0740d3;
+}
+.time-zone-select.ant-select-single:not(.ant-select-customize-input) .ant-select-selector{
+  padding: 0px 11px 0px 0px;
+}
+.timezone-item{
+    margin: 0;
+}

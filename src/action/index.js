@@ -1,4 +1,4 @@
-import { FILTER} from "./Types";
+import { FILTER, PLACES} from "./Types";
 
 export const fetchFilter = (data) => {
   return {
@@ -7,3 +7,9 @@ export const fetchFilter = (data) => {
   };
 };
 
+export const fetchPlace = (data) => {
+  return {
+    type: PLACES,
+    data,
+  };
+};
