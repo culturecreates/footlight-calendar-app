@@ -29,6 +29,8 @@ import EventEditor from "../components/EventEditor";
 import { useNavigate } from "react-router-dom";
 import RecurringEvent from "../components/RecurringEvent";
 import Compressor from "compressorjs";
+import { useDispatch, useSelector } from "react-redux";
+import { fetchPlace } from "../action";
 
 const { Option } = Select;
 const { Dragger } = Upload;
@@ -68,8 +70,18 @@ const AddEvent = function ({ currentLang, eventDetails }) {
     grid: true, //弹窗宽度
   };
 
+  const dispatch = useDispatch();
+  const placeStore = useSelector((state) => state.place);
   useEffect(() => {
-    getAllPlaces();
+    if( placeStore==null)
+    {
+      getAllPlaces()
+    }
+    else
+    {
+     setAllLocations(placeStore);
+     setPlaceList(placeStore.places);
+    }
   }, []);
   const getAllPlaces = () => {
     ServiceApi.getAllPlaces()
@@ -80,20 +92,20 @@ const AddEvent = function ({ currentLang, eventDetails }) {
           
           setPlaceList(events.places)
           setAllLocations(events);
-
+          dispatch(fetchPlace(events));
           //   setTotalPage(response.data.totalPage * 20)
         }
       })
       .catch((error) => {});
   };
 
-  useEffect(()=>{
-    if( allLocations)
-    {
-    setEventType(eventDetails.eventAttendanceMode ==="OFFLINE"?"online":"offline");
-    setPlaceList(eventDetails.eventAttendanceMode !=="OFFLINE"?allLocations.virtualLocation:allLocations.places);
-    }
-  },[allLocations,eventDetails])
+  // useEffect(()=>{
+  //   if( eventDetails && allLocations)
+  //   {
+  //   setEventType(eventDetails.eventAttendanceMode ==="OFFLINE"?"online":"offline");
+  //   setPlaceList(eventDetails.eventAttendanceMode !=="OFFLINE"?allLocations.virtualLocation:allLocations.places);
+  //   }
+  // },[allLocations,eventDetails])
   const handleSubmit = (values) => {
     values.startDate.set({
       h: values.startTime.get("hour"),
@@ -187,7 +199,9 @@ const AddEvent = function ({ currentLang, eventDetails }) {
   useEffect(() => {
     if (eventDetails) {
       if (eventDetails.endDate) setIsEndDate(true);
-      
+      if(placeStore!==null)
+      setPlaceList(eventDetails?.attendanceMode !=="OFFLINE"?placeStore.virtualLocation:placeStore.places);
+
       form.setFieldsValue({
         desc: eventDetails.description?eventDetails.description[currentLang]:"",
         location: eventDetails.location?.uuid,
