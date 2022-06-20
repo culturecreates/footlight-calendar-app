@@ -22,7 +22,6 @@ import {
   MinusOutlined,
 } from "@ant-design/icons";
 import { useTranslation, Trans } from "react-i18next";
-import ImgCrop from "antd-img-crop";
 import { Upload } from "antd";
 import ServiceApi from "../services/Service";
 import EventEditor from "../components/EventEditor";
@@ -51,6 +50,7 @@ const AddEvent = function ({ currentLang, eventDetails }) {
   const [fileList, setFileList] = useState([]);
   const [placeList, setPlaceList] = useState([]);
   const [isUpload, setIsUpload] = useState(false);
+  const [numberOfDays, setNumberOfDays] = useState(0);
   const [compressedFile, setCompressedFile] = useState(null);
   const [form] = Form.useForm();
   const navigate = useNavigate();
@@ -61,15 +61,7 @@ const AddEvent = function ({ currentLang, eventDetails }) {
   const [endDisable, setEndDisable] = useState(moment().format("YYYY-MM-DD"));
   const { t, i18n } = useTranslation();
 
-  const propsImg = {
-    width: 500, //裁剪宽度
-    height: 300, //裁剪高度
-    resize: true, //裁剪是否可以调整大小
-    resizeAndDrag: true, //裁剪是否可以调整大小、可拖动
-    modalTitle: "Event Image", //弹窗标题
-    modalWidth: 600,
-    grid: true, //弹窗宽度
-  };
+  
 
   const dispatch = useDispatch();
   const placeStore = useSelector((state) => state.place);
@@ -225,6 +217,7 @@ const AddEvent = function ({ currentLang, eventDetails }) {
       } else setFileList([]);
       if(eventDetails.recurringEvent)
       {
+        setNumberOfDays(eventDetails.subEvents?.length)
         form.setFieldsValue({
           frequency: eventDetails.recurringEvent?.frequency,
           startDateRecur: moment(new Date(eventDetails.recurringEvent?.startDate), "DD-MM-YYYY"),
@@ -407,7 +400,8 @@ const AddEvent = function ({ currentLang, eventDetails }) {
             >
               {t("RecurringEvent", { lng: currentLang })}
             </Button>
-            {isRecurring && <RecurringEvent currentLang={currentLang} formFields={formValue} />}
+            {isRecurring && <RecurringEvent currentLang={currentLang} formFields={formValue}
+            numberOfDaysEvent={numberOfDays} />}
             <div>
               <Radio.Group
                 name="radiogroup"
@@ -453,9 +447,8 @@ const AddEvent = function ({ currentLang, eventDetails }) {
             </Form.Item>
           </Col>
           <Col className="upload-col">
-            {/* <ImgCrop {...propsImg}> */}
+           
             <Dragger
-              // action="https://www.mocky.io/v2/5cc8019d300000980a055e76"
               listType="picture-card"
               className={
                 fileList.length > 0 ? "event-upload" : "ant-event-upload"
@@ -476,7 +469,6 @@ const AddEvent = function ({ currentLang, eventDetails }) {
                 {t("DragAndDrop", { lng: currentLang })}
               </p>
             </Dragger>
-            {/* </ImgCrop> */}
           </Col>
         </Row>
         <div className="update-select-title">{"Description"}</div>

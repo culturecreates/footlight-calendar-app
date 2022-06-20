@@ -9,12 +9,12 @@ import {
     EditOutlined
   } from "@ant-design/icons";
 const { Option } = Select;
-const RecurringEvent = function ({ currentLang = "fr" ,formFields}) {
+const RecurringEvent = function ({ currentLang = "fr" ,formFields, numberOfDaysEvent=0}) {
   const [startDisable, setStartDisable] = useState(
     moment().format("YYYY-MM-DD")
   );
   const [endDisable, setEndDisable] = useState(moment().format("YYYY-MM-DD"));
-  const [nummberofDates, setNumberofDates]=useState(0)
+  const [nummberofDates, setNumberofDates]=useState(numberOfDaysEvent)
   const [isModalVisible, setIsModalVisible] = useState(false);
   const { t, i18n } = useTranslation();
 
