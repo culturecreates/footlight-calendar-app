@@ -19,7 +19,7 @@ import { useTranslation, Trans } from "react-i18next";
 import ServiceApi from "../services/Service";
 import { useNavigate } from "react-router-dom";
 import Spinner from "../components/Spinner";
-import moment from "moment";
+import moment from "moment-timezone";
 import ICalendarLink from "react-icalendar-link";
 
 const EventDetails = function ({ currentLang,isAdmin=false }) {
@@ -70,20 +70,20 @@ const EventDetails = function ({ currentLang,isAdmin=false }) {
           label:
             new Date(item.startDate).toLocaleDateString(currentLang, {
               weekday: "long",
-            }) + moment(item.startDate).utc().format(" DD MMM YYYY")+" - "+ moment(item.startDate).utc().format("hh:mm A"),
+            }) + moment(item.startDate).tz("Canada/Eastern").format(" DD MMM YYYY")+" - "+ moment(item.startDate).tz("Canada/Eastern").format("hh:mm A"),
           key: index,
         };
         return obj;
       })}
     />
   );
-  const getDiffernceinDates = (start, end) => {
-    const startDate = moment(start);
-    const timeEnd = moment(end);
-    const diff = timeEnd.diff(startDate);
-    const diffDuration = moment.duration(diff);
-    return diffDuration.hours() === 0 ? 24 : diffDuration.hours();
-  };
+  // const getDiffernceinDates = (start, end) => {
+  //   const startDate = moment(start);
+  //   const timeEnd = moment(end);
+  //   const diff = timeEnd.diff(startDate);
+  //   const diffDuration = moment.duration(diff);
+  //   return diffDuration.hours() === 0 ? 24 : diffDuration.hours();
+  // };
 
 
   const getUriOffers=(data)=>{
@@ -108,10 +108,10 @@ const EventDetails = function ({ currentLang,isAdmin=false }) {
                 {new Date(eventDetails.startDate).toLocaleDateString(
                   currentLang,
                   { weekday: "long" }
-                ) + moment(eventDetails.startDate).utc().format(" DD MMM YYYY")}
+                ) + moment(eventDetails.startDate).format(" DD MMM YYYY")}
               </div>
               <div>
-                {moment(eventDetails.startDate).utc().format("hh:mm A")}
+                {moment(eventDetails.startDate).tz("Canada/Eastern").format('hh:mm a')}
               </div>
               <div className="subevent-dropdown">
                 {eventDetails?.subEvents?.length > 0 && (
@@ -136,13 +136,13 @@ const EventDetails = function ({ currentLang,isAdmin=false }) {
                 {new Date(eventDetails.startDate).toLocaleDateString(
                   currentLang,
                   { weekday: "long" }
-                ) + moment(eventDetails.startDate).utc().format(" DD MMM")}
+                ) + moment(eventDetails.startDate).tz("Canada/Eastern").format(" DD MMM")}
                 <span>&nbsp;{t("to", { lng: currentLang })} </span>
                 {eventDetails.endDate &&
                   new Date(eventDetails.endDate).toLocaleDateString(
                     currentLang,
                     { weekday: "long" }
-                  ) + moment(eventDetails.endDate).utc().format(" DD MMM")}
+                  ) + moment(eventDetails.endDate).tz("Canada/Eastern").format(" DD MMM")}
               </div>
             </div>
             <div>
@@ -245,7 +245,7 @@ const EventDetails = function ({ currentLang,isAdmin=false }) {
                 {""}
                 <span>
                   {eventDetails && eventDetails.startDate &&
-                <a href={`https://calendar.google.com/calendar/render?action=TEMPLATE&dates=${moment(eventDetails.startDate).utc().format("YYYYDDMMT0000Z")}/${moment(eventDetails.endDate).utc().format("YYYYDDMMT0000Z")}&location=${eventDetails.location?.name[currentLang]}&details=${eventDetails.description[currentLang]}`} target="_blank" rel="noreferrer">
+                <a href={`https://calendar.google.com/calendar/render?action=TEMPLATE&dates=${moment(eventDetails.startDate).tz("Canada/Eastern").format("YYYYDDMMT0000Z")}/${moment(eventDetails.endDate).tz("Canada/Eastern").format("YYYYDDMMT0000Z")}&location=${eventDetails.location?.name[currentLang]}&details=${eventDetails.description[currentLang]}`} target="_blank" rel="noreferrer">
                   <GoogleOutlined
                     className="social-icons"
                   />

@@ -22,13 +22,30 @@ const RecurringEvent = function ({ currentLang = "fr" ,formFields}) {
     setStartDisable(moment(dateString, "MM-DD-YYYY"));
   };
   const onChangeEnd = (date, dateString) => {
-    setEndDisable(moment(dateString, "MM-DD-YYYY"));
+    // setEndDisable(moment(dateString, "MM-DD-YYYY"));
   };
   useEffect(()=>{
-      console.log(formFields)
       if(formFields && formFields.endDateRecur && formFields.startDateRecur)
+      if(formFields.frequency === "DAILY")
         getNumberOfDays(formFields.startDateRecur,formFields.endDateRecur)
+      else if(formFields.frequency === "WEEKLY") 
+      {
+        getNumberOfWeekDays(moment(new Date(formFields.startDateRecur), "YYYY,MM,DD"),moment(new Date(formFields.endDateRecur), "YYYY,MM,DD"),formFields.daysOfWeek)
+      }
+      else
+      setNumberofDates(0)
   },[formFields])
+
+  const getNumberOfWeekDays=async(start,end,daysofweek)=>{
+    let date = [];
+
+     daysofweek.map(item=>
+      date.push(getDaysBetweenDates(start,end,item)
+      )
+      )
+     setNumberofDates([].concat.apply([], date).length)
+   
+  }
 
   const getNumberOfDays=async(start,end)=>{
     let date = [];
@@ -39,6 +56,22 @@ const RecurringEvent = function ({ currentLang = "fr" ,formFields}) {
 
      setNumberofDates(date.length)
    
+  }
+  function getDaysBetweenDates(start, end, dayName) {
+    var result = [];
+    var days = {sunday:0,monday:1,tuesday:2,wednesday:3,thursday:4,friday:5,saturday:6};
+    var day = days[dayName.toLowerCase()];
+    // Copy start date
+    var current = new Date(start);
+    // Shift to next of required days
+    current.setDate(current.getDate() + (day - current.getDay() + 7) % 7);
+    // While less than end date, add dates to result array
+    while (current < end) {
+      result.push(new Date(+current));
+      current.setDate(current.getDate() + 7);
+    }
+    
+    return result;  
   }
   return (
     <Card className="recurring-card">
