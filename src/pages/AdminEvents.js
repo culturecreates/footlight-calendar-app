@@ -73,7 +73,7 @@ const AdminEvents = function ({ currentLang }) {
       key: "startDate",
       width: 200,
       render: (e, record) => (
-        <div>{moment(record.startDate).utc().format("DD-MM-YYYY")}</div>
+        <div>{moment(record.startDate).tz(record.scheduleTimezone?record.scheduleTimezone:"Canada/Eastern").format("DD-MM-YYYY")}</div>
       ),
       sorter: (a, b) => new Date(moment(a.startDate, "MMMM Do YYYY, h:mm:ss a").format("LLL")) -
       new Date(moment(b.startDate, "MMMM Do YYYY, h:mm:ss a").format("LLL")),
