@@ -30,6 +30,7 @@ import RecurringEvent from "../components/RecurringEvent";
 import Compressor from "compressorjs";
 import { useDispatch, useSelector } from "react-redux";
 import { fetchPlace } from "../action";
+import { timeZone } from "../utils/Utility";
 
 const { Option } = Select;
 const { Dragger } = Upload;
@@ -120,7 +121,7 @@ const AddEvent = function ({ currentLang, eventDetails }) {
         fr: values.desc,
       },
       startDate: !isRecurring ?moment(values.startDate).format("YYYY-MM-DDTHH:mm:ss"): undefined,
-
+      scheduleTimezone: values.timeZone,
       locationId: {
         place: {
           entityId: eventType === "offline" ? values.location : null,
@@ -205,6 +206,7 @@ const AddEvent = function ({ currentLang, eventDetails }) {
         title: eventDetails.name["fr"],
         endTime: eventDetails.endDate ? moment(eventDetails.endDate.substring(11,20), "HH-mm-ss"): undefined,
         startTime: moment(eventDetails.startDate.substring(11,20), "HH-mm-ss"),
+        timeZone: eventDetails.scheduleTimezone?eventDetails.scheduleTimezone:"Canada/Eastern",
       });
       if (eventDetails.image) {
         const obj = {
@@ -224,7 +226,7 @@ const AddEvent = function ({ currentLang, eventDetails }) {
           endDateRecur: moment(new Date(eventDetails.recurringEvent?.endDate), "DD-MM-YYYY"),
           startTimeRecur: moment(eventDetails.recurringEvent?.startTime, "HH:mm"),
           endTimeRecur: moment(eventDetails.recurringEvent?.endTime, "HH:mm"),
-          timeZone: eventDetails.recurringEvent?.timeZone,
+          
           daysOfWeek:eventDetails.recurringEvent?.days
         })
         setIsRecurring(true)
@@ -350,6 +352,7 @@ const AddEvent = function ({ currentLang, eventDetails }) {
               </div>
             </div>
 }
+
 {!isRecurring &&
             <div>
               <Button
@@ -393,6 +396,7 @@ const AddEvent = function ({ currentLang, eventDetails }) {
                 </div>
               </div>
             )}
+            <div className="customize-div">
             <Button
               className="add-end-date-btn"
               icon={isRecurring ? <MinusOutlined /> : <PlusOutlined />}
@@ -400,6 +404,18 @@ const AddEvent = function ({ currentLang, eventDetails }) {
             >
               {t("RecurringEvent", { lng: currentLang })}
             </Button>
+            <Form.Item
+            name="timeZone"
+            className="timezone-item"
+            rules={[{ required: true, message: "End time required" }]}
+          >
+          <Select defaultValue="Canada/Eastern" className="time-zone-select" bordered={false}>
+              {timeZone.map(item=>
+      <Option value={item.value} key={item.value}>{item.name}</Option>)}
+      
+    </Select>
+    </Form.Item>
+    </div>
             {isRecurring && <RecurringEvent currentLang={currentLang} formFields={formValue}
             numberOfDaysEvent={numberOfDays} />}
             <div>

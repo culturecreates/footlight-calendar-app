@@ -191,17 +191,7 @@ const RecurringEvent = function ({ currentLang = "fr" ,formFields, numberOfDaysE
       <div className="customize-div">
       {nummberofDates !==0 &&
           <div> {nummberofDates +" Dates"}</div>}
-          <Form.Item
-            name="timeZone"
-            className="timezone-item"
-            rules={[{ required: true, message: "End time required" }]}
-          >
-          <Select defaultValue="Canada/Eastern" className="time-zone-select" bordered={false}>
-              {timeZone.map(item=>
-      <Option value={item.value} key={item.value}>{item.name}</Option>)}
-      
-    </Select>
-    </Form.Item>
+          
           {/* <div onClick={()=>setIsModalVisible(true)} className="customize"><EditOutlined />Customize</div> */}
       </div>
       <RecurringModal isModalVisible={isModalVisible} setIsModalVisible={setIsModalVisible}/>

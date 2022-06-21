@@ -146,3 +146,7 @@
     color: #3a0202;
     font-weight: 500;
 }
+.date-popup.ant-dropdown{
+    max-height: 300px;
+    overflow: auto;
+}
