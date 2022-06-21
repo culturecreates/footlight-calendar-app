@@ -66,14 +66,17 @@ const EventDetails = function ({ currentLang,isAdmin=false }) {
   const menu = (
     <Menu
       items={eventDetails?.subEvents.map((item, index) => {
+        if(index !==0)
+        {
         const obj = {
           label:
             new Date(item.startDate).toLocaleDateString(currentLang, {
               weekday: "long",
-            }) + moment(item.startDate).tz("Canada/Eastern").format(" DD MMM YYYY")+" - "+ moment(item.startDate).tz("Canada/Eastern").format("hh:mm A"),
+            }) + moment(item.startDate).tz(eventDetails.scheduleTimezone?eventDetails.scheduleTimezone:"Canada/Eastern").format(" DD MMM YYYY")+" - "+ moment(item.startDate).tz(eventDetails.scheduleTimezone?eventDetails.scheduleTimezone:"Canada/Eastern").format("hh:mm A"),
           key: index,
         };
         return obj;
+      }
       })}
     />
   );
@@ -111,19 +114,19 @@ const EventDetails = function ({ currentLang,isAdmin=false }) {
                 ) + moment(eventDetails.startDate).format(" DD MMM YYYY")}
               </div>
               <div>
-                {moment(eventDetails.startDate).tz("Canada/Eastern").format('hh:mm a')}
+                {moment(eventDetails.startDate).tz(eventDetails.scheduleTimezone?eventDetails.scheduleTimezone:"Canada/Eastern").format('hh:mm a')}
               </div>
               <div className="subevent-dropdown">
-                {eventDetails?.subEvents?.length > 0 && (
+                {eventDetails?.subEvents?.length > 1 && (
                   <>
-                    <Dropdown overlay={menu} trigger={["click"]}>
+                    <Dropdown overlay={menu} trigger={["click"]} overlayClassName={eventDetails.subEvents?.length > 6 ?"date-popup":"test-date-event"}>
                       <a
                         className="sub-events"
                         onClick={(e) => e.preventDefault()}
                       >
                         <Space>
                           <TagsFilled />
-                          {eventDetails.subEvents?.length}
+                          {eventDetails.subEvents?.length-1}
                           {t("Different", { lng: currentLang })} date
                           <DownOutlined />
                         </Space>
@@ -136,13 +139,13 @@ const EventDetails = function ({ currentLang,isAdmin=false }) {
                 {new Date(eventDetails.startDate).toLocaleDateString(
                   currentLang,
                   { weekday: "long" }
-                ) + moment(eventDetails.startDate).tz("Canada/Eastern").format(" DD MMM")}
+                ) + moment(eventDetails.startDate).tz(eventDetails.scheduleTimezone?eventDetails.scheduleTimezone:"Canada/Eastern").format(" DD MMM")}
                 <span>&nbsp;{t("to", { lng: currentLang })} </span>
                 {eventDetails.endDate &&
                   new Date(eventDetails.endDate).toLocaleDateString(
                     currentLang,
                     { weekday: "long" }
-                  ) + moment(eventDetails.endDate).tz("Canada/Eastern").format(" DD MMM")}
+                  ) + moment(eventDetails.endDate).tz(eventDetails.scheduleTimezone?eventDetails.scheduleTimezone:"Canada/Eastern").format(" DD MMM")}
               </div>
             </div>
             <div>
@@ -240,12 +243,14 @@ const EventDetails = function ({ currentLang,isAdmin=false }) {
                 </Button>
               ))}
 
-              <div className="social-section">
+              {/* <div className="social-section"> */}
+              <Row justify="end"  className="social-section">
+              <Col  >
                 {t("iCal", { lng: currentLang })}
                 {""}
                 <span>
                   {eventDetails && eventDetails.startDate &&
-                <a href={`https://calendar.google.com/calendar/render?action=TEMPLATE&dates=${moment(eventDetails.startDate).tz("Canada/Eastern").format("YYYYDDMMT0000Z")}/${moment(eventDetails.endDate).tz("Canada/Eastern").format("YYYYDDMMT0000Z")}&location=${eventDetails.location?.name[currentLang]}&details=${eventDetails.description[currentLang]}`} target="_blank" rel="noreferrer">
+                <a href={`https://calendar.google.com/calendar/render?action=TEMPLATE&dates=${moment(eventDetails.startDate).tz(eventDetails.scheduleTimezone?eventDetails.scheduleTimezone:"Canada/Eastern").format("YYYYDDMMT0000Z")}/${moment(eventDetails.endDate).tz(eventDetails.scheduleTimezone?eventDetails.scheduleTimezone:"Canada/Eastern").format("YYYYDDMMT0000Z")}&location=${eventDetails.location?.name[currentLang]}&details=${eventDetails.description[currentLang]}`} target="_blank" rel="noreferrer">
                   <GoogleOutlined
                     className="social-icons"
                   />
@@ -257,6 +262,8 @@ const EventDetails = function ({ currentLang,isAdmin=false }) {
                     onClick={() => window.print()}
                   />
                 </span>
+                </Col>
+                <Col>
                 {t("socialLink", { lng: currentLang })}{" "}
                 <span>
                   <a href={`https://twitter.com/home?status=${window.location.href}`} target="_blank" rel="noreferrer">
@@ -266,7 +273,9 @@ const EventDetails = function ({ currentLang,isAdmin=false }) {
                   <FacebookFilled  />
                   </a>                  
                 </span>
-              </div>
+                </Col>
+                </Row>
+              {/* </div> */}
             </Col>
           </Row>
         </>

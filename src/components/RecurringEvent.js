@@ -9,12 +9,12 @@ import {
     EditOutlined
   } from "@ant-design/icons";
 const { Option } = Select;
-const RecurringEvent = function ({ currentLang = "fr" ,formFields}) {
+const RecurringEvent = function ({ currentLang = "fr" ,formFields, numberOfDaysEvent=0}) {
   const [startDisable, setStartDisable] = useState(
     moment().format("YYYY-MM-DD")
   );
   const [endDisable, setEndDisable] = useState(moment().format("YYYY-MM-DD"));
-  const [nummberofDates, setNumberofDates]=useState(0)
+  const [nummberofDates, setNumberofDates]=useState(numberOfDaysEvent)
   const [isModalVisible, setIsModalVisible] = useState(false);
   const { t, i18n } = useTranslation();
 
@@ -191,17 +191,7 @@ const RecurringEvent = function ({ currentLang = "fr" ,formFields}) {
       <div className="customize-div">
       {nummberofDates !==0 &&
           <div> {nummberofDates +" Dates"}</div>}
-          <Form.Item
-            name="timeZone"
-            className="timezone-item"
-            rules={[{ required: true, message: "End time required" }]}
-          >
-          <Select defaultValue="Canada/Eastern" className="time-zone-select" bordered={false}>
-              {timeZone.map(item=>
-      <Option value={item.value} key={item.value}>{item.name}</Option>)}
-      
-    </Select>
-    </Form.Item>
+          
           {/* <div onClick={()=>setIsModalVisible(true)} className="customize"><EditOutlined />Customize</div> */}
       </div>
       <RecurringModal isModalVisible={isModalVisible} setIsModalVisible={setIsModalVisible}/>
