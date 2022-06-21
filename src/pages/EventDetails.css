@@ -150,3 +150,12 @@
     max-height: 300px;
     overflow: auto;
 }
+
+@media only screen and (max-width : 600px) {
+    .social-section.ant-row-end{
+        justify-content: start;
+    }
+    .logo-image{
+        width: 130px;
+    }
+}

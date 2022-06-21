@@ -66,6 +66,8 @@ const EventDetails = function ({ currentLang,isAdmin=false }) {
   const menu = (
     <Menu
       items={eventDetails?.subEvents.map((item, index) => {
+        if(index !==0)
+        {
         const obj = {
           label:
             new Date(item.startDate).toLocaleDateString(currentLang, {
@@ -74,6 +76,7 @@ const EventDetails = function ({ currentLang,isAdmin=false }) {
           key: index,
         };
         return obj;
+      }
       })}
     />
   );
@@ -114,16 +117,16 @@ const EventDetails = function ({ currentLang,isAdmin=false }) {
                 {moment(eventDetails.startDate).tz(eventDetails.scheduleTimezone?eventDetails.scheduleTimezone:"Canada/Eastern").format('hh:mm a')}
               </div>
               <div className="subevent-dropdown">
-                {eventDetails?.subEvents?.length > 0 && (
+                {eventDetails?.subEvents?.length > 1 && (
                   <>
-                    <Dropdown overlay={menu} trigger={["click"]} overlayClassName="date-popup">
+                    <Dropdown overlay={menu} trigger={["click"]} overlayClassName={eventDetails.subEvents?.length > 6 ?"date-popup":"test-date-event"}>
                       <a
                         className="sub-events"
                         onClick={(e) => e.preventDefault()}
                       >
                         <Space>
                           <TagsFilled />
-                          {eventDetails.subEvents?.length}
+                          {eventDetails.subEvents?.length-1}
                           {t("Different", { lng: currentLang })} date
                           <DownOutlined />
                         </Space>
@@ -240,7 +243,9 @@ const EventDetails = function ({ currentLang,isAdmin=false }) {
                 </Button>
               ))}
 
-              <div className="social-section">
+              {/* <div className="social-section"> */}
+              <Row justify="end"  className="social-section">
+              <Col  >
                 {t("iCal", { lng: currentLang })}
                 {""}
                 <span>
@@ -257,6 +262,8 @@ const EventDetails = function ({ currentLang,isAdmin=false }) {
                     onClick={() => window.print()}
                   />
                 </span>
+                </Col>
+                <Col>
                 {t("socialLink", { lng: currentLang })}{" "}
                 <span>
                   <a href={`https://twitter.com/home?status=${window.location.href}`} target="_blank" rel="noreferrer">
@@ -266,7 +273,9 @@ const EventDetails = function ({ currentLang,isAdmin=false }) {
                   <FacebookFilled  />
                   </a>                  
                 </span>
-              </div>
+                </Col>
+                </Row>
+              {/* </div> */}
             </Col>
           </Row>
         </>

@@ -64,20 +64,37 @@ function App() {
   return (
     <Layout className="events-app-layout">
       <Header className="app-header">
-        <div className="header-links">
+      <Row justify="space-between" className="header-links">
+      <Col xs={{
+        span: 12,
+        offset: 0,
+      }} md={{ span: 8 }} lg={{ span: 8 }}>
         <Image
+        className="logo-image"
     width={200}
     preview={false}
     src="https://toutculture.ca/images/logo_header.svg"
   />
+  </Col>
+  <Col  xs={{
+        span: 0,
+        offset: 0,
+      }}
+      md={{ span: 8 }} lg={{ span: 8 }}>
       <div className="footer-title">FootLight</div>
+      </Col>
         {/* <div className="footer-cal">{t("headerText", { lng: currentLang })}</div> */}
+        <Col xs={{
+        span: 12,
+        offset: 0,
+      }} md={{ span: 8 }} lg={{ span: 8 }}>
       <div className="header-text">
             <div className={isEnglish?"active-admin":"active-user"}>French</div>
             <Switch checked={isEnglish} data-testid="admin-user-switch"
            className="switch-user" onChange={onChange}  />
             <div className={!isEnglish?"active-admin":"active-user"}>English</div> </div>
-            </div>
+            </Col>
+         </Row>
       </Header>
 
       <Content className="app-content">

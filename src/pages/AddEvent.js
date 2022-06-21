@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from "react";
-import moment from "moment";
+import moment from "moment-timezone";
 import PropTypes from "prop-types";
 import {
   Layout,
@@ -222,8 +222,8 @@ const AddEvent = function ({ currentLang, eventDetails }) {
         setNumberOfDays(eventDetails.subEvents?.length)
         form.setFieldsValue({
           frequency: eventDetails.recurringEvent?.frequency,
-          startDateRecur: moment(new Date(eventDetails.recurringEvent?.startDate), "DD-MM-YYYY"),
-          endDateRecur: moment(new Date(eventDetails.recurringEvent?.endDate), "DD-MM-YYYY"),
+          startDateRecur: moment(new Date(eventDetails.recurringEvent?.startDate), "DD-MM-YYYY").tz(eventDetails.scheduleTimezone?eventDetails.scheduleTimezone:"Canada/Eastern"),
+          endDateRecur: moment(new Date(eventDetails.recurringEvent?.endDate), "DD-MM-YYYY").tz(eventDetails.scheduleTimezone?eventDetails.scheduleTimezone:"Canada/Eastern"),
           startTimeRecur: moment(eventDetails.recurringEvent?.startTime, "HH:mm"),
           endTimeRecur: moment(eventDetails.recurringEvent?.endTime, "HH:mm"),
           

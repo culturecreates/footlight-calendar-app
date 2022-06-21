@@ -1,5 +1,5 @@
 import React from "react";
-import moment from "moment";
+import moment from "moment-timezone";
 import PropTypes from "prop-types";
 import "../App.css";
 import { useNavigate } from "react-router-dom";
@@ -26,11 +26,11 @@ const EventItem = function ({ item, currentLang }) {
       <div>
         <div className="event-date">
           <div className="event-date-section">
-            <div>{moment(item.startDate).utc().format("DDMMM")}</div>
+            <div>{moment(item.startDate).tz(item.scheduleTimezone?item.scheduleTimezone:"Canada/Eastern").format("DDMMM")}</div>
             {item.endDate &&
             <>
             <div>&nbsp;-&nbsp;</div>
-            <div>{moment(item.endDate).utc().format("DDMMM")}</div>
+            <div>{moment(item.endDate).tz(item.scheduleTimezone?item.scheduleTimezone:"Canada/Eastern").format("DDMMM")}</div>
             </>}
           </div>
         </div>
