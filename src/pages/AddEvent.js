@@ -201,8 +201,8 @@ const AddEvent = function ({ currentLang, eventDetails }) {
       form.setFieldsValue({
         desc: eventDetails.description?eventDetails.description["fr"]:"",
         location: eventDetails.location?.uuid,
-        startDate: moment(new Date(eventDetails.startDate), "DD-MM-YYYY"),
-        endDate: eventDetails.endDate ? moment(new Date(eventDetails.endDate), "DD-MM-YYYY"):undefined,
+        startDate: moment(new Date(eventDetails.startDate), "DD-MM-YYYY").tz(eventDetails.scheduleTimezone?eventDetails.scheduleTimezone:"Canada/Eastern"),
+        endDate: eventDetails.endDate ? moment(new Date(eventDetails.endDate), "DD-MM-YYYY").tz(eventDetails.scheduleTimezone?eventDetails.scheduleTimezone:"Canada/Eastern"):undefined,
         title: eventDetails.name["fr"],
         endTime: eventDetails.endDate ? moment(eventDetails.endDate.substring(11,20), "HH-mm-ss"): undefined,
         startTime: moment(eventDetails.startDate.substring(11,20), "HH-mm-ss"),
