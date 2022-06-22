@@ -21,7 +21,7 @@ import {
   PlusOutlined,
   MinusOutlined,
 } from "@ant-design/icons";
-import { useTranslation, Trans } from "react-i18next";
+import { useTranslation } from "react-i18next";
 import { Upload } from "antd";
 import ServiceApi from "../services/Service";
 import EventEditor from "../components/EventEditor";
@@ -223,12 +223,12 @@ const AddEvent = function ({ currentLang, eventDetails }) {
         setNumberOfDays(eventDetails.subEvents?.length)
         form.setFieldsValue({
           frequency: eventDetails.recurringEvent?.frequency,
-          startDateRecur: [moment(new Date(eventDetails.recurringEvent?.startDate), "DD-MM-YYYY").tz(eventDetails.scheduleTimezone?eventDetails.scheduleTimezone:"Canada/Eastern"),
-           moment(new Date(eventDetails.recurringEvent?.endDate), "DD-MM-YYYY").tz(eventDetails.scheduleTimezone?eventDetails.scheduleTimezone:"Canada/Eastern")],
+          startDateRecur: [moment(new Date(eventDetails.recurringEvent?.startDate), "DD-MM-YYYY"),
+           moment(new Date(eventDetails.recurringEvent?.endDate), "DD-MM-YYYY")],
           startTimeRecur: moment(eventDetails.recurringEvent?.startTime, "HH:mm"),
           endTimeRecur: moment(eventDetails.recurringEvent?.endTime, "HH:mm"),
           
-          daysOfWeek:eventDetails.recurringEvent?.days
+          daysOfWeek:eventDetails.recurringEvent?.weekDays
         })
         setIsRecurring(true)
       }

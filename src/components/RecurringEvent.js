@@ -1,8 +1,8 @@
 import { Card, DatePicker, Form, Select, TimePicker } from "antd";
-import { useTranslation, Trans } from "react-i18next";
+import { useTranslation } from "react-i18next";
 import moment from "moment";
 import { useEffect, useState } from "react";
-import { daysOfWeek, timeZone } from "../utils/Utility";
+import { daysOfWeek } from "../utils/Utility";
 import "./RecurringEvent.css"
 import RecurringModal from "./RecurringModal";
 import {

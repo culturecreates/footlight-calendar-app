@@ -1,6 +1,6 @@
 import React,{useState} from "react";
 import ReactQuill, { Quill } from "react-quill";
-import "react-quill/dist/quill.snow.css";import PropTypes from "prop-types";
+import "react-quill/dist/quill.snow.css";
 import {    Form  } from "antd";
 
 var Size = Quill.import("attributors/style/size");
