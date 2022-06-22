@@ -95,35 +95,35 @@ export const adminSideMenuLinks = [
 
   export const timeZone =[
     {
-      name:"Canada/Newfoundland (GMT-2:30)",
+      name:"Canada/Newfoundland",
       value:"Canada/Newfoundland"
     },
     {
-      name:"Canada/Atlantic (GMT-3)",
+      name:"Canada/Atlantic",
       value:"Canada/Atlantic"
     },
     {
-      name:"Canada/Eastern (GMT-4)",
+      name:"Canada/Eastern",
       value:"Canada/Eastern"
     },
     {
-      name:"Canada/Central (GMT-5)",
+      name:"Canada/Central",
       value:"Canada/Central"
     },
 		{
-      name:"Canada/Mountain (GMT-6)",
+      name:"Canada/Mountain",
       value:"Canada/Mountain"
     },	
 		{
-      name:"Canada/Saskatchewan (GMT-6)",
+      name:"Canada/Saskatchewan",
       value:"Canada/Saskatchewan"
     },		
 		{
-      name:"Canada/Yukon (GMT-7)",
+      name:"Canada/Yukon",
       value:"Canada/Yukon"
     },	
 		{
-      name:"Canada/Pacific (GMT-7)",
+      name:"Canada/Pacific",
       value:"Canada/Pacific"
     },	
 			

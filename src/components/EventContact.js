@@ -1,11 +1,10 @@
 import React from "react";
-import { Calendar } from "antd";
 import PropTypes from "prop-types";
 import "../App.css";
-import { useTranslation, Trans } from "react-i18next";
+import { useTranslation } from "react-i18next";
 
 const EventContact = function ({ name, values,currentLang }) {
-    const { t, i18n } = useTranslation();
+    const { t } = useTranslation();
 
  
   return (

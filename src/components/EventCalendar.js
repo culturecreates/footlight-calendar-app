@@ -1,8 +1,7 @@
 import React from "react";
-import { Calendar, DatePicker } from "antd";
+import { DatePicker } from "antd";
 import PropTypes from "prop-types";
 import "../App.css";
-import moment from "moment";
 
 const EventCalendar = function ({ onSelection, value }) {
   function onPanelChange(value) {

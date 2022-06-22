@@ -21,7 +21,7 @@ import {
   PlusOutlined,
   MinusOutlined,
 } from "@ant-design/icons";
-import { useTranslation, Trans } from "react-i18next";
+import { useTranslation } from "react-i18next";
 import { Upload } from "antd";
 import ServiceApi from "../services/Service";
 import EventEditor from "../components/EventEditor";
