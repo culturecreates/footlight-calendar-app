@@ -101,6 +101,7 @@ const AddEvent = function ({ currentLang, eventDetails }) {
   //   }
   // },[allLocations,eventDetails])
   const handleSubmit = (values) => {
+   
     if(!isRecurring)
     {
     values.startDate.set({
@@ -136,12 +137,12 @@ const AddEvent = function ({ currentLang, eventDetails }) {
       if(isRecurring)
       {const recurEvent = {
         frequency: values.frequency,
-        startDate: moment(values.startDateRecur).format("YYYY-MM-DD"),
-        endDate: moment(values.endDateRecur).format("YYYY-MM-DD"),
+        startDate: moment(values.startDateRecur[0]).format("YYYY-MM-DD"),
+        endDate: moment(values.startDateRecur[1]).format("YYYY-MM-DD"),
         startTime: moment(values.startTimeRecur).format("HH:mm"),
         endTime: moment(values.endTimeRecur).format("HH:mm"),
         timeZone: values.timeZone,
-        days:values.frequency==="WEEKLY"?values.daysOfWeek:undefined
+        weekDays:values.frequency==="WEEKLY"?values.daysOfWeek:undefined
       }; 
       eventObj.recurringEvent= recurEvent;
     } 
@@ -222,8 +223,8 @@ const AddEvent = function ({ currentLang, eventDetails }) {
         setNumberOfDays(eventDetails.subEvents?.length)
         form.setFieldsValue({
           frequency: eventDetails.recurringEvent?.frequency,
-          startDateRecur: moment(new Date(eventDetails.recurringEvent?.startDate), "DD-MM-YYYY").tz(eventDetails.scheduleTimezone?eventDetails.scheduleTimezone:"Canada/Eastern"),
-          endDateRecur: moment(new Date(eventDetails.recurringEvent?.endDate), "DD-MM-YYYY").tz(eventDetails.scheduleTimezone?eventDetails.scheduleTimezone:"Canada/Eastern"),
+          startDateRecur: [moment(new Date(eventDetails.recurringEvent?.startDate), "DD-MM-YYYY").tz(eventDetails.scheduleTimezone?eventDetails.scheduleTimezone:"Canada/Eastern"),
+           moment(new Date(eventDetails.recurringEvent?.endDate), "DD-MM-YYYY").tz(eventDetails.scheduleTimezone?eventDetails.scheduleTimezone:"Canada/Eastern")],
           startTimeRecur: moment(eventDetails.recurringEvent?.startTime, "HH:mm"),
           endTimeRecur: moment(eventDetails.recurringEvent?.endTime, "HH:mm"),
           

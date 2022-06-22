@@ -9,6 +9,7 @@ import {
     EditOutlined
   } from "@ant-design/icons";
 const { Option } = Select;
+const { RangePicker } = DatePicker;
 const RecurringEvent = function ({ currentLang = "fr" ,formFields, numberOfDaysEvent=0}) {
   const [startDisable, setStartDisable] = useState(
     moment().format("YYYY-MM-DD")
@@ -25,12 +26,12 @@ const RecurringEvent = function ({ currentLang = "fr" ,formFields, numberOfDaysE
     // setEndDisable(moment(dateString, "MM-DD-YYYY"));
   };
   useEffect(()=>{
-      if(formFields && formFields.endDateRecur && formFields.startDateRecur)
+      if(formFields &&  formFields.startDateRecur)
       if(formFields.frequency === "DAILY")
-        getNumberOfDays(formFields.startDateRecur,formFields.endDateRecur)
+        getNumberOfDays(formFields.startDateRecur[0],formFields.startDateRecur[1])
       else if(formFields.frequency === "WEEKLY") 
       {
-        getNumberOfWeekDays(moment(new Date(formFields.startDateRecur), "YYYY,MM,DD"),moment(new Date(formFields.endDateRecur), "YYYY,MM,DD"),formFields.daysOfWeek)
+        getNumberOfWeekDays(moment(new Date(formFields.startDateRecur[0]), "YYYY,MM,DD"),moment(new Date(formFields.startDateRecur[1]), "YYYY,MM,DD"),formFields.daysOfWeek)
       }
       else
       setNumberofDates(0)
@@ -130,22 +131,28 @@ const RecurringEvent = function ({ currentLang = "fr" ,formFields, numberOfDaysE
       <div className="flex-align">
         <div className="date-div">
           <div className="update-select-title">
-            {t("StartDate", { lng: currentLang })}
+            {t("StartDate", { lng: currentLang })} - {t("EndDate", { lng: currentLang })}
           </div>
           <Form.Item
             name="startDateRecur"
             className="status-comment-item"
             rules={[{ required: true, message: "Start date required" }]}
           >
-            <DatePicker
+            {/* <DatePicker
               onChange={onChangeStart}
               format="MM-DD-YYYY"
               // disabledDate={disabledDate}
               disabledDate={(d) => !d || d.isBefore(endDisable)}
-            />
+            /> */}
+            <RangePicker
+      // defaultValue={[moment('2015/01/01', dateFormat), moment('2015/01/01', dateFormat)]}
+      format="MM-DD-YYYY"
+      disabledDate={(d) => !d || d.isSameOrBefore(endDisable)}
+    />
           </Form.Item>
-        </div> <div className="date-div">
-          <div className="update-select-title">
+        </div>
+         {/* <div className="date-div"> */}
+          {/* <div className="update-select-title">
             {t("EndDate", { lng: currentLang })}
           </div>
           <Form.Item
@@ -159,7 +166,7 @@ const RecurringEvent = function ({ currentLang = "fr" ,formFields, numberOfDaysE
               disabledDate={(d) => !d || d.isSameOrBefore(startDisable)}
             />
           </Form.Item>
-        </div>
+        </div> */}
        
       </div>
       <div className="flex-align">

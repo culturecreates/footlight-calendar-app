@@ -25,3 +25,13 @@
     margin: 0;
     margin-bottom: 20px;
 }
+.recurring-modal.ant-modal{
+    width: 600px;
+    max-height: 475px;
+}
+.recurring-modal .calendar{
+    padding: 1px;
+    width: 350px;
+    height: 355px;
+    overflow: auto;
+}
