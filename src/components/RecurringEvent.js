@@ -8,15 +8,19 @@ import RecurringModal from "./RecurringModal";
 import {
     EditOutlined
   } from "@ant-design/icons";
+import uniqid from "uniqid";
+
 const { Option } = Select;
 const { RangePicker } = DatePicker;
-const RecurringEvent = function ({ currentLang = "fr" ,formFields, numberOfDaysEvent=0}) {
+const RecurringEvent = function ({ currentLang = "fr" ,formFields, numberOfDaysEvent=0, form,eventDetails}) {
   const [startDisable, setStartDisable] = useState(
     moment().format("YYYY-MM-DD")
   );
   const [endDisable, setEndDisable] = useState(moment().format("YYYY-MM-DD"));
   const [nummberofDates, setNumberofDates]=useState(numberOfDaysEvent)
   const [isModalVisible, setIsModalVisible] = useState(false);
+  const [customDates,setCustomDates]=useState([])
+  const [isCustom, setIsCustom] = useState(false)
   const { t, i18n } = useTranslation();
 
   const onChangeStart = (date, dateString) => {
@@ -26,11 +30,68 @@ const RecurringEvent = function ({ currentLang = "fr" ,formFields, numberOfDaysE
     // setEndDisable(moment(dateString, "MM-DD-YYYY"));
   };
   useEffect(()=>{
+    if(eventDetails && eventDetails.recurringEvent?.customDates)
+    {
+      
+      const custom=eventDetails.recurringEvent?.customDates.map(item=>{
+        const objTime ={
+          startTime: item.startTime &&moment(item.startTime,"hh:mm a").format("hh:mm a"),
+          endTime:item.endTime && moment(item.endTime,"hh:mm a").format("hh:mm a"),
+          start:item.startTime ,
+          end: item.endTime
+        }
+      const obj = {
+        id: uniqid(),
+        name: "test name",
+        location: "test Location",
+        startDate: new Date(
+          moment(item.startDate).format("YYYY,M,D")
+        ),
+        endDate: new Date(
+          moment(item.startDate).format("YYYY,M,D")
+        ),
+        initDate: item.startDate ,
+        isDeleted: false,
+        time: objTime
+      };
+      return obj;
+    })
+    console.log(custom)
+    setCustomDates(custom)
+    }
+  },[eventDetails])
+
+  const onCustomize = (customizedDate) => {
+    setCustomDates(customizedDate)
+    if(customizedDate.length>0)
+    {
+     
+    setIsCustom(true)
+    const custom =customizedDate.filter(item => !item.isDeleted).map(item=>{
+      const obj={
+        startDate:moment(item.startDate.toLocaleDateString()).format(
+          "YYYY-MM-DD"
+        ),
+        startTime:item.time?.start,
+        endTime: item.time?.end && item.time.end
+      }
+      return obj;
+    })
+    form.setFieldsValue({
+      frequency:"CUSTOM",
+      customDates: custom
+    })
+    console.log(custom)
+  }
+  };
+  useEffect(()=>{
       if(formFields &&  formFields.startDateRecur)
       if(formFields.frequency === "DAILY")
-        getNumberOfDays(formFields.startDateRecur[0],formFields.startDateRecur[1])
+       { getNumberOfDays(formFields.startDateRecur[0],formFields.startDateRecur[1])
+      setIsCustom(false)}
       else if(formFields.frequency === "WEEKLY") 
       {
+        setIsCustom(false)
         getNumberOfWeekDays(moment(new Date(formFields.startDateRecur[0]), "YYYY,MM,DD"),moment(new Date(formFields.startDateRecur[1]), "YYYY,MM,DD"),formFields.daysOfWeek)
       }
       else
@@ -79,6 +140,7 @@ const RecurringEvent = function ({ currentLang = "fr" ,formFields, numberOfDaysE
       <div className="update-select-title">
         {t("Frequency", { lng: currentLang })}
       </div>
+      
       <Form.Item
         name="frequency"
         className="status-comment-item"
@@ -98,6 +160,25 @@ const RecurringEvent = function ({ currentLang = "fr" ,formFields, numberOfDaysE
           <Option value="CUSTOM">Custom</Option>
         </Select>
       </Form.Item>
+      {formFields && (formFields.frequency === "CUSTOM" || isCustom) &&
+      <Form.Item
+      name="customDates"
+      className="status-comment-item"
+      rules={[{ required: false, message: "Start date required" }]}
+    >
+      <div>
+        {customDates.map(item=><Card>
+          <div className="custom-no-of-date">{moment(item.startDate.toLocaleDateString()).format(
+                      "MMM,DD,YYYY"
+                    )}</div>
+                    {item.time &&
+          <div>{item.time.startTime} - {item.time.endTime  && item.time.endTime} </div>}
+        </Card>)}
+      </div>
+      </Form.Item>
+}
+      {formFields && (formFields.frequency !== "CUSTOM" && !isCustom) &&
+      <>
       {formFields && formFields.frequency==="WEEKLY" &&
       <>
       <div className="update-select-title">
@@ -195,13 +276,16 @@ const RecurringEvent = function ({ currentLang = "fr" ,formFields, numberOfDaysE
           </Form.Item>
         </div>
       </div>
+      </>
+}
       <div className="customize-div">
       {nummberofDates !==0 &&
           <div> {nummberofDates +" Dates"}</div>}
           
-          {/* <div onClick={()=>setIsModalVisible(true)} className="customize"><EditOutlined />Customize</div> */}
+          <div onClick={()=>setIsModalVisible(true)} className="customize"><EditOutlined />Customize</div>
       </div>
-      <RecurringModal isModalVisible={isModalVisible} setIsModalVisible={setIsModalVisible}/>
+      <RecurringModal isModalVisible={isModalVisible} setIsModalVisible={setIsModalVisible}
+      currentLang={currentLang} setCustomDates={onCustomize} customDates={customDates}/>
     </Card>
   );
 };
