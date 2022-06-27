@@ -51,6 +51,7 @@ const AddEvent = function ({ currentLang, eventDetails }) {
   const [fileList, setFileList] = useState([]);
   const [placeList, setPlaceList] = useState([]);
   const [isUpload, setIsUpload] = useState(false);
+  const [isUpdate, setIsUpdate] = useState(false);
   const [numberOfDays, setNumberOfDays] = useState(0);
   const [compressedFile, setCompressedFile] = useState(null);
   const [form] = Form.useForm();
@@ -196,6 +197,7 @@ const AddEvent = function ({ currentLang, eventDetails }) {
 
   useEffect(() => {
     if (eventDetails) {
+      setIsUpdate(true)
       if (eventDetails.endDate) setIsEndDate(true);
       if(placeStore!==null)
       setPlaceList(eventDetails?.eventAttendanceMode !=="OFFLINE"?placeStore.virtualLocation:placeStore.places);
@@ -498,10 +500,13 @@ const AddEvent = function ({ currentLang, eventDetails }) {
             size="large"
             icon={<CloseOutlined />}
             onClick={() => {
-              form.resetFields();
+              if(isUpdate)
+               navigate(`/admin/events`)
+              else
+              {form.resetFields();
               form.setFieldsValue({
                 desc: "",
-              });
+              });}
             }}
           >
             Cancel
@@ -512,7 +517,7 @@ const AddEvent = function ({ currentLang, eventDetails }) {
             size="large"
             icon={<CheckOutlined />}
           >
-            Save
+            {isUpdate?"Update": "Save"}
           </Button>
         </Form.Item>
       </Form>

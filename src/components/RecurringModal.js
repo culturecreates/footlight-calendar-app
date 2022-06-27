@@ -38,6 +38,11 @@ const RecurringModal = ({ isModalVisible, setIsModalVisible, currentLang ,setCus
       start:moment(values.startTimeCustom).format("HH:mm"),
       end: values.endTimeCustom && moment(values.endTimeCustom).format("HH:mm")
     }
+    
+    if(updateAllTime){
+      setDataSource(dateSource.map(item=>({...item,time:obj})))
+    }
+    else
     setDataSource(
       dateSource.map((item) => {
         if (selectedDateId === item.id) item.time = obj;
@@ -47,8 +52,9 @@ const RecurringModal = ({ isModalVisible, setIsModalVisible, currentLang ,setCus
     form.resetFields()
     setShowAddTime(false)
     setSelectedDateId("-100")
+    
     setUpdateAllTime(false)
-    console.log(obj)
+    
   };
 
   useEffect(() => {
@@ -120,6 +126,15 @@ const RecurringModal = ({ isModalVisible, setIsModalVisible, currentLang ,setCus
     else
      setUpdateAllTime(false) 
   };
+
+  const deleteTime=(event)=>{
+    setDataSource(
+      dateSource.map((item) => {
+        if (event.id === item.id) delete item.time;
+        return item;
+      })
+    );
+  }
   return (
     <Modal
       title="Basic Modal"
@@ -155,7 +170,7 @@ const RecurringModal = ({ isModalVisible, setIsModalVisible, currentLang ,setCus
         <Col flex="auto" className="custom-date-column">
           <div className="custom-time-layout">
             <div className="custom-no-of-date">{dateSource.length} dates</div>
-            <div>4 time</div>
+            <div>{dateSource.filter(item=>item.time).length} time</div>
           </div>
           <Divider />
           <div>
@@ -186,7 +201,7 @@ const RecurringModal = ({ isModalVisible, setIsModalVisible, currentLang ,setCus
                   <div className="custom-time-layout" style={{ margin: "9px" }}>
                     <div>{item.time.startTime && item.time.startTime} - {item.time.endTime  && item.time.endTime} </div>
                     <div>
-                      <CloseOutlined className="close-time" />{" "}
+                      <CloseOutlined className="close-time" onClick={()=>deleteTime(item)}/>{" "}
                     </div>
                   </div>
                 )}
@@ -212,7 +227,7 @@ const RecurringModal = ({ isModalVisible, setIsModalVisible, currentLang ,setCus
                     data-testid="status-update-form"
                     onFinish={handleSubmit}
                   >
-                    <div className="flex-align">
+                    <div className="flex-align" style={{marginTop:"15px"}}>
                       <div className="date-div">
                         <div className="update-select-title">
                           {t("StartTime", { lng: currentLang })}
@@ -246,7 +261,7 @@ const RecurringModal = ({ isModalVisible, setIsModalVisible, currentLang ,setCus
                       <Checkbox
                         onChange={onChangeCheckbox}
                         className="check-time"
-                        value={updateAllTime}
+                        checked={updateAllTime}
                       >
                         Add this time to all dates
                       </Checkbox>
