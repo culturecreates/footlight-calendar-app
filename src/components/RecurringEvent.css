@@ -33,7 +33,7 @@
     padding: 1px;
     width: 350px;
     height: 375px;
-    overflow: auto;
+    /* overflow: auto; */
 }
 .recurring-modal .calendar .months-container .month-container{
     height: 230px;
@@ -103,3 +103,6 @@
     color: blue;
     font-weight: 700;
 }
+/* .recurring-time-picker .ant-picker-footer{
+    display: none;
+} */

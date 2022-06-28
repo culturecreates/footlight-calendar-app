@@ -23,46 +23,49 @@ import {
 import { useTranslation } from "react-i18next";
 import CopyTimeModal from "./CopyTimeModal";
 
-const RecurringModal = ({ isModalVisible, setIsModalVisible, currentLang ,setCustomDates,customDates}) => {
+const RecurringModal = ({
+  isModalVisible,
+  setIsModalVisible,
+  currentLang,
+  setCustomDates,
+  customDates,
+}) => {
   const [dateSource, setDataSource] = useState([]);
   const [test, setTest] = useState();
   const [showAddTime, setShowAddTime] = useState(false);
-  const [updateAllTime, setUpdateAllTime] = useState(false)
-  const [copyModal, setCopyModal] = useState(false)
+  const [updateAllTime, setUpdateAllTime] = useState(false);
+  const [copyModal, setCopyModal] = useState(false);
   const [selectedDateId, setSelectedDateId] = useState("-100");
   const [selectedCopyTime, setSelectedCopyTime] = useState();
   const { t } = useTranslation();
   const [form] = Form.useForm();
 
   const handleSubmit = (values) => {
-    const obj ={
+    const obj = {
       startTime: moment(values.startTimeCustom).format("hh:mm a"),
-      endTime:values.endTimeCustom && moment(values.endTimeCustom).format("hh:mm a"),
-      start:moment(values.startTimeCustom).format("HH:mm"),
-      end: values.endTimeCustom && moment(values.endTimeCustom).format("HH:mm")
-    }
-    
-    if(updateAllTime){
-      setDataSource(dateSource.map(item=>({...item,time:[obj]})))
-    }
-    else
-    setDataSource(
-      dateSource.map((item) => {
-        if (selectedDateId === item.id) {
-          if(item.time)
-          item.time = [...item.time,obj];
-          else
-          item.time = [obj];
-        }
-        return item;
-      })
-    );
-    form.resetFields()
-    setShowAddTime(false)
-    setSelectedDateId("-100")
-    
-    setUpdateAllTime(false)
-    
+      endTime:
+        values.endTimeCustom && moment(values.endTimeCustom).format("hh:mm a"),
+      start: moment(values.startTimeCustom).format("HH:mm"),
+      end: values.endTimeCustom && moment(values.endTimeCustom).format("HH:mm"),
+    };
+
+    if (updateAllTime) {
+      setDataSource(dateSource.map((item) => ({ ...item, time: [obj] })));
+    } else
+      setDataSource(
+        dateSource.map((item) => {
+          if (selectedDateId === item.id) {
+            if (item.time) item.time = [...item.time, obj];
+            else item.time = [obj];
+          }
+          return item;
+        })
+      );
+    form.resetFields();
+    setShowAddTime(false);
+    setSelectedDateId("-100");
+
+    setUpdateAllTime(false);
   };
 
   useEffect(() => {
@@ -70,16 +73,16 @@ const RecurringModal = ({ isModalVisible, setIsModalVisible, currentLang ,setCus
     let name = d.getMonth();
     const el1 = document.querySelector(`[data-month-id="${name}"]`);
     if (el1) el1.scrollIntoView();
-    setDataSource(customDates)
+    setDataSource(customDates);
   }, [isModalVisible]);
 
   const handleOk = () => {
-    setCustomDates(dateSource)
+    setCustomDates(dateSource);
     setIsModalVisible(false);
   };
 
   const handleCancel = () => {
-    setDataSource([])
+    setDataSource([]);
     setIsModalVisible(false);
   };
 
@@ -108,7 +111,7 @@ const RecurringModal = ({ isModalVisible, setIsModalVisible, currentLang ,setCus
       else setDataSource([...dateSource, test]);
       setTest(null);
     }
-    console.log(dateSource)
+    console.log(dateSource);
   }, [test]);
 
   const deleteEvent = (event) => {
@@ -128,27 +131,27 @@ const RecurringModal = ({ isModalVisible, setIsModalVisible, currentLang ,setCus
     );
   };
 
-  const copyEvents =(event)=>{
-    setSelectedCopyTime(event)
-    setCopyModal(true)
-
-  }
-
-  const onChangeCheckbox = (e) => {
-    if(e.target.checked)
-     setUpdateAllTime(true)
-    else
-     setUpdateAllTime(false) 
+  const copyEvents = (event) => {
+    setSelectedCopyTime(event);
+    setCopyModal(true);
   };
 
-  const deleteTime=(event)=>{
+  const onChangeCheckbox = (e) => {
+    if (e.target.checked) setUpdateAllTime(true);
+    else setUpdateAllTime(false);
+  };
+
+  const deleteTime = (event,start) => {
     setDataSource(
       dateSource.map((item) => {
-        if (event.id === item.id) delete item.time;
-        return item;
+        const obj={
+          ...item,time:event.id === item.id?item.time.filter(eventTime=> eventTime.startTime !== start):item.time
+        }
+        
+        return obj;
       })
     );
-  }
+  };
   return (
     <Modal
       title="Custom Recurring Events"
@@ -184,7 +187,7 @@ const RecurringModal = ({ isModalVisible, setIsModalVisible, currentLang ,setCus
         <Col flex="auto" className="custom-date-column">
           <div className="custom-time-layout">
             <div className="custom-no-of-date">{dateSource.length} dates</div>
-            <div>{dateSource.filter(item=>item.time).length} times</div>
+            <div>{dateSource.filter((item) => item.time).length} times</div>
           </div>
           <Divider />
           <div>
@@ -206,25 +209,34 @@ const RecurringModal = ({ isModalVisible, setIsModalVisible, currentLang ,setCus
                     {item.isDeleted ? (
                       <UndoOutlined onClick={() => redoEvent(item)} />
                     ) : (
-                      <CopyOutlined onClick={()=> copyEvents(item)}/>
+                      <CopyOutlined onClick={() => copyEvents(item)} />
                     )}
                     <DeleteFilled onClick={() => deleteEvent(item)} />
                   </div>
                 </div>
-                {!item.isDeleted && item.time &&(
-                  item.time.map(customTime=>
-                  <div className="custom-time-layout" style={{ margin: "9px" }}>
-                    <div>{customTime.startTime && customTime.startTime} - {customTime.endTime  && customTime.endTime} </div>
-                    <div>
-                      <CloseOutlined className="close-time" onClick={()=>deleteTime(item)}/>{" "}
+                {!item.isDeleted &&
+                  item.time &&
+                  item.time.map((customTime) => (
+                    <div
+                      className="custom-time-layout"
+                      style={{ margin: "9px" }}
+                    >
+                      <div>
+                        {customTime.startTime && customTime.startTime} {customTime.endTime?" - ":""}
+                        {customTime.endTime && customTime.endTime}{" "}
+                      </div>
+                      <div>
+                        <CloseOutlined
+                          className="close-time"
+                          onClick={() => deleteTime(item,customTime.startTime)}
+                        />{" "}
+                      </div>
                     </div>
-                  </div>
-                  )
-                )}
+                  ))}
                 {!item.isDeleted && selectedDateId !== item.id && (
                   <div className="add-time-btn">
                     <span
-                    style={{cursor:"pointer"}}
+                      style={{ cursor: "pointer" }}
                       onClick={() => {
                         setShowAddTime(true);
                         setSelectedDateId(item.id);
@@ -243,7 +255,7 @@ const RecurringModal = ({ isModalVisible, setIsModalVisible, currentLang ,setCus
                     data-testid="status-update-form"
                     onFinish={handleSubmit}
                   >
-                    <div className="flex-align" style={{marginTop:"15px"}}>
+                    <div className="flex-align" style={{ marginTop: "15px" }}>
                       <div className="date-div">
                         <div className="update-select-title">
                           {t("StartTime", { lng: currentLang })}
@@ -255,7 +267,15 @@ const RecurringModal = ({ isModalVisible, setIsModalVisible, currentLang ,setCus
                             { required: true, message: "Start time required" },
                           ]}
                         >
-                          <TimePicker format="HH:mm" />
+                          <TimePicker
+                            format="HH:mm"
+                            popupClassName="recurring-time-picker"
+                            // onSelect={(value) => {
+                            //   form.setFieldsValue({
+                            //     startTimeCustom: value,
+                            //   });
+                            // }}
+                          />
                         </Form.Item>
                       </div>
                       <div className="date-div">
@@ -269,7 +289,15 @@ const RecurringModal = ({ isModalVisible, setIsModalVisible, currentLang ,setCus
                             { required: false, message: "End time required" },
                           ]}
                         >
-                          <TimePicker format="HH:mm" />
+                          <TimePicker
+                            format="HH:mm"
+                            popupClassName="recurring-time-picker"
+                            // onSelect={(value) => {
+                            //   form.setFieldsValue({
+                            //     endTimeCustom: value,
+                            //   });
+                            // }}
+                          />
                         </Form.Item>
                       </div>
                     </div>
@@ -303,8 +331,9 @@ const RecurringModal = ({ isModalVisible, setIsModalVisible, currentLang ,setCus
                 <Divider />
               </div>
             ))}
-            {dateSource.length===0 && 
-            <Empty description={"No date selected"} />}
+            {dateSource.length === 0 && (
+              <Empty description={"No date selected"} />
+            )}
           </div>
         </Col>
       </Row>
