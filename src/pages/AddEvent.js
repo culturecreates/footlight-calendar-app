@@ -51,6 +51,7 @@ const AddEvent = function ({ currentLang, eventDetails }) {
   const [fileList, setFileList] = useState([]);
   const [placeList, setPlaceList] = useState([]);
   const [isUpload, setIsUpload] = useState(false);
+  const [isUpdate, setIsUpdate] = useState(false);
   const [numberOfDays, setNumberOfDays] = useState(0);
   const [compressedFile, setCompressedFile] = useState(null);
   const [form] = Form.useForm();
@@ -137,12 +138,13 @@ const AddEvent = function ({ currentLang, eventDetails }) {
       if(isRecurring)
       {const recurEvent = {
         frequency: values.frequency,
-        startDate: moment(values.startDateRecur[0]).format("YYYY-MM-DD"),
-        endDate: moment(values.startDateRecur[1]).format("YYYY-MM-DD"),
-        startTime: moment(values.startTimeRecur).format("HH:mm"),
-        endTime: moment(values.endTimeRecur).format("HH:mm"),
-        timeZone: values.timeZone,
-        weekDays:values.frequency==="WEEKLY"?values.daysOfWeek:undefined
+        startDate: form.getFieldsValue().frequency !== "CUSTOM"&&moment(values.startDateRecur[0]).format("YYYY-MM-DD"),
+        endDate: form.getFieldsValue().frequency !== "CUSTOM"&&moment(values.startDateRecur[1]).format("YYYY-MM-DD"),
+        startTime: form.getFieldsValue().frequency !== "CUSTOM"&&moment(values.startTimeRecur).format("HH:mm"),
+        endTime: form.getFieldsValue().frequency !== "CUSTOM"&&moment(values.endTimeRecur).format("HH:mm"),
+        // timeZone: values.timeZone,
+        weekDays:values.frequency==="WEEKLY"?values.daysOfWeek:undefined,
+        customDates: form.getFieldsValue().frequency === "CUSTOM"&& form.getFieldsValue().customDates
       }; 
       eventObj.recurringEvent= recurEvent;
     } 
@@ -195,6 +197,7 @@ const AddEvent = function ({ currentLang, eventDetails }) {
 
   useEffect(() => {
     if (eventDetails) {
+      setIsUpdate(true)
       if (eventDetails.endDate) setIsEndDate(true);
       if(placeStore!==null)
       setPlaceList(eventDetails?.eventAttendanceMode !=="OFFLINE"?placeStore.virtualLocation:placeStore.places);
@@ -227,7 +230,7 @@ const AddEvent = function ({ currentLang, eventDetails }) {
            moment(new Date(eventDetails.recurringEvent?.endDate), "DD-MM-YYYY")],
           startTimeRecur: moment(eventDetails.recurringEvent?.startTime, "HH:mm"),
           endTimeRecur: moment(eventDetails.recurringEvent?.endTime, "HH:mm"),
-          
+          customDates:eventDetails.recurringEvent?.customDates,
           daysOfWeek:eventDetails.recurringEvent?.weekDays
         })
         setIsRecurring(true)
@@ -418,7 +421,7 @@ const AddEvent = function ({ currentLang, eventDetails }) {
     </Form.Item>
     </div>
             {isRecurring && <RecurringEvent currentLang={currentLang} formFields={formValue}
-            numberOfDaysEvent={numberOfDays} />}
+            numberOfDaysEvent={numberOfDays} form={form} eventDetails={eventDetails}/>}
             <div>
               <Radio.Group
                 name="radiogroup"
@@ -497,10 +500,13 @@ const AddEvent = function ({ currentLang, eventDetails }) {
             size="large"
             icon={<CloseOutlined />}
             onClick={() => {
-              form.resetFields();
+              if(isUpdate)
+               navigate(`/admin/events`)
+              else
+              {form.resetFields();
               form.setFieldsValue({
                 desc: "",
-              });
+              });}
             }}
           >
             Cancel
@@ -511,7 +517,7 @@ const AddEvent = function ({ currentLang, eventDetails }) {
             size="large"
             icon={<CheckOutlined />}
           >
-            Save
+            {isUpdate?"Update": "Save"}
           </Button>
         </Form.Item>
       </Form>
