@@ -21,7 +21,9 @@ export default class ServiceApi {
     return Axios({
       url: `all-venues`,
       method: "GET",
-    
+      params:{
+        excludeContainsPlace: true
+      }
     });
   }
   static searchSuggesion(value,lng) {
