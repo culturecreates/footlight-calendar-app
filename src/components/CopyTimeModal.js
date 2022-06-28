@@ -62,10 +62,12 @@ const CopyTimeModal = ({
       okText="Done"
     >
       {copyTime && copyTime.time && (
+          copyTime.time.map(customTime=>
         <div className="replace-txt">
-          {copyTime.time.startTime && copyTime.time.startTime} -{" "}
-          {copyTime.time.endTime && copyTime.time.endTime}{" "}
+          {customTime.startTime && customTime.startTime} -{" "}
+          {customTime.endTime && customTime.endTime}{" "}
         </div>
+          )
       )}
       <div className="replace-txt">
         Replace existing times on the following dates:

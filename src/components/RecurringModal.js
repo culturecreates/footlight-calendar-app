@@ -43,12 +43,17 @@ const RecurringModal = ({ isModalVisible, setIsModalVisible, currentLang ,setCus
     }
     
     if(updateAllTime){
-      setDataSource(dateSource.map(item=>({...item,time:obj})))
+      setDataSource(dateSource.map(item=>({...item,time:[obj]})))
     }
     else
     setDataSource(
       dateSource.map((item) => {
-        if (selectedDateId === item.id) item.time = obj;
+        if (selectedDateId === item.id) {
+          if(item.time)
+          item.time = [...item.time,obj];
+          else
+          item.time = [obj];
+        }
         return item;
       })
     );
@@ -207,12 +212,14 @@ const RecurringModal = ({ isModalVisible, setIsModalVisible, currentLang ,setCus
                   </div>
                 </div>
                 {!item.isDeleted && item.time &&(
+                  item.time.map(customTime=>
                   <div className="custom-time-layout" style={{ margin: "9px" }}>
-                    <div>{item.time.startTime && item.time.startTime} - {item.time.endTime  && item.time.endTime} </div>
+                    <div>{customTime.startTime && customTime.startTime} - {customTime.endTime  && customTime.endTime} </div>
                     <div>
                       <CloseOutlined className="close-time" onClick={()=>deleteTime(item)}/>{" "}
                     </div>
                   </div>
+                  )
                 )}
                 {!item.isDeleted && selectedDateId !== item.id && (
                   <div className="add-time-btn">

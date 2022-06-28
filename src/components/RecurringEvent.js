@@ -38,15 +38,7 @@ const RecurringEvent = function ({
       
     setIsCustom(true)
       const custom = eventDetails.recurringEvent?.customDates.map((item) => {
-        const objTime = {
-          startTime:
-            item.startTime &&
-            moment(item.startTime, "hh:mm a").format("hh:mm a"),
-          endTime:
-            item.endTime && moment(item.endTime, "hh:mm a").format("hh:mm a"),
-          start: item.startTime,
-          end: item.endTime,
-        };
+        
         const obj = {
           id: uniqid(),
           name: "test name",
@@ -55,7 +47,18 @@ const RecurringEvent = function ({
           endDate: new Date(moment(item.startDate).format("YYYY,M,D")),
           initDate: item.startDate,
           isDeleted: false,
-          time: objTime,
+          time: item.customTimes ? item.customTimes.map(customTime=>{
+            const objTime = {
+              startTime:
+              customTime.startTime &&
+                moment(customTime.startTime, "hh:mm a").format("hh:mm a"),
+              endTime:
+              customTime.endTime && moment(customTime.endTime, "hh:mm a").format("hh:mm a"),
+              start: customTime.startTime,
+              end: customTime.endTime,
+            };
+            return objTime
+          }):[],
         };
         return obj;
       });
@@ -75,8 +78,15 @@ const RecurringEvent = function ({
             startDate: moment(item.startDate.toLocaleDateString()).format(
               "YYYY-MM-DD"
             ),
-            startTime: item.time?.start,
-            endTime: item.time?.end && item.time.end,
+            customTimes:item.time?item.time.map(customTime=>{
+              const obj={
+                startTime: customTime?.start,
+                endTime: customTime?.end && customTime.end,
+              }
+              return obj
+            })
+            :[]
+            
           };
           return obj;
         });
@@ -187,10 +197,12 @@ if(formFields)
                 </div>
 
                 {item.time && (
+                  item.time.map(customTime=>
                   <div>
-                    {item.time.startTime} -{" "}
-                    {item.time.endTime && item.time.endTime}{" "}
+                    {customTime.startTime} -{" "}
+                    {customTime.endTime && customTime.endTime}{" "}
                   </div>
+                  )
                 )}
               </Card>
             ))}
