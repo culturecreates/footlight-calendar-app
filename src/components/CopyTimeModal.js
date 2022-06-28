@@ -12,6 +12,7 @@ const CopyTimeModal = ({
 }) => {
   const [checkOptions, setCheckOptions] = useState([]);
   const [selectedCheckbox, setSelectedCheckbox] = useState([]);
+  const [checkAll, setCheckAll] = useState(false);
   const handleOk = () => {
     const newCopyArray = recurringEvents.filter((item) => {
       if (selectedCheckbox.includes(item.id)) item.time = copyTime.time;
@@ -24,7 +25,6 @@ const CopyTimeModal = ({
 
   const onChange = (checkedValues) => {
     setSelectedCheckbox(checkedValues);
-    console.log("checked = ", checkedValues);
   };
 
   const handleCancel = () => {
@@ -46,6 +46,12 @@ const CopyTimeModal = ({
           })
       );
   }, [recurringEvents, copyTime]);
+
+  const onCheckAllChange = (e) => {
+    setSelectedCheckbox(e.target.checked ? recurringEvents.map(item=>item.id) : []);
+    
+    setCheckAll(e.target.checked);
+  };
   return (
     <Modal
       title="Duplicate Times"
@@ -68,7 +74,11 @@ const CopyTimeModal = ({
         className="copycheck"
         options={checkOptions}
         onChange={onChange}
+        value={selectedCheckbox}
       />
+      <Checkbox  onChange={onCheckAllChange} checked={checkAll} className="select-all-check">
+      {checkAll?"Unselect All": "Select All"}
+      </Checkbox>
     </Modal>
   );
 };
