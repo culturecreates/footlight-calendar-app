@@ -199,7 +199,7 @@ if(formFields)
                 {item.time && (
                   item.time.map(customTime=>
                   <div>
-                    {customTime.startTime} -{" "}
+                    {customTime.startTime} {customTime.endTime?" - ":""}
                     {customTime.endTime && customTime.endTime}{" "}
                   </div>
                   )
