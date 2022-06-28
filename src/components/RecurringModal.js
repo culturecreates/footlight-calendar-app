@@ -21,13 +21,16 @@ import {
   CloseOutlined,
 } from "@ant-design/icons";
 import { useTranslation } from "react-i18next";
+import CopyTimeModal from "./CopyTimeModal";
 
 const RecurringModal = ({ isModalVisible, setIsModalVisible, currentLang ,setCustomDates,customDates}) => {
   const [dateSource, setDataSource] = useState([]);
   const [test, setTest] = useState();
   const [showAddTime, setShowAddTime] = useState(false);
   const [updateAllTime, setUpdateAllTime] = useState(false)
+  const [copyModal, setCopyModal] = useState(false)
   const [selectedDateId, setSelectedDateId] = useState("-100");
+  const [selectedCopyTime, setSelectedCopyTime] = useState();
   const { t } = useTranslation();
   const [form] = Form.useForm();
 
@@ -120,6 +123,12 @@ const RecurringModal = ({ isModalVisible, setIsModalVisible, currentLang ,setCus
     );
   };
 
+  const copyEvents =(event)=>{
+    setSelectedCopyTime(event)
+    setCopyModal(true)
+
+  }
+
   const onChangeCheckbox = (e) => {
     if(e.target.checked)
      setUpdateAllTime(true)
@@ -137,7 +146,7 @@ const RecurringModal = ({ isModalVisible, setIsModalVisible, currentLang ,setCus
   }
   return (
     <Modal
-      title="Basic Modal"
+      title="Custom Recurring Events"
       visible={isModalVisible}
       onOk={handleOk}
       onCancel={handleCancel}
@@ -170,7 +179,7 @@ const RecurringModal = ({ isModalVisible, setIsModalVisible, currentLang ,setCus
         <Col flex="auto" className="custom-date-column">
           <div className="custom-time-layout">
             <div className="custom-no-of-date">{dateSource.length} dates</div>
-            <div>{dateSource.filter(item=>item.time).length} time</div>
+            <div>{dateSource.filter(item=>item.time).length} times</div>
           </div>
           <Divider />
           <div>
@@ -192,7 +201,7 @@ const RecurringModal = ({ isModalVisible, setIsModalVisible, currentLang ,setCus
                     {item.isDeleted ? (
                       <UndoOutlined onClick={() => redoEvent(item)} />
                     ) : (
-                      <CopyOutlined />
+                      <CopyOutlined onClick={()=> copyEvents(item)}/>
                     )}
                     <DeleteFilled onClick={() => deleteEvent(item)} />
                   </div>
@@ -292,6 +301,14 @@ const RecurringModal = ({ isModalVisible, setIsModalVisible, currentLang ,setCus
           </div>
         </Col>
       </Row>
+      <CopyTimeModal
+        isModalVisible={copyModal}
+        setIsModalVisible={setCopyModal}
+        currentLang={currentLang}
+        recurringEvents={dateSource}
+        copyTime={selectedCopyTime}
+        updateTime={setDataSource}
+      />
     </Modal>
   );
 };

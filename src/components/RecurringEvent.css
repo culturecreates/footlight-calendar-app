@@ -88,3 +88,14 @@
 .check-time .ant-checkbox+span{
     font-weight: 600;
 }
+.copycheck.ant-checkbox-group{
+    display: flex;
+    flex-direction: column;
+}
+.replace-txt,
+.copycheck.ant-checkbox-group label{
+    margin: 10px 0px;
+    color: #000;
+    font-size: 15px;
+    font-weight: 600;
+}
