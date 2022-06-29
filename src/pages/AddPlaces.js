@@ -19,7 +19,7 @@ import Spinner from "../components/Spinner";
 const AddPlaces = function ({ currentLang,placeDetails }) {
   const [address, setAddress] = useState("");
   const [loading, setLoading] = useState(false);
-
+  const [isUpdate, setIsUpdate] = useState(false);
   const { t, i18n } = useTranslation();
   const [form] = Form.useForm();
   const navigate = useNavigate();
@@ -154,6 +154,7 @@ const AddPlaces = function ({ currentLang,placeDetails }) {
 
   useEffect(() => {
     if (placeDetails) {
+      setIsUpdate(true);
       form.setFieldsValue({
         name: placeDetails.name[currentLang],
         addressCountry:placeDetails.postalAddress?.addressCountry,
@@ -262,10 +263,11 @@ const AddPlaces = function ({ currentLang,placeDetails }) {
             size="large"
             icon={<CloseOutlined />}
             onClick={() => {
-              form.resetFields();
-              form.setFieldsValue({
-                desc: "",
-              });
+              if (isUpdate) navigate(`/admin/places`);
+              else {
+                form.resetFields();
+               
+              }
             }}
           >
             Cancel
@@ -276,7 +278,7 @@ const AddPlaces = function ({ currentLang,placeDetails }) {
             size="large"
             icon={<CheckOutlined />}
           >
-            Save
+            {isUpdate ? "Update" : "Save"}
           </Button>
         </Form.Item>
       </Form>
