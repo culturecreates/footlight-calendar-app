@@ -21,6 +21,8 @@ import AdminEvents from "./AdminEvents";
 import EventDetails from "./EventDetails";
 import { useTranslation, Trans } from "react-i18next";
 import AdminPlaces from "./AdminPlaces";
+import EventContact from "../components/EventContact";
+import AdminContacts from "./AdminContact";
 
 const { Header, Content, Sider } = Layout;
 
@@ -68,7 +70,8 @@ const AdminDashboard = function ({ item, currentLang }) {
           <Route path="add-event" element={<AdminEvents currentLang={currentLang} />} />
           <Route path="places" element={<AdminPlaces currentLang={currentLang} />} />
           <Route path="add-place" element={<AdminPlaces currentLang={currentLang} />} />
-
+          <Route path="contacts" element={<AdminContacts currentLang={currentLang} />} />
+          <Route path="add-contact" element={<AdminContacts currentLang={currentLang} />} />
           <Route path="events/:eventId" element={<EventDetails currentLang={currentLang} isAdmin/>} />
         </Routes>
       </Content>

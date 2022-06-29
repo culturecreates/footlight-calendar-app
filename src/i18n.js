@@ -10,7 +10,7 @@ i18n
     resources: {
       en: {
         translations: {
-          
+          "Email":"Email",
           "Region": "REGION",
           "Types": "TYPES",
           "Type": "Type",
@@ -64,6 +64,7 @@ i18n
       },
       fr: {
         translations: {
+          "Email":"Courriel",
           "Frequency":"Fréquence",
           "RecurringEvent":"Evénement Récurrent",
             "Types": "Types",

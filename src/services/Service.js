@@ -16,7 +16,13 @@ export default class ServiceApi {
     
     });
   }
-
+  static getAllContacts() {
+    return Axios({
+      url: `contact-points`,
+      method: "GET",
+      
+    });
+  }
   static getAllPlaces() {
     return Axios({
       url: `all-venues`,
@@ -66,6 +72,14 @@ export default class ServiceApi {
     });
   }
 
+  static getContactDetail(id) {
+    return Axios({
+      url: `contact-points/${id}`,
+      method: "GET",
+      
+
+    });
+  }
   static getPlaceDetail(id) {
     return Axios({
       url: `places/${id}`,
@@ -116,6 +130,15 @@ export default class ServiceApi {
     });
   }
 
+  static addContact(payload) {
+    return Axios({
+      url: `contact-points`,
+      method: "POST",
+      data: JSON.stringify(payload),
+
+    });
+  }
+
   static addPlace(payload) {
     return Axios({
       url: `places`,
@@ -136,6 +159,15 @@ export default class ServiceApi {
   static updatePlace(payload,id) {
     return Axios({
       url: `places/${id}`,
+      method: "PATCH",
+      data: JSON.stringify(payload),
+
+    });
+  }
+
+  static updateContact(payload,id) {
+    return Axios({
+      url: `contact-points/${id}`,
       method: "PATCH",
       data: JSON.stringify(payload),
 

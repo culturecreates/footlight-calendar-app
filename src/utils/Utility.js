@@ -7,6 +7,10 @@ export const adminSideMenuLinks = [
       name: "Places",
       link: "/admin/places",
     },
+    {
+      name: "Contact",
+      link: "/admin/contacts",
+    },
     
     
   ];
@@ -17,6 +21,44 @@ export const adminSideMenuLinks = [
       return dateString 
   }
 
+  export const adminContact=[
+    {
+      name: "name",
+      title:"Name",
+      required:true,
+      placeHolder: "Enter Contact Name",
+      type:"text"
+    },
+    {
+      name: "description",
+      title:"Description",
+      required:true,
+      placeHolder: "Enter Description",
+      type:"area"
+    },
+    {
+      name: "url",
+      title:"Site Web",
+      required:true,
+      placeHolder: "Enter Url",
+      type:"text"
+    },
+    {
+      name: "email",
+      title:"Email",
+      required:true,
+      placeHolder: "Enter email",
+      type:"text"
+    },
+    {
+      name: "telephone",
+      title:"Telephone",
+      required:true,
+      placeHolder: "Enter Telephone",
+      type:"text"
+    },
+    
+  ]
   export const adminPlaces = [
     {
       name: "name",
