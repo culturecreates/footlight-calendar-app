@@ -13,6 +13,9 @@ import {
   Col,
   Radio,
   message,
+  Divider,
+  Space,
+  Typography,
 } from "antd";
 import {
   FileImageOutlined,
@@ -29,8 +32,9 @@ import { useNavigate } from "react-router-dom";
 import RecurringEvent from "../components/RecurringEvent";
 import Compressor from "compressorjs";
 import { useDispatch, useSelector } from "react-redux";
-import { fetchPlace } from "../action";
+import { fetchContact, fetchPlace } from "../action";
 import { timeZone } from "../utils/Utility";
+import AddNewContactModal from "../components/AddNewContactModal";
 
 const { Option } = Select;
 const { Dragger } = Upload;
@@ -50,8 +54,10 @@ const AddEvent = function ({ currentLang, eventDetails }) {
   const [eventType, setEventType] = useState("offline");
   const [fileList, setFileList] = useState([]);
   const [placeList, setPlaceList] = useState([]);
+  const [contactList, setContactList] = useState([]);
   const [isUpload, setIsUpload] = useState(false);
   const [isUpdate, setIsUpdate] = useState(false);
+  const [showAddContact,setShowAddContact]= useState(false)
   const [numberOfDays, setNumberOfDays] = useState(0);
   const [compressedFile, setCompressedFile] = useState(null);
   const [form] = Form.useForm();
@@ -63,57 +69,79 @@ const AddEvent = function ({ currentLang, eventDetails }) {
   const [endDisable, setEndDisable] = useState(moment().format("YYYY-MM-DD"));
   const { t, i18n } = useTranslation();
 
-  
-
   const dispatch = useDispatch();
   const placeStore = useSelector((state) => state.place);
+  const contactStore = useSelector((state) => state.contact);
   useEffect(() => {
-    if( placeStore==null)
-    {
-      getAllPlaces()
+    if (placeStore == null) {
+      getAllPlaces();
+    } else {
+      setAllLocations(placeStore);
+      setPlaceList(placeStore.places);
     }
-    else
-    {
-     setAllLocations(placeStore);
-     setPlaceList(placeStore.places);
-    }
+
   }, []);
+  useEffect(()=>{
+
+    if (contactStore == null) {
+      getContacts();
+    } else {
+      setContactList(contactStore.map(item=>{
+        const obj={name:item.name["fr"],
+      value:item.uuid}
+      return obj;
+      }));
+
+    }
+  },[contactStore])
+
+  const getContacts = (page = 1) => {
+    
+    ServiceApi.getAllContacts(page, currentLang === "en" ? "EN" : "FR")
+      .then((response) => {
+        if (response && response.data && response.data.data) {
+          const events = response.data.data;
+          dispatch(fetchContact(response.data.data));
+          
+          setContactList(events.map(item=>{
+            const obj={name:item.name["fr"],
+          value:item.uuid}
+          return obj;
+          }));
+        
+        }
+        
+      })
+      .catch((error) => {
+        
+      });
+  };
   const getAllPlaces = () => {
     ServiceApi.getAllPlaces()
       .then((response) => {
         if (response && response.data && response.data.data) {
           const events = response.data.data;
-         
-          
-          setPlaceList(events.places)
+
+          setPlaceList(events.places);
           setAllLocations(events);
           dispatch(fetchPlace(events));
-          //   setTotalPage(response.data.totalPage * 20)
+         
         }
       })
       .catch((error) => {});
   };
 
-  // useEffect(()=>{
-  //   if( eventDetails && allLocations)
-  //   {
-  //   setEventType(eventDetails.eventAttendanceMode ==="OFFLINE"?"online":"offline");
-  //   setPlaceList(eventDetails.eventAttendanceMode !=="OFFLINE"?allLocations.virtualLocation:allLocations.places);
-  //   }
-  // },[allLocations,eventDetails])
   const handleSubmit = (values) => {
-   
-    if(!isRecurring)
-    {
-    values.startDate.set({
-      h: values.startTime.get("hour"),
-      m: values.startTime.get("minute"),
-    });
-    if (isEndDate)
-      values.endDate.set({
-        h: values.endTime.get("hour"),
-        m: values.endTime.get("minute"),
+    if (!isRecurring) {
+      values.startDate.set({
+        h: values.startTime.get("hour"),
+        m: values.startTime.get("minute"),
       });
+      if (isEndDate)
+        values.endDate.set({
+          h: values.endTime.get("hour"),
+          m: values.endTime.get("minute"),
+        });
     }
     const eventObj = {
       name: {
@@ -122,7 +150,9 @@ const AddEvent = function ({ currentLang, eventDetails }) {
       description: {
         fr: values.desc,
       },
-      startDate: !isRecurring ?moment(values.startDate).format("YYYY-MM-DDTHH:mm:ss"): undefined,
+      startDate: !isRecurring
+        ? moment(values.startDate).format("YYYY-MM-DDTHH:mm:ss")
+        : undefined,
       scheduleTimezone: values.timeZone,
       locationId: {
         place: {
@@ -132,22 +162,35 @@ const AddEvent = function ({ currentLang, eventDetails }) {
           entityId: eventType === "online" ? values.location : null,
         },
       },
+      contactPoint: values.contact ?{
+        entityId: values.contact
+      }:undefined,
     };
     if (isEndDate && !isRecurring)
       eventObj.endDate = moment(values.endDate).format("YYYY-MM-DDTHH:mm:ss");
-      if(isRecurring)
-      {const recurEvent = {
+    if (isRecurring) {
+      const recurEvent = {
         frequency: values.frequency,
-        startDate: form.getFieldsValue().frequency !== "CUSTOM"&&moment(values.startDateRecur[0]).format("YYYY-MM-DD"),
-        endDate: form.getFieldsValue().frequency !== "CUSTOM"&&moment(values.startDateRecur[1]).format("YYYY-MM-DD"),
-        startTime: form.getFieldsValue().frequency !== "CUSTOM"&&moment(values.startTimeRecur).format("HH:mm"),
-        endTime: form.getFieldsValue().frequency !== "CUSTOM"&&moment(values.endTimeRecur).format("HH:mm"),
+        startDate:
+          form.getFieldsValue().frequency !== "CUSTOM" &&
+          moment(values.startDateRecur[0]).format("YYYY-MM-DD"),
+        endDate:
+          form.getFieldsValue().frequency !== "CUSTOM" &&
+          moment(values.startDateRecur[1]).format("YYYY-MM-DD"),
+        startTime:
+          form.getFieldsValue().frequency !== "CUSTOM" &&
+          moment(values.startTimeRecur).format("HH:mm"),
+        endTime:
+          form.getFieldsValue().frequency !== "CUSTOM" &&
+          moment(values.endTimeRecur).format("HH:mm"),
         // timeZone: values.timeZone,
-        weekDays:values.frequency==="WEEKLY"?values.daysOfWeek:undefined,
-        customDates: form.getFieldsValue().frequency === "CUSTOM"&& form.getFieldsValue().customDates
-      }; 
-      eventObj.recurringEvent= recurEvent;
-    } 
+        weekDays: values.frequency === "WEEKLY" ? values.daysOfWeek : undefined,
+        customDates:
+          form.getFieldsValue().frequency === "CUSTOM" &&
+          form.getFieldsValue().customDates,
+      };
+      eventObj.recurringEvent = recurEvent;
+    }
 
     if (eventDetails)
       ServiceApi.updateEvent(eventObj, eventDetails.uuid)
@@ -197,20 +240,39 @@ const AddEvent = function ({ currentLang, eventDetails }) {
 
   useEffect(() => {
     if (eventDetails) {
-      setIsUpdate(true)
+      setIsUpdate(true);
       if (eventDetails.endDate) setIsEndDate(true);
-      if(placeStore!==null)
-      setPlaceList(eventDetails?.eventAttendanceMode !=="OFFLINE"?placeStore.virtualLocation:placeStore.places);
+      if (placeStore !== null)
+        setPlaceList(
+          eventDetails?.eventAttendanceMode !== "OFFLINE"
+            ? placeStore.virtualLocation
+            : placeStore.places
+        );
 
       form.setFieldsValue({
-        desc: eventDetails.description?eventDetails.description["fr"]:"",
+        contact:eventDetails.contactPoint?.uuid,
+        desc: eventDetails.description ? eventDetails.description["fr"] : "",
         location: eventDetails.location?.uuid,
-        startDate: moment(new Date(eventDetails.startDate), "DD-MM-YYYY").tz(eventDetails.scheduleTimezone?eventDetails.scheduleTimezone:"Canada/Eastern"),
-        endDate: eventDetails.endDate ? moment(new Date(eventDetails.endDate), "DD-MM-YYYY").tz(eventDetails.scheduleTimezone?eventDetails.scheduleTimezone:"Canada/Eastern"):undefined,
+        startDate: moment(new Date(eventDetails.startDate), "DD-MM-YYYY").tz(
+          eventDetails.scheduleTimezone
+            ? eventDetails.scheduleTimezone
+            : "Canada/Eastern"
+        ),
+        endDate: eventDetails.endDate
+          ? moment(new Date(eventDetails.endDate), "DD-MM-YYYY").tz(
+              eventDetails.scheduleTimezone
+                ? eventDetails.scheduleTimezone
+                : "Canada/Eastern"
+            )
+          : undefined,
         title: eventDetails.name["fr"],
-        endTime: eventDetails.endDate ? moment(eventDetails.endDate.substring(11,20), "HH-mm-ss"): undefined,
-        startTime: moment(eventDetails.startDate.substring(11,20), "HH-mm-ss"),
-        timeZone: eventDetails.scheduleTimezone?eventDetails.scheduleTimezone:"Canada/Eastern",
+        endTime: eventDetails.endDate
+          ? moment(eventDetails.endDate.substring(11, 20), "HH-mm-ss")
+          : undefined,
+        startTime: moment(eventDetails.startDate.substring(11, 20), "HH-mm-ss"),
+        timeZone: eventDetails.scheduleTimezone
+          ? eventDetails.scheduleTimezone
+          : "Canada/Eastern",
       });
       if (eventDetails.image) {
         const obj = {
@@ -221,19 +283,29 @@ const AddEvent = function ({ currentLang, eventDetails }) {
         };
         setFileList([obj]);
       } else setFileList([]);
-      if(eventDetails.recurringEvent)
-      {
-        setNumberOfDays(eventDetails.subEvents?.length)
+      if (eventDetails.recurringEvent) {
+        setNumberOfDays(eventDetails.subEvents?.length);
         form.setFieldsValue({
           frequency: eventDetails.recurringEvent?.frequency,
-          startDateRecur: [moment(new Date(eventDetails.recurringEvent?.startDate), "DD-MM-YYYY"),
-           moment(new Date(eventDetails.recurringEvent?.endDate), "DD-MM-YYYY")],
-          startTimeRecur: moment(eventDetails.recurringEvent?.startTime, "HH:mm"),
+          startDateRecur: [
+            moment(
+              new Date(eventDetails.recurringEvent?.startDate),
+              "DD-MM-YYYY"
+            ),
+            moment(
+              new Date(eventDetails.recurringEvent?.endDate),
+              "DD-MM-YYYY"
+            ),
+          ],
+          startTimeRecur: moment(
+            eventDetails.recurringEvent?.startTime,
+            "HH:mm"
+          ),
           endTimeRecur: moment(eventDetails.recurringEvent?.endTime, "HH:mm"),
-          customDates:eventDetails.recurringEvent?.customDates,
-          daysOfWeek:eventDetails.recurringEvent?.weekDays
-        })
-        setIsRecurring(true)
+          customDates: eventDetails.recurringEvent?.customDates,
+          daysOfWeek: eventDetails.recurringEvent?.weekDays,
+        });
+        setIsRecurring(true);
       }
     } else
       form.setFieldsValue({
@@ -323,51 +395,51 @@ const AddEvent = function ({ currentLang, eventDetails }) {
             >
               <Input placeholder="Enter Event Name" className="replace-input" />
             </Form.Item>
-            {!isRecurring &&
-            <div className="flex-align">
-              <div className="date-div">
-                <div className="update-select-title">
-                  {t("StartDate", { lng: currentLang })}
+            {!isRecurring && (
+              <div className="flex-align">
+                <div className="date-div">
+                  <div className="update-select-title">
+                    {t("StartDate", { lng: currentLang })}
+                  </div>
+                  <Form.Item
+                    name="startDate"
+                    className="status-comment-item"
+                    rules={[{ required: true, message: "Start date required" }]}
+                  >
+                    <DatePicker
+                      onChange={onChangeStart}
+                      format="MM-DD-YYYY"
+                      // disabledDate={disabledDate}
+                      disabledDate={(d) => !d || d.isBefore(endDisable)}
+                    />
+                  </Form.Item>
                 </div>
-                <Form.Item
-                  name="startDate"
-                  className="status-comment-item"
-                  rules={[{ required: true, message: "Start date required" }]}
-                >
-                  <DatePicker
-                    onChange={onChangeStart}
-                    format="MM-DD-YYYY"
-                    // disabledDate={disabledDate}
-                    disabledDate={(d) => !d || d.isBefore(endDisable)}
-                  />
-                </Form.Item>
-              </div>
-              <div>
-                <div className="update-select-title">
-                  {t("StartTime", { lng: currentLang })}
+                <div>
+                  <div className="update-select-title">
+                    {t("StartTime", { lng: currentLang })}
+                  </div>
+                  <Form.Item
+                    name="startTime"
+                    className="status-comment-item"
+                    rules={[{ required: true, message: "Start time required" }]}
+                  >
+                    <TimePicker format="HH:mm:ss" />
+                  </Form.Item>
                 </div>
-                <Form.Item
-                  name="startTime"
-                  className="status-comment-item"
-                  rules={[{ required: true, message: "Start time required" }]}
-                >
-                  <TimePicker format="HH:mm:ss"/>
-                </Form.Item>
               </div>
-            </div>
-}
+            )}
 
-{!isRecurring &&
-            <div>
-              <Button
-                className="add-end-date-btn"
-                icon={isEndDate ? <MinusOutlined /> : <PlusOutlined />}
-                onClick={() => setIsEndDate(!isEndDate)}
-              >
-                {t("EndDateTime", { lng: currentLang })}
-              </Button>
-            </div>
-}
+            {!isRecurring && (
+              <div>
+                <Button
+                  className="add-end-date-btn"
+                  icon={isEndDate ? <MinusOutlined /> : <PlusOutlined />}
+                  onClick={() => setIsEndDate(!isEndDate)}
+                >
+                  {t("EndDateTime", { lng: currentLang })}
+                </Button>
+              </div>
+            )}
             {isEndDate && !isRecurring && (
               <div className="flex-align">
                 <div className="date-div">
@@ -395,41 +467,58 @@ const AddEvent = function ({ currentLang, eventDetails }) {
                     className="status-comment-item"
                     rules={[{ required: true, message: "End time required" }]}
                   >
-                    <TimePicker format="HH:mm:ss"/>
+                    <TimePicker format="HH:mm:ss" />
                   </Form.Item>
                 </div>
               </div>
             )}
             <div className="customize-div">
-            <Button
-              className="add-end-date-btn"
-              icon={isRecurring ? <MinusOutlined /> : <PlusOutlined />}
-              onClick={() => setIsRecurring(!isRecurring)}
-            >
-              {t("RecurringEvent", { lng: currentLang })}
-            </Button>
-            <Form.Item
-            name="timeZone"
-            className="timezone-item"
-            rules={[{ required: true, message: "End time required" }]}
-          >
-          <Select defaultValue="Canada/Eastern" className="time-zone-select" bordered={false}>
-              {timeZone.map(item=>
-      <Option value={item.value} key={item.value}>{item.name}</Option>)}
-      
-    </Select>
-    </Form.Item>
-    </div>
-            {isRecurring && <RecurringEvent currentLang={currentLang} formFields={formValue}
-            numberOfDaysEvent={numberOfDays} form={form} eventDetails={eventDetails}/>}
+              <Button
+                className="add-end-date-btn"
+                icon={isRecurring ? <MinusOutlined /> : <PlusOutlined />}
+                onClick={() => setIsRecurring(!isRecurring)}
+              >
+                {t("RecurringEvent", { lng: currentLang })}
+              </Button>
+              <Form.Item
+                name="timeZone"
+                className="timezone-item"
+                rules={[{ required: true, message: "End time required" }]}
+              >
+                <Select
+                  defaultValue="Canada/Eastern"
+                  className="time-zone-select"
+                  bordered={false}
+                >
+                  {timeZone.map((item) => (
+                    <Option value={item.value} key={item.value}>
+                      {item.name}
+                    </Option>
+                  ))}
+                </Select>
+              </Form.Item>
+            </div>
+            {isRecurring && (
+              <RecurringEvent
+                currentLang={currentLang}
+                formFields={formValue}
+                numberOfDaysEvent={numberOfDays}
+                form={form}
+                eventDetails={eventDetails}
+              />
+            )}
             <div>
               <Radio.Group
                 name="radiogroup"
                 value={eventType}
                 onChange={(e, i) => handleChange(e, i)}
               >
-                <Radio value={"offline"}>{t("Offline", { lng: currentLang })}</Radio>
-                <Radio value={"online"}>{t("Online", { lng: currentLang })}</Radio>
+                <Radio value={"offline"}>
+                  {t("Offline", { lng: currentLang })}
+                </Radio>
+                <Radio value={"online"}>
+                  {t("Online", { lng: currentLang })}
+                </Radio>
               </Radio.Group>
             </div>
             <div className="update-select-title">
@@ -467,7 +556,7 @@ const AddEvent = function ({ currentLang, eventDetails }) {
             </Form.Item>
           </Col>
           <Col className="upload-col">
-           
+            
             <Dragger
               listType="picture-card"
               className={
@@ -489,6 +578,46 @@ const AddEvent = function ({ currentLang, eventDetails }) {
                 {t("DragAndDrop", { lng: currentLang })}
               </p>
             </Dragger>
+            <div>
+            <div className="update-select-title">
+              {t("Contact", { lng: currentLang })}
+            </div>
+            <Form.Item
+              name="contact"
+              className="status-comment-item"
+              rules={[
+                {
+                  required: false,
+                  message: "contact required",
+                  whitespace: true,
+                },
+              ]}
+            >
+              <Select
+                style={{ width: 350 }}
+                dropdownClassName="contact-select"
+                placeholder="Select Contact"
+                dropdownRender={(menu) => (
+                  <>
+                    {menu}
+                    <Divider style={{ margin: "8px 0" }} />
+                    <Space align="center" style={{ padding: "0 8px 4px" }}>
+                      <Typography.Link
+                        onClick={() => setShowAddContact(true)}
+                        style={{ whiteSpace: "nowrap" }}
+                      >
+                        <PlusOutlined /> Add New Contact
+                      </Typography.Link>
+                    </Space>
+                  </>
+                )}
+              >
+                {contactList.map((item) => (
+                  <Option key={item.value} value={item.value}>{item.name}</Option>
+                ))}
+              </Select>
+            </Form.Item>
+            </div>
           </Col>
         </Row>
         <div className="update-select-title">{"Description"}</div>
@@ -500,13 +629,13 @@ const AddEvent = function ({ currentLang, eventDetails }) {
             size="large"
             icon={<CloseOutlined />}
             onClick={() => {
-              if(isUpdate)
-               navigate(`/admin/events`)
-              else
-              {form.resetFields();
-              form.setFieldsValue({
-                desc: "",
-              });}
+              if (isUpdate) navigate(`/admin/events`);
+              else {
+                form.resetFields();
+                form.setFieldsValue({
+                  desc: "",
+                });
+              }
             }}
           >
             Cancel
@@ -517,10 +646,13 @@ const AddEvent = function ({ currentLang, eventDetails }) {
             size="large"
             icon={<CheckOutlined />}
           >
-            {isUpdate?"Update": "Save"}
+            {isUpdate ? "Update" : "Save"}
           </Button>
         </Form.Item>
       </Form>
+      {showAddContact &&
+      <AddNewContactModal isModalVisible={showAddContact} setIsModalVisible={setShowAddContact}/>
+}
     </Layout>
   );
 };

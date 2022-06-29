@@ -111,12 +111,15 @@
 .ant-upload.ant-upload-drag,
 .ant-upload-list-picture-card-container{
     width: 350px;
-    height: 300px;
+    height: 290px;
+    margin-bottom: 10px;
 }
 .upload-col{
     flex: 1;
     display: flex;
     justify-content: center;
+    flex-direction: column;
+    align-items: center;
 }
 .upload-col .ant-tooltip.ant-tooltip-placement-top{
     display: none;
@@ -169,4 +172,9 @@
     border: 1px solid #d9d9d9;
     padding: 4px 11px;
 
+}
+.contact-select .ant-space-align-center{
+    width: 100%;
+    display: flex;
+    justify-content: center;
 }
