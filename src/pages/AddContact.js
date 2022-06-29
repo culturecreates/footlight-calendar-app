@@ -17,6 +17,7 @@ import { fetchContact } from "../action";
 
 const AddContact = function ({ currentLang,contactDetails,isModal=false,onsuccessAdd }) {
   const [loading, setLoading] = useState(false);
+  const [isUpdate, setIsUpdate] = useState(false);
 
   const { t, i18n } = useTranslation();
   const [form] = Form.useForm();
@@ -75,6 +76,7 @@ const AddContact = function ({ currentLang,contactDetails,isModal=false,onsucces
 
   useEffect(() => {
     if (contactDetails) {
+      setIsUpdate(true);
       form.setFieldsValue({
         name: contactDetails.name[currentLang],
         email:contactDetails.email,
@@ -131,7 +133,11 @@ const AddContact = function ({ currentLang,contactDetails,isModal=false,onsucces
             size="large"
             icon={<CloseOutlined />}
             onClick={() => {
-              form.resetFields();
+              if (isUpdate) navigate(`/admin/contacts`);
+              else {
+                form.resetFields();
+                
+              }
             }}
           >
             Cancel
@@ -142,7 +148,7 @@ const AddContact = function ({ currentLang,contactDetails,isModal=false,onsucces
             size="large"
             icon={<CheckOutlined />}
           >
-            Save
+            {isUpdate ? "Update" : "Save"}
           </Button>
         </Form.Item>
       </Form>

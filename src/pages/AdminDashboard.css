@@ -178,3 +178,7 @@
     display: flex;
     justify-content: center;
 }
+
+.copy-modal .spin{
+    width: 425px;
+}
