@@ -105,9 +105,13 @@ const RecurringModal = ({
   useEffect(() => {
     if (test) {
       if (dateSource.find((item) => item.initDate === test.initDate))
-        setDataSource(
-          dateSource.filter((item) => item.initDate !== test.initDate)
-        );
+      {setDataSource(
+        dateSource.map((item) => {
+          if (item.initDate === test.initDate) item.isDeleted = true;
+          return item;
+        })
+      );
+    }
       else setDataSource([...dateSource, test]);
       setTest(null);
     }
@@ -176,7 +180,7 @@ const RecurringModal = ({
                 location: "test Location",
                 startDate: e.startDate,
                 endDate: e.endDate,
-                initDate: e.startDate.toLocaleDateString(),
+                initDate: moment(e.startDate.toLocaleDateString()).format("YYYY-MM-DD") ,
                 isDeleted: false,
               };
               setTest(obj);

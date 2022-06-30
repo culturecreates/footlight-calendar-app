@@ -161,6 +161,11 @@ if(formFields)
 
     return result;
   }
+
+  const handleChange = (value) => {
+    if(value==="CUSTOM")
+     setIsModalVisible(true)
+  };
   return (
     <Card className="recurring-card">
       <div className="update-select-title">
@@ -179,6 +184,7 @@ if(formFields)
           className="search-select"
           optionFilterProp="children"
           defaultValue="DAILY"
+          onChange={handleChange}
         >
           <Option value="DAILY">Daily</Option>
           <Option value="WEEKLY">Weekly</Option>

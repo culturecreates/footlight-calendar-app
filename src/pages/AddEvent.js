@@ -33,7 +33,7 @@ import RecurringEvent from "../components/RecurringEvent";
 import Compressor from "compressorjs";
 import { useDispatch, useSelector } from "react-redux";
 import { fetchContact, fetchPlace } from "../action";
-import { timeZone } from "../utils/Utility";
+import { fbUrlValidate, timeZone, urlValidate } from "../utils/Utility";
 import AddNewContactModal from "../components/AddNewContactModal";
 
 const { Option } = Select;
@@ -616,6 +616,61 @@ const AddEvent = function ({ currentLang, eventDetails }) {
                   <Option key={item.value} value={item.value}>{item.name}</Option>
                 ))}
               </Select>
+            </Form.Item>
+
+            <div className="update-select-title">
+              {t("Facebook Link", { lng: currentLang })}
+            </div>
+            <Form.Item
+              name="facebookLink"
+              className="status-comment-item"
+              rules={[
+                {
+                  required: false,
+                  message: "url required",
+                  whitespace: true,
+                },
+                {
+                  message: 'Enter valid url.',
+                  validator: (_, value) => {
+                    if (fbUrlValidate(value)) {
+                      return Promise.resolve();
+                    } else {
+                      return Promise.reject('Enter valid url.');
+                    }
+                  }
+                }
+              ]}
+              validateTrigger="onBlur"
+            >
+              <Input placeholder="Enter Event Name" className="replace-input" />
+            </Form.Item>
+            <div className="update-select-title">
+              {t("Event", { lng: currentLang })} {" "}Page Link
+            </div>
+            <Form.Item
+              name="eventPage"
+              className="status-comment-item"
+              rules={[
+                {
+                  required: false,
+                  message: "Event name required",
+                  whitespace: true,
+                },
+                {
+                  message: 'Enter valid url.',
+                  validator: (_, value) => {
+                    if (urlValidate(value)) {
+                      return Promise.resolve();
+                    } else {
+                      return Promise.reject('Enter valid url.');
+                    }
+                  }
+                }
+              ]}
+              validateTrigger="onBlur"
+            >
+              <Input placeholder="Enter Event Name" className="replace-input" />
             </Form.Item>
             </div>
           </Col>
