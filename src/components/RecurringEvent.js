@@ -100,6 +100,7 @@ const RecurringEvent = function ({
   useEffect(() => {
     if (formFields && formFields.startDateRecur) {
       if (formFields.frequency === "DAILY") {
+        console.log(formFields.startDateRecur[0])
         getNumberOfDays(
           formFields.startDateRecur[0],
           formFields.startDateRecur[1]

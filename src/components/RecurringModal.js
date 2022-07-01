@@ -32,6 +32,7 @@ const RecurringModal = ({
 }) => {
   const [dateSource, setDataSource] = useState([]);
   const [test, setTest] = useState();
+  const [dateArrayCal, setDateArrayCal] = useState(null);
   const [showAddTime, setShowAddTime] = useState(false);
   const [updateAllTime, setUpdateAllTime] = useState(false);
   const [copyModal, setCopyModal] = useState(false);
@@ -118,6 +119,24 @@ const RecurringModal = ({
     console.log(dateSource);
   }, [test]);
 
+  useEffect(() => {
+    if(dateArrayCal)
+    {
+    if (dateArrayCal.length>1) {
+      const checkDateExisting=dateSource.map(item=>item.initDate)
+      const newCopyArray = dateArrayCal.filter((item) => 
+         !checkDateExisting.includes(item.initDate)
+        
+      );
+      
+        const iterated=[...dateSource,[].concat.apply([], newCopyArray)];
+      setDataSource([].concat.apply([], iterated));
+    }
+    setDateArrayCal(null)
+  }
+   
+  }, [dateArrayCal]);
+
   const deleteEvent = (event) => {
     setDataSource(
       dateSource.map((item) => {
@@ -156,6 +175,17 @@ const RecurringModal = ({
       })
     );
   };
+
+  const getNumberOfDays = async (start, end) => {
+    let date = [];
+
+    for (var m = moment(start); m.isSameOrBefore(end); m.add(1, "days")) {
+      date.push(m.format("DD/MM/YYYY"));
+    }
+    console.log(date)
+    return date;
+    
+  };
   return (
     <Modal
       title="Custom Recurring Events"
@@ -173,9 +203,34 @@ const RecurringModal = ({
             minDate={new Date()}
             enableRangeSelection={true}
             //  onRangeSelected={e =>selectDate(e) }
-            onRangeSelected={(e) => {
-              const obj = {
-                id: uniqid(),
+            onRangeSelected={async(e) => {
+             const dateLength=await getNumberOfDays( e.startDate,e.endDate)
+             
+             if(dateLength && dateLength.length>1)
+              {
+                const dateArray=dateLength.map(item=>{
+                  const date = moment(item, 'DD/MM/YYYY')
+                  console.log(new Date(date.format('YYYY,M,D')).toLocaleDateString(),
+                  moment(new Date(date.format('YYYY,M,D')).toLocaleDateString()).format(
+                    "MMM,DD,YYYY"
+                  ))
+                  const obj = {
+                    id: uniqid(),
+                    name: "test name",
+                    location: "test Location",
+                    startDate: new Date(date.format('YYYY,M,D')),
+                    endDate: new Date(date.format('YYYY,M,D')),
+                    initDate: moment(date).format("YYYY-MM-DD") ,
+                    isDeleted: false,
+                  };
+                  return obj;
+                })
+                setDateArrayCal(dateArray)
+              }
+              else
+              {
+                const obj={
+                  id: uniqid(),
                 name: "test name",
                 location: "test Location",
                 startDate: e.startDate,
@@ -184,6 +239,8 @@ const RecurringModal = ({
                 isDeleted: false,
               };
               setTest(obj);
+              }
+            
             }}
             dataSource={dateSource}
           />
@@ -213,7 +270,7 @@ const RecurringModal = ({
                     {item.isDeleted ? (
                       <UndoOutlined onClick={() => redoEvent(item)} />
                     ) : (
-                      <CopyOutlined onClick={() => copyEvents(item)} />
+                      <CopyOutlined onClick={() => {if(item.time && item.time.length>0)copyEvents(item)}} />
                     )}
                     <DeleteFilled onClick={() => deleteEvent(item)} />
                   </div>
