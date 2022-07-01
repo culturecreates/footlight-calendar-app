@@ -136,16 +136,14 @@ const EventDetails = function ({ currentLang,isAdmin=false }) {
                     <span>&nbsp;</span>
                   </>
                 )}
-                {new Date(eventDetails.startDate).toLocaleDateString(
-                  currentLang,
-                  { weekday: "long" }
-                ) + moment(eventDetails.startDate).tz(eventDetails.scheduleTimezone?eventDetails.scheduleTimezone:"Canada/Eastern").format(" DD MMM")}
+                {
+                  moment(moment(eventDetails.startDate).tz(eventDetails.scheduleTimezone?eventDetails.scheduleTimezone:"Canada/Eastern").format("YYYY-MM-DD"), "YYYY-MM-DD").format('dddd')
+                + moment(eventDetails.startDate).tz(eventDetails.scheduleTimezone?eventDetails.scheduleTimezone:"Canada/Eastern").format(" DD MMM")}
                 <span>&nbsp;{t("to", { lng: currentLang })} </span>
                 {eventDetails.endDate &&
-                  new Date(eventDetails.endDate).toLocaleDateString(
-                    currentLang,
-                    { weekday: "long" }
-                  ) + moment(eventDetails.endDate).tz(eventDetails.scheduleTimezone?eventDetails.scheduleTimezone:"Canada/Eastern").format(" DD MMM")}
+                moment(moment(eventDetails.endDate).tz(eventDetails.scheduleTimezone?eventDetails.scheduleTimezone:"Canada/Eastern").format("YYYY-MM-DD"), "YYYY-MM-DD").format('dddd')
+                   + moment(eventDetails.endDate).tz(eventDetails.scheduleTimezone?eventDetails.scheduleTimezone:"Canada/Eastern").format(" DD MMM")}
+                  {}
               </div>
             </div>
             <div>
@@ -176,6 +174,7 @@ const EventDetails = function ({ currentLang,isAdmin=false }) {
               <div
                 className="event-item"
                 style={{
+                  cursor:"unset",
                   backgroundImage: eventDetails?.image
                     ? `url(${eventDetails?.image?.thumbnail?.uri})`
                     : `url(https://cdn.caligram.com/uploads/event/8J5/medium/6242018236834.png)`,

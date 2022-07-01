@@ -289,13 +289,15 @@ const AddEvent = function ({ currentLang, eventDetails }) {
           frequency: eventDetails.recurringEvent?.frequency,
           startDateRecur: [
             moment(
-              new Date(eventDetails.recurringEvent?.startDate),
+              moment(eventDetails.recurringEvent?.startDate, 'YYYY-MM-DD').format('DD-MM-YYYY')
+              ,
               "DD-MM-YYYY"
             ),
             moment(
-              new Date(eventDetails.recurringEvent?.endDate),
+              moment(eventDetails.recurringEvent?.endDate, 'YYYY-MM-DD').format('DD-MM-YYYY')
+             ,
               "DD-MM-YYYY"
-            ),
+            )
           ],
           startTimeRecur: moment(
             eventDetails.recurringEvent?.startTime,

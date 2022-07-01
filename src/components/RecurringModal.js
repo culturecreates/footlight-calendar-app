@@ -113,7 +113,7 @@ const RecurringModal = ({
         })
       );
     }
-      else setDataSource([...dateSource, test]);
+      else setDataSource([...dateSource, test].sort((a, b) => b.startDate < a.startDate ? 1: -1));
       setTest(null);
     }
     console.log(dateSource);
@@ -130,7 +130,7 @@ const RecurringModal = ({
       );
       
         const iterated=[...dateSource,[].concat.apply([], newCopyArray)];
-      setDataSource([].concat.apply([], iterated));
+      setDataSource([].concat.apply([], iterated).sort((a, b) => b.startDate < a.startDate ? 1: -1));
     }
     setDateArrayCal(null)
   }
