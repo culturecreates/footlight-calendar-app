@@ -174,17 +174,17 @@ const AddEvent = function ({ currentLang, eventDetails }) {
       const recurEvent = {
         frequency: values.frequency,
         startDate:
-          form.getFieldsValue().frequency !== "CUSTOM" &&
-          moment(values.startDateRecur[0]).format("YYYY-MM-DD"),
+          form.getFieldsValue().frequency !== "CUSTOM" ?
+          moment(values.startDateRecur[0]).format("YYYY-MM-DD"): undefined,
         endDate:
-          form.getFieldsValue().frequency !== "CUSTOM" &&
-          moment(values.startDateRecur[1]).format("YYYY-MM-DD"),
+          form.getFieldsValue().frequency !== "CUSTOM" ?
+          moment(values.startDateRecur[1]).format("YYYY-MM-DD"): undefined,
         startTime:
-          form.getFieldsValue().frequency !== "CUSTOM" &&
-          moment(values.startTimeRecur).format("HH:mm"),
+          form.getFieldsValue().frequency !== "CUSTOM" ?
+          moment(values.startTimeRecur).format("HH:mm") : undefined,
         endTime:
-          form.getFieldsValue().frequency !== "CUSTOM" &&
-          moment(values.endTimeRecur).format("HH:mm"),
+          form.getFieldsValue().frequency !== "CUSTOM" ?
+          moment(values.endTimeRecur).format("HH:mm") : undefined,
         // timeZone: values.timeZone,
         weekDays: values.frequency === "WEEKLY" ? values.daysOfWeek : undefined,
         customDates:
