@@ -165,6 +165,8 @@ const AddEvent = function ({ currentLang, eventDetails }) {
       contactPoint: values.contact ?{
         entityId: values.contact
       }:undefined,
+      url:{uri:values.eventPage},
+      sameAs:values.facebookLink?[values.facebookLink]:[],
     };
     if (isEndDate && !isRecurring)
       eventObj.endDate = moment(values.endDate).format("YYYY-MM-DDTHH:mm:ss");
@@ -273,6 +275,8 @@ const AddEvent = function ({ currentLang, eventDetails }) {
         timeZone: eventDetails.scheduleTimezone
           ? eventDetails.scheduleTimezone
           : "Canada/Eastern",
+        eventPage:eventDetails.url?.uri,
+        facebookLink:eventDetails.sameAs.length>0? eventDetails.sameAs[0]:undefined 
       });
       if (eventDetails.image) {
         const obj = {
@@ -289,12 +293,12 @@ const AddEvent = function ({ currentLang, eventDetails }) {
           frequency: eventDetails.recurringEvent?.frequency,
           startDateRecur: [
             moment(
-              moment(eventDetails.recurringEvent?.startDate, 'YYYY-MM-DD').format('DD-MM-YYYY')
+              moment(eventDetails.recurringEvent?.startDate?eventDetails.recurringEvent?.startDate:eventDetails.startDate, 'YYYY-MM-DD').format('DD-MM-YYYY')
               ,
               "DD-MM-YYYY"
             ),
             moment(
-              moment(eventDetails.recurringEvent?.endDate, 'YYYY-MM-DD').format('DD-MM-YYYY')
+              moment(eventDetails.recurringEvent?.endDate?eventDetails.recurringEvent?.endDate:eventDetails.endDate, 'YYYY-MM-DD').format('DD-MM-YYYY')
              ,
               "DD-MM-YYYY"
             )
@@ -633,19 +637,19 @@ const AddEvent = function ({ currentLang, eventDetails }) {
                   whitespace: true,
                 },
                 {
-                  message: 'Enter valid url.',
+                  message: 'Enter valid facebook link.',
                   validator: (_, value) => {
                     if (fbUrlValidate(value)) {
                       return Promise.resolve();
                     } else {
-                      return Promise.reject('Enter valid url.');
+                      return Promise.reject('Enter valid facebbok link.');
                     }
                   }
                 }
               ]}
               validateTrigger="onBlur"
             >
-              <Input placeholder="Enter Event Name" className="replace-input" />
+              <Input placeholder="Enter Event FB Link" className="replace-input" />
             </Form.Item>
             <div className="update-select-title">
               {t("Event", { lng: currentLang })} {" "}Page Link
@@ -672,7 +676,7 @@ const AddEvent = function ({ currentLang, eventDetails }) {
               ]}
               validateTrigger="onBlur"
             >
-              <Input placeholder="Enter Event Name" className="replace-input" />
+              <Input placeholder="Enter Event Url" className="replace-input" />
             </Form.Item>
             </div>
           </Col>

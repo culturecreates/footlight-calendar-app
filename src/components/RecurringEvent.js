@@ -34,11 +34,11 @@ const RecurringEvent = function ({
     // setEndDisable(moment(dateString, "MM-DD-YYYY"));
   };
   useEffect(() => {
-    if (eventDetails && eventDetails.recurringEvent?.customDates) {
-      
-    setIsCustom(true)
+    if (eventDetails ) {
+      if(eventDetails.recurringEvent?.customDates)
+      {
+      setIsCustom(true);
       const custom = eventDetails.recurringEvent?.customDates.map((item) => {
-        
         const obj = {
           id: uniqid(),
           name: "test name",
@@ -47,22 +47,44 @@ const RecurringEvent = function ({
           endDate: new Date(moment(item.startDate).format("YYYY,M,D")),
           initDate: item.startDate,
           isDeleted: false,
-          time: item.customTimes ? item.customTimes.map(customTime=>{
-            const objTime = {
-              startTime:
-              customTime.startTime &&
-                moment(customTime.startTime, "hh:mm a").format("hh:mm a"),
-              endTime:
-              customTime.endTime && moment(customTime.endTime, "hh:mm a").format("hh:mm a"),
-              start: customTime.startTime,
-              end: customTime.endTime,
-            };
-            return objTime
-          }):[],
+          time: item.customTimes
+            ? item.customTimes.map((customTime) => {
+                const objTime = {
+                  startTime:
+                    customTime.startTime &&
+                    moment(customTime.startTime, "hh:mm a").format("hh:mm a"),
+                  endTime:
+                    customTime.endTime &&
+                    moment(customTime.endTime, "hh:mm a").format("hh:mm a"),
+                  start: customTime.startTime,
+                  end: customTime.endTime,
+                };
+                return objTime;
+              })
+            : [],
         };
         return obj;
       });
       setCustomDates(custom);
+    }
+    else
+    {
+      const custom = eventDetails.subEvents.map((item) => {
+        const obj = {
+          id: uniqid(),
+          name: "test name",
+          location: "test Location",
+          startDate: new Date(moment(item.startDate).format("YYYY,M,D")),
+          endDate: new Date(moment(item.startDate).format("YYYY,M,D")),
+          initDate: moment(item.startDate).format("YYYY-MM-DD") ,
+          isDeleted: false,
+          time: [],
+        };
+        return obj;
+      });
+      console.log("raseem",custom)
+      setCustomDates(custom);
+    }
     }
   }, [eventDetails]);
 
@@ -78,15 +100,15 @@ const RecurringEvent = function ({
             startDate: moment(item.startDate.toLocaleDateString()).format(
               "YYYY-MM-DD"
             ),
-            customTimes:item.time?item.time.map(customTime=>{
-              const obj={
-                startTime: customTime?.start,
-                endTime: customTime?.end && customTime.end,
-              }
-              return obj
-            })
-            :[]
-            
+            customTimes: item.time
+              ? item.time.map((customTime) => {
+                  const obj = {
+                    startTime: customTime?.start,
+                    endTime: customTime?.end && customTime.end,
+                  };
+                  return obj;
+                })
+              : [],
           };
           return obj;
         });
@@ -100,7 +122,7 @@ const RecurringEvent = function ({
   useEffect(() => {
     if (formFields && formFields.startDateRecur) {
       if (formFields.frequency === "DAILY") {
-        console.log(formFields.startDateRecur[0])
+        console.log(formFields.startDateRecur[0]);
         getNumberOfDays(
           formFields.startDateRecur[0],
           formFields.startDateRecur[1]
@@ -115,11 +137,10 @@ const RecurringEvent = function ({
         setNumberofDates(0);
       }
     }
-if(formFields)
-    {if ( formFields.frequency === "CUSTOM") 
-    setIsCustom(true)
-    else 
-    setIsCustom(false)}
+    if (formFields) {
+      if (formFields.frequency === "CUSTOM") setIsCustom(true);
+      else setIsCustom(false);
+    }
   }, [formFields]);
 
   const getNumberOfWeekDays = async (start, end, daysofweek) => {
@@ -164,8 +185,7 @@ if(formFields)
   }
 
   const handleChange = (value) => {
-    if(value==="CUSTOM")
-     setIsModalVisible(true)
+    if (value === "CUSTOM") setIsModalVisible(true);
   };
   return (
     <Card className="recurring-card">
@@ -203,14 +223,13 @@ if(formFields)
                   )}
                 </div>
 
-                {item.time && (
-                  item.time.map(customTime=>
-                  <div>
-                    {customTime.startTime} {customTime.endTime?" - ":""}
-                    {customTime.endTime && customTime.endTime}{" "}
-                  </div>
-                  )
-                )}
+                {item.time &&
+                  item.time.map((customTime) => (
+                    <div>
+                      {customTime.startTime} {customTime.endTime ? " - " : ""}
+                      {customTime.endTime && customTime.endTime}{" "}
+                    </div>
+                  ))}
               </Card>
             ))}
           </div>
