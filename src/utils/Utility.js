@@ -21,6 +21,22 @@ export const adminSideMenuLinks = [
       return dateString 
   }
 
+  export const  fbUrlValidate = (url) => {
+    var expression = /^(https?:\/\/){0,1}(www\.){0,1}facebook\.com/;
+    var regexp = new RegExp(expression);
+    if(!url||url.length===0 )
+        return true
+    return regexp.test(url);
+  }
+
+  export const  urlValidate = (url) => {
+    var expression = /^(https?|ftp):\/\/([a-zA-Z0-9.-]+(:[a-zA-Z0-9.&%$-]+)*@)*((25[0-5]|2[0-4][0-9]|1[0-9]{2}|[1-9][0-9]?)(\.(25[0-5]|2[0-4][0-9]|1[0-9]{2}|[1-9]?[0-9])){3}|([a-zA-Z0-9-]+\.)*[a-zA-Z0-9-]+\.(com|edu|gov|int|mil|net|org|biz|arpa|info|name|pro|aero|coop|museum|[a-zA-Z]{2}))(:[0-9]+)*(\/($|[a-zA-Z0-9.,?'\\+&%$#=~_-]+))*$/;
+    var regexp = new RegExp(expression);
+    if(!url||url.length===0 )
+        return true
+    return regexp.test(url);
+  }
+
   export const adminContact=[
     {
       name: "name",

@@ -1,6 +1,9 @@
 import { Checkbox, Modal } from "antd";
 import { useEffect, useState } from "react";
 import moment from "moment";
+import { ExclamationCircleOutlined } from '@ant-design/icons';
+
+const { confirm } = Modal;
 
 const CopyTimeModal = ({
   isModalVisible,
@@ -52,11 +55,27 @@ const CopyTimeModal = ({
     
     setCheckAll(e.target.checked);
   };
+
+  const showConfirm = () => {
+    confirm({
+      title: 'Are you sure?',
+      icon: <ExclamationCircleOutlined />,
+      content: ' This action cannot be undone.',
+  
+      onOk() {
+        handleOk()
+      },
+  
+      onCancel() {
+        console.log('Cancel');
+      },
+    });
+  };
   return (
     <Modal
       title="Duplicate Times"
       visible={isModalVisible}
-      onOk={handleOk}
+      onOk={showConfirm}
       onCancel={handleCancel}
       className="copy-modal"
       okText="Done"

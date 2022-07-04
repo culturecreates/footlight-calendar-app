@@ -33,7 +33,7 @@ import RecurringEvent from "../components/RecurringEvent";
 import Compressor from "compressorjs";
 import { useDispatch, useSelector } from "react-redux";
 import { fetchContact, fetchPlace } from "../action";
-import { timeZone } from "../utils/Utility";
+import { fbUrlValidate, timeZone, urlValidate } from "../utils/Utility";
 import AddNewContactModal from "../components/AddNewContactModal";
 
 const { Option } = Select;
@@ -165,6 +165,8 @@ const AddEvent = function ({ currentLang, eventDetails }) {
       contactPoint: values.contact ?{
         entityId: values.contact
       }:undefined,
+      url:{uri:values.eventPage},
+      sameAs:values.facebookLink?[values.facebookLink]:[],
     };
     if (isEndDate && !isRecurring)
       eventObj.endDate = moment(values.endDate).format("YYYY-MM-DDTHH:mm:ss");
@@ -273,6 +275,8 @@ const AddEvent = function ({ currentLang, eventDetails }) {
         timeZone: eventDetails.scheduleTimezone
           ? eventDetails.scheduleTimezone
           : "Canada/Eastern",
+        eventPage:eventDetails.url?.uri,
+        facebookLink:eventDetails.sameAs.length>0? eventDetails.sameAs[0]:undefined 
       });
       if (eventDetails.image) {
         const obj = {
@@ -289,13 +293,15 @@ const AddEvent = function ({ currentLang, eventDetails }) {
           frequency: eventDetails.recurringEvent?.frequency,
           startDateRecur: [
             moment(
-              new Date(eventDetails.recurringEvent?.startDate),
+              moment(eventDetails.recurringEvent?.startDate?eventDetails.recurringEvent?.startDate:eventDetails.startDate, 'YYYY-MM-DD').format('DD-MM-YYYY')
+              ,
               "DD-MM-YYYY"
             ),
             moment(
-              new Date(eventDetails.recurringEvent?.endDate),
+              moment(eventDetails.recurringEvent?.endDate?eventDetails.recurringEvent?.endDate:eventDetails.endDate, 'YYYY-MM-DD').format('DD-MM-YYYY')
+             ,
               "DD-MM-YYYY"
-            ),
+            )
           ],
           startTimeRecur: moment(
             eventDetails.recurringEvent?.startTime,
@@ -616,6 +622,61 @@ const AddEvent = function ({ currentLang, eventDetails }) {
                   <Option key={item.value} value={item.value}>{item.name}</Option>
                 ))}
               </Select>
+            </Form.Item>
+
+            <div className="update-select-title">
+              {t("Facebook Link", { lng: currentLang })}
+            </div>
+            <Form.Item
+              name="facebookLink"
+              className="status-comment-item"
+              rules={[
+                {
+                  required: false,
+                  message: "url required",
+                  whitespace: true,
+                },
+                {
+                  message: 'Enter valid facebook link.',
+                  validator: (_, value) => {
+                    if (fbUrlValidate(value)) {
+                      return Promise.resolve();
+                    } else {
+                      return Promise.reject('Enter valid facebbok link.');
+                    }
+                  }
+                }
+              ]}
+              validateTrigger="onBlur"
+            >
+              <Input placeholder="Enter Event FB Link" className="replace-input" />
+            </Form.Item>
+            <div className="update-select-title">
+              {t("Event", { lng: currentLang })} {" "}Page Link
+            </div>
+            <Form.Item
+              name="eventPage"
+              className="status-comment-item"
+              rules={[
+                {
+                  required: false,
+                  message: "Event name required",
+                  whitespace: true,
+                },
+                {
+                  message: 'Enter valid url.',
+                  validator: (_, value) => {
+                    if (urlValidate(value)) {
+                      return Promise.resolve();
+                    } else {
+                      return Promise.reject('Enter valid url.');
+                    }
+                  }
+                }
+              ]}
+              validateTrigger="onBlur"
+            >
+              <Input placeholder="Enter Event Url" className="replace-input" />
             </Form.Item>
             </div>
           </Col>

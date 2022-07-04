@@ -109,10 +109,14 @@ function App() {
       </Router>
       </Content>
       <Footer className="app-footer">
-        <div className="footer-links">
+        <Row className="footer-links">
+          <Col>
         <div className="footer-title">FootLight</div>
+        </Col>
+        <Col>
         <div className="footer-cal">{t("headerText", { lng: currentLang })}</div>
-        </div>
+        </Col>
+        </Row>
         <div className="footer-copy">
           <div>©2022 {t("CopyReserve", { lng: currentLang })}&nbsp;&nbsp;&nbsp;&nbsp;Culture Outaouais </div>
           <div>{t("Powered", { lng: currentLang })} <span className="footer-name">Footlight</span> </div>
