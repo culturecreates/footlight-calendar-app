@@ -48,7 +48,7 @@ export const adminSideMenuLinks = [
     {
       name: "description",
       title:"Description",
-      required:true,
+      required:false,
       placeHolder: "Enter Description",
       type:"area"
     },
@@ -62,14 +62,14 @@ export const adminSideMenuLinks = [
     {
       name: "email",
       title:"Email",
-      required:true,
+      required:false,
       placeHolder: "Enter email",
       type:"text"
     },
     {
       name: "telephone",
       title:"Telephone",
-      required:true,
+      required:false,
       placeHolder: "Enter Telephone",
       type:"text"
     },

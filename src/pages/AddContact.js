@@ -9,7 +9,7 @@ import {
   CloseOutlined,
   
 } from "@ant-design/icons";
-import { adminContact } from "../utils/Utility";
+import { adminContact, urlValidate } from "../utils/Utility";
 import ServiceApi from "../services/Service";
 import Spinner from "../components/Spinner";
 import { useDispatch, useSelector } from "react-redux";
@@ -89,6 +89,19 @@ const AddContact = function ({ currentLang,contactDetails,isModal=false,onsucces
       
     } 
   }, [contactDetails]);
+
+  function handleEnter(event) {
+    if (event.keyCode === 13) {
+      event.preventDefault()
+      const inputs =
+          Array.prototype.slice.call(document.querySelectorAll("input"))
+      const index =
+          (inputs.indexOf(document.activeElement) + 1) % inputs.length
+      const input = inputs[index]
+      input.focus()
+      input.select()
+  }
+  }
   return (
     <Layout className="add-event-layout">
       <Form
@@ -109,6 +122,19 @@ const AddContact = function ({ currentLang,contactDetails,isModal=false,onsucces
                   required: item.required,
                   whitespace: true,
                 },
+                item.name==="url" &&
+                {
+                  
+                  message: 'Enter valid url.',
+                  validator: (_, value) => {
+
+                    if (urlValidate(value)) {
+                      return Promise.resolve();
+                    } else {
+                      return Promise.reject('Enter valid url.');
+                    }
+                  }
+                }
               ]}
             >
               { item.type === "area"?
@@ -121,7 +147,7 @@ const AddContact = function ({ currentLang,contactDetails,isModal=false,onsucces
                 <Input
                   placeholder={item.placeHolder}
                   className="replace-input"
-                  
+                  onKeyDown={handleEnter}
                 />
               }
             </Form.Item>
