@@ -57,7 +57,7 @@ const RecurringModal = ({
       setDataSource(
         dateSource.map((item) => {
           if (selectedDateId === item.id) {
-            if (item.time) item.time = [...item.time, obj];
+            if (item.time) item.time = [...item.time, obj].sort((a,b)=>a.startTime.localeCompare(b.startTime));
             else item.time = [obj];
           }
           return item;
@@ -285,7 +285,7 @@ const RecurringModal = ({
                     <DeleteOutlined onClick={() => deleteEvent(item)} />}
                   </div>
                 </div>
-                
+
                 {!item.isDeleted &&
                   item.time &&
                   item.time.map((customTime) => (
