@@ -15,6 +15,7 @@ import uniqid from "uniqid";
 import moment from "moment";
 import {
   DeleteFilled,
+  DeleteOutlined,
   CopyOutlined,
   PlusOutlined,
   UndoOutlined,
@@ -56,7 +57,7 @@ const RecurringModal = ({
       setDataSource(
         dateSource.map((item) => {
           if (selectedDateId === item.id) {
-            if (item.time) item.time = [...item.time, obj];
+            if (item.time) item.time = [...item.time, obj].sort((a,b)=>a.startTime.localeCompare(b.startTime));
             else item.time = [obj];
           }
           return item;
@@ -108,7 +109,8 @@ const RecurringModal = ({
       if (dateSource.find((item) => item.initDate === test.initDate))
       {setDataSource(
         dateSource.map((item) => {
-          if (item.initDate === test.initDate) item.isDeleted = true;
+          if (item.initDate === test.initDate) item.isDeleted?item.isDeleted = false: item.isDeleted = true;
+          
           return item;
         })
       );
@@ -143,6 +145,11 @@ const RecurringModal = ({
         if (event.id === item.id) item.isDeleted = true;
         return item;
       })
+    );
+  };
+  const deleteEventPermenent = (event) => {
+    setDataSource(
+      dateSource.filter((item) => event.id !== item.id)
     );
   };
   const redoEvent = (event) => {
@@ -242,7 +249,7 @@ const RecurringModal = ({
               }
             
             }}
-            dataSource={dateSource}
+            dataSource={dateSource.filter(item=>!item.isDeleted)}
           />
         </Col>
         <Col flex="auto" className="custom-date-column">
@@ -272,9 +279,13 @@ const RecurringModal = ({
                     ) : (
                       <CopyOutlined onClick={() => {if(item.time && item.time.length>0)copyEvents(item)}} />
                     )}
-                    <DeleteFilled onClick={() => deleteEvent(item)} />
+                    {item.isDeleted ? 
+                    <DeleteFilled onClick={() => deleteEventPermenent(item)} />
+                    :
+                    <DeleteOutlined onClick={() => deleteEvent(item)} />}
                   </div>
                 </div>
+
                 {!item.isDeleted &&
                   item.time &&
                   item.time.map((customTime) => (

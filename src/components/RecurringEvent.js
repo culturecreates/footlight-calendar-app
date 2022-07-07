@@ -48,7 +48,7 @@ const RecurringEvent = function ({
           initDate: item.startDate,
           isDeleted: false,
           time: item.customTimes
-            ? item.customTimes.map((customTime) => {
+            ? item.customTimes.sort((a,b)=>a.startTime.localeCompare(b.startTime)).map((customTime) => {
                 const objTime = {
                   startTime:
                     customTime.startTime &&
@@ -82,7 +82,7 @@ const RecurringEvent = function ({
         };
         return obj;
       });
-      console.log("raseem",custom)
+     
       setCustomDates(custom);
     }
     }
@@ -148,6 +148,21 @@ const RecurringEvent = function ({
 
     daysofweek.map((item) => date.push(getDaysBetweenDates(start, end, item)));
     setNumberofDates([].concat.apply([], date).length);
+    const custom = [].concat.apply([], date).map((item) => {
+      
+      const obj={
+        id: uniqid(),
+      name: "test name",
+      location: "test Location",
+      startDate: item,
+      endDate: item,
+      initDate: moment(item.toLocaleDateString()).format("YYYY-MM-DD") ,
+      isDeleted: false,
+    };
+      return obj;
+    });
+   
+    setCustomDates(custom);
   };
 
   const getNumberOfDays = async (start, end) => {
@@ -158,6 +173,24 @@ const RecurringEvent = function ({
     }
 
     setNumberofDates(date.length);
+
+    const custom = date.map((item) => {
+      const date = moment(item, 'DD/MM/YYYY')
+      
+      const obj = {
+        id: uniqid(),
+        name: "test name",
+        location: "test Location",
+        startDate: new Date(moment(date).format("YYYY,M,D")),
+        endDate: new Date(moment(date).format("YYYY,M,D")),
+        initDate: moment(date).format("YYYY-MM-DD") ,
+        isDeleted: false,
+        time: [],
+      };
+      return obj;
+    });
+   
+    setCustomDates(custom);
   };
   function getDaysBetweenDates(start, end, dayName) {
     var result = [];
