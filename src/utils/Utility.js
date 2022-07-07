@@ -22,7 +22,7 @@ export const adminSideMenuLinks = [
   }
 
   export const  fbUrlValidate = (url) => {
-    var expression = /^(https?:\/\/){0,1}(www\.){0,1}facebook\.com/;
+    var expression =  /^(http|https):\/\/www.facebook.com\/.*/i;
     var regexp = new RegExp(expression);
     if(!url||url.length===0 )
         return true
