@@ -97,7 +97,7 @@ const RecurringEvent = function ({
         .filter((item) => !item.isDeleted)
         .map((item) => {
           const obj = {
-            startDate: moment(item.startDate.toLocaleDateString()).format(
+            startDate: moment(item.startDate).format(
               "YYYY-MM-DD"
             ),
             customTimes: item.time
@@ -156,7 +156,7 @@ const RecurringEvent = function ({
       location: "test Location",
       startDate: item,
       endDate: item,
-      initDate: moment(item.toLocaleDateString()).format("YYYY-MM-DD") ,
+      initDate: moment(item).format("YYYY-MM-DD") ,
       isDeleted: false,
     };
       return obj;
@@ -251,7 +251,7 @@ const RecurringEvent = function ({
             {customDates.map((item) => (
               <Card>
                 <div className="custom-no-of-date">
-                  {moment(item.startDate.toLocaleDateString()).format(
+                  {moment(item.startDate).format(
                     "MMM,DD,YYYY"
                   )}
                 </div>

@@ -242,7 +242,7 @@ const RecurringModal = ({
                 location: "test Location",
                 startDate: e.startDate,
                 endDate: e.endDate,
-                initDate: moment(e.startDate.toLocaleDateString()).format("YYYY-MM-DD") ,
+                initDate: moment(e.startDate).format("YYYY-MM-DD") ,
                 isDeleted: false,
               };
               setTest(obj);
@@ -269,7 +269,7 @@ const RecurringModal = ({
                         : "custom-no-of-date"
                     }
                   >
-                    {moment(item.startDate.toLocaleDateString()).format(
+                    {moment(item.startDate).format(
                       "MMM,DD,YYYY"
                     )}
                   </div>
