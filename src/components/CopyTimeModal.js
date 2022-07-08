@@ -40,7 +40,7 @@ const CopyTimeModal = ({
           .filter((item) => item.id !== copyTime.id)
           .map((item) => {
             const obj = {
-              label: moment(item.startDate.toLocaleDateString()).format(
+              label: moment(item.startDate).format(
                 "MMM,DD,YYYY"
               ),
               value: item.id,
