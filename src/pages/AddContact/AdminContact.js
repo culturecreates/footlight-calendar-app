@@ -3,24 +3,22 @@ import moment from "moment";
 import PropTypes from "prop-types";
 import { Layout, Card, Table, Button, Switch, Avatar, Breadcrumb, Col, Row } from "antd";
 import { useTranslation, Trans } from "react-i18next";
-import "./AdminDashboard.css";
+import "../AdminDashboard.css";
 import { PlusOutlined, ForkOutlined } from "@ant-design/icons";
 import { useNavigate,useLocation } from "react-router-dom";
-import Spinner from "../components/Spinner";
-import ServiceApi from "../services/Service";
-import SemanticSearch from "../components/SemanticSearch";
-import AddEvent from "./AddEvent";
-import AddPlaces from "./AddPlaces";
+import Spinner from "../../components/Spinner";
+import ServiceApi from "../../services/Service";
 import { useDispatch, useSelector } from "react-redux";
-import { fetchPlace } from "../action";
+import { fetchContact, fetchPlace } from "../../action";
+import AddContact from "./AddContact";
 
-const AdminPlaces = function ({ currentLang }) {
-  const [placeList, setPlaceList] = useState([]);
+const AdminContacts = function ({ currentLang }) {
+  const [contactList, setContactList] = useState([]);
   const [loading, setLoading] = useState(false);
   const [isAdd, setIsAdd] = useState(false);
   const [totalPage, setTotalPage] = useState(1);
   const [defaultPage, setDefaultPage] = useState(1);
-  const [placeDetails, setPlaceDetails] = useState()
+  const [contactDetails, setContactDetails] = useState()
   const navigate = useNavigate();
   const location = useLocation();
 
@@ -29,13 +27,14 @@ const AdminPlaces = function ({ currentLang }) {
 
   const eventTableHeader = [
     {
-      title: t("PlaceName", { lng: currentLang }),
+      title: t("Name", { lng: currentLang }),
       dataIndex: "name",
       key: "name",
       render: (e, record) => (
         <Row className="image-name">
           
           <Col flex="1 1 150px">
+              
           {record.name[currentLang]}
           </Col>
         </Row>
@@ -43,37 +42,34 @@ const AdminPlaces = function ({ currentLang }) {
     }
   ];
 
-  const handleDelete = (checked,record,event) => {
-    event.stopPropagation()
-  };
- 
+  
 
   useEffect(() => {
-    if(location.pathname.includes("admin/add-place"))
+    if(location.pathname.includes("admin/add-contact"))
     {
       setIsAdd(true)
       const search = window.location.search;
     const params = new URLSearchParams(search);
     const eventId = params.get("id");
     if(eventId)
-    getplaceDetails(eventId)
+    getContactDetails(eventId)
     }
     else
     {
       setIsAdd(false)
-      getPlaces();
-      setPlaceDetails()
+      getContacts();
+      setContactDetails()
     }
    
   }, [location]);
 
-  const getplaceDetails = (id) => {
+  const getContactDetails = (id) => {
     setLoading(true);
-    ServiceApi.getPlaceDetail(id)
+    ServiceApi.getContactDetail(id)
       .then((response) => {
         if (response && response.data && response.data) {
           const events = response.data;
-          setPlaceDetails(events)
+          setContactDetails(events)
           if (response.data.StatusCode !== 400) {
              
           }
@@ -85,16 +81,16 @@ const AdminPlaces = function ({ currentLang }) {
       });
   };
 
-  const getPlaces = (page = 1) => {
+  const getContacts = (page = 1) => {
     setLoading(true);
-    ServiceApi.getAllPlaces(page, currentLang === "en" ? "EN" : "FR")
+    ServiceApi.getAllContacts(page, currentLang === "en" ? "EN" : "FR")
       .then((response) => {
         if (response && response.data && response.data.data) {
-          const events = response.data.data.places;
-          dispatch(fetchPlace(response.data.data));
-          setPlaceList(events);
-            if(response.data.totalCount)
-            setTotalPage(response.data.totalCount)
+          const events = response.data.data;
+         
+          dispatch(fetchContact(response.data.data));
+          setContactList(events);
+        
         }
         setLoading(false);
       })
@@ -105,45 +101,46 @@ const AdminPlaces = function ({ currentLang }) {
 
   const selectSemantic = (selectObj) => {
     const searchArray = [selectObj];
-    getPlaces(1, searchArray);
+    getContacts(1, searchArray);
   };
 
   return (
     <Layout className="dashboard-layout">
       {isAdd &&
        <Breadcrumb separator=">">
-    <Breadcrumb.Item onClick={()=>navigate(`/admin/places`)}>{t("Places", { lng: currentLang })}</Breadcrumb.Item>
-    <Breadcrumb.Item >{t("AddPlace", { lng: currentLang })}</Breadcrumb.Item>
+    <Breadcrumb.Item onClick={()=>navigate(`/admin/contacts`)}>{t("Contacts", { lng: currentLang })}</Breadcrumb.Item>
+    <Breadcrumb.Item >{t("AddContact", { lng: currentLang })}</Breadcrumb.Item>
     
   </Breadcrumb>
 }
       <Row className="admin-event-header">
-        <Col className="header-title" flex="0 1 300px">{t("Places", { lng: currentLang })}</Col>
+        <Col className="header-title" flex="0 1 300px">{t("Contacts", { lng: currentLang })}</Col>
         {!isAdd &&
         <Col className="flex-align">
           {/* <SemanticSearch
             onSelection={selectSemantic}
-            onClearSearch={getPlaces}
+            onClearSearch={getContacts}
             currentLang={currentLang}
           /> */}
           <Button type="primary" icon={<PlusOutlined />} size={"large"}
-          onClick={()=>navigate(`/admin/add-place`)}>
-            Add {t("Places", { lng: currentLang })}
+          onClick={()=>navigate(`/admin/add-contact`)}>
+            Add {t("Contacts", { lng: currentLang })}
           </Button>
         </Col>
 }
       </Row>
       <Card className="segment-card">
-        {!isAdd ? <Table
+        {!isAdd ? 
+        <Table
            
-              dataSource={placeList}
+              dataSource={contactList}
               columns={eventTableHeader}
               className={"event-table"}
-              scroll={{x: 800, y: "calc(100% - 60px)" }}
+              scroll={{x: 700, y: "calc(100% - 60px)" }}
               pagination={{
                 onChange: page =>{
                   setDefaultPage(page)
-                  getPlaces(
+                  getContacts(
                     page
                   )
                 },
@@ -157,22 +154,24 @@ const AdminPlaces = function ({ currentLang }) {
                 return {
                   onClick: (event) => {
                     event.stopPropagation()
-                    navigate(`/admin/add-place/?id=${record.uuid}`);
-                    // setSelectedProduct(record);
-                  }, // click row
+                    navigate(`/admin/add-contact/?id=${record.uuid}`);
+                    
+                  }, 
                 };
               }}
             /> 
+       
             :
-        <AddPlaces currentLang={currentLang} placeDetails={placeDetails}/>
+           
+        <AddContact currentLang={currentLang} contactDetails={contactDetails}/>
             }
       </Card>
       {loading && <Spinner />}
     </Layout>
   );
 };
-export default AdminPlaces;
+export default AdminContacts;
 
-AdminPlaces.propTypes = {
+AdminContacts.propTypes = {
   currentLang: PropTypes.string,
 };

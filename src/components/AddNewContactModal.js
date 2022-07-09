@@ -1,7 +1,7 @@
 import { Checkbox, Modal } from "antd";
 import { useEffect, useState } from "react";
 import moment from "moment";
-import AddContact from "../pages/AddContact";
+import AddContact from "../pages/AddContact/AddContact";
 
 const AddNewContactModal = ({
   isModalVisible,

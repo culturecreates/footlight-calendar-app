@@ -12,9 +12,9 @@ import {
   CloseOutlined,
   PlusOutlined,
 } from "@ant-design/icons";
-import { adminPlaces } from "../utils/Utility";
-import ServiceApi from "../services/Service";
-import Spinner from "../components/Spinner";
+import { adminPlaces } from "../../utils/Utility";
+import ServiceApi from "../../services/Service";
+import Spinner from "../../components/Spinner";
 
 const AddPlaces = function ({ currentLang,placeDetails }) {
   const [address, setAddress] = useState("");

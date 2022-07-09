@@ -26,15 +26,15 @@ import {
 } from "@ant-design/icons";
 import { useTranslation } from "react-i18next";
 import { Upload } from "antd";
-import ServiceApi from "../services/Service";
-import EventEditor from "../components/EventEditor";
+import ServiceApi from "../../services/Service";
+import EventEditor from "../../components/EventEditor";
 import { useNavigate } from "react-router-dom";
-import RecurringEvent from "../components/RecurringEvent";
+import RecurringEvent from "../../components/RecurringEvent";
 import Compressor from "compressorjs";
 import { useDispatch, useSelector } from "react-redux";
-import { fetchContact, fetchPlace } from "../action";
-import { fbUrlValidate, timeZone, urlValidate } from "../utils/Utility";
-import AddNewContactModal from "../components/AddNewContactModal";
+import { fetchContact, fetchPlace } from "../../action";
+import { fbUrlValidate, timeZone, urlValidate } from "../../utils/Utility";
+import AddNewContactModal from "../../components/AddNewContactModal";
 
 const { Option } = Select;
 const { Dragger } = Upload;

@@ -3,15 +3,15 @@ import moment from "moment";
 import PropTypes from "prop-types";
 import { Layout, Card, Table, Button, Switch, Avatar, Breadcrumb, Col, Row } from "antd";
 import { useTranslation, Trans } from "react-i18next";
-import "./AdminDashboard.css";
+import "../AdminDashboard.css";
 import { PlusOutlined, ForkOutlined } from "@ant-design/icons";
 import { useNavigate,useLocation } from "react-router-dom";
-import Spinner from "../components/Spinner";
-import ServiceApi from "../services/Service";
-import SemanticSearch from "../components/SemanticSearch";
+import Spinner from "../../components/Spinner";
+import ServiceApi from "../../services/Service";
+import SemanticSearch from "../../components/SemanticSearch";
 import AddEvent from "./AddEvent";
 import { useDispatch, useSelector } from "react-redux";
-import { fetchPlace } from "../action";
+import { fetchPlace } from "../../action";
 
 
 const AdminEvents = function ({ currentLang }) {

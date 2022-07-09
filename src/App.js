@@ -5,13 +5,13 @@ import "antd/dist/antd.min.css";
 import "antd/dist/antd.less";
 import React,{ useState } from "react";
 import { BrowserRouter as Router, Route, Routes } from "react-router-dom";
-import Events from "./pages/Events";
 import EventDetails from "./pages/EventDetails";
 import moment from "moment";
 import enUS from "antd/lib/locale/en_US";
 import frCA from "antd/lib/locale/fr_CA";
 import "moment/locale/fr-ca";
 import AdminDashboard from "./pages/AdminDasboard";
+import Events from "./pages/Event/Events";
 moment.locale("fr-ca");
 
 
