@@ -124,8 +124,8 @@ const Events = function ({ currentLang,locale }) {
         if (response && response.data && response.data.data) {
           const events = response.data.data;
           setEventList(events);
-         
-          //   setTotalPage(response.data.totalPage * 20)
+         if(response.data.totalCount)
+             setTotalPage(response.data.totalCount)
         }
         setLoading(false);
       })

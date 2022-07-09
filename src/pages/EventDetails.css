@@ -40,6 +40,8 @@
 .event-contact-card{
     border-top: 2px solid rgb(238, 238, 238);
     margin-bottom: 15px;
+    display: flex;
+    flex-direction: column;
 }
 .flex{
     display: flex;

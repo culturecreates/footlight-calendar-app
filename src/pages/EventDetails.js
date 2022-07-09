@@ -210,6 +210,13 @@ const EventDetails = function ({ currentLang,isAdmin=false }) {
                   currentLang={currentLang}
                 />
               )}
+              {eventDetails.sameAs && eventDetails.sameAs.length > 0 && (
+                <EventContact
+                  name="Link"
+                  values={eventDetails.url?[eventDetails.sameAs,eventDetails.url.uri]:eventDetails.sameAs}
+                  currentLang={currentLang}
+                />
+              )}
               {eventDetails.audience?.length > 0 && (
                 <EventContact
                   name="audience"
