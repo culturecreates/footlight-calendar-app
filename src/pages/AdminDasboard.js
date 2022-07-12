@@ -16,13 +16,11 @@ import {
   } from "react-router-dom";
 import EventCalendar from "../components/EventCalendar";
 import { adminSideMenuLinks } from "../utils/Utility";
-import Events from "./Events";
-import AdminEvents from "./AdminEvents";
 import EventDetails from "./EventDetails";
 import { useTranslation, Trans } from "react-i18next";
-import AdminPlaces from "./AdminPlaces";
-import EventContact from "../components/EventContact";
-import AdminContacts from "./AdminContact";
+import AdminEvents from "./AddEvent/AdminEvents";
+import AdminContacts from "./AddContact/AdminContact";
+import AdminPlaces from "./AdminPlace/AdminPlaces";
 
 const { Header, Content, Sider } = Layout;
 

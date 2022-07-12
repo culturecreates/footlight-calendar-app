@@ -24,6 +24,8 @@ const CopyTimeModal = ({
     updateTime(newCopyArray);
 
     setIsModalVisible(false);
+    setCheckAll(false)
+    setSelectedCheckbox([])
   };
 
   const onChange = (checkedValues) => {

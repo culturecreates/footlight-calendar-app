@@ -62,12 +62,13 @@ export default class ServiceApi {
     });
   }
 
-  static getEventDetail(id,isAdmin= false) {
+  static getEventDetail(id,isAdmin= false,includeJsonld=true) {
     return Axios({
       url: `events/${id}`,
       method: "GET",
       params:{
-        isAdmin:true
+        isAdmin:true,
+        includeJsonld:includeJsonld
       }
     });
   }

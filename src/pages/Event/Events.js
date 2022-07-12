@@ -1,19 +1,18 @@
 import React, { useState, useEffect, useRef } from "react";
 import { Row, Col, ConfigProvider, Pagination, Button, Empty, DatePicker } from "antd";
 import { useTranslation, Trans } from "react-i18next";
-import "./Event.css";
+import "../Event.css";
 import PropTypes from "prop-types";
-import "../App.css";
 import { CloseOutlined,AppstoreOutlined } from "@ant-design/icons";
-import EventCalendar from "../components/EventCalendar";
-import SelectionTag from "../components/SelectionTag";
+import EventCalendar from "../../components/EventCalendar";
+import SelectionTag from "../../components/SelectionTag";
 import moment from "moment";
-import ServiceApi from "../services/Service";
-import Spinner from "../components/Spinner";
-import EventItem from "../components/EventItem";
-import SemanticSearch from "../components/SemanticSearch";
+import ServiceApi from "../../services/Service";
+import Spinner from "../../components/Spinner";
+import EventItem from "../../components/EventItem";
+import SemanticSearch from "../../components/SemanticSearch";
 import { useDispatch, useSelector } from "react-redux";
-import { fetchFilter } from "../action";
+import { fetchFilter } from "../../action";
 
 
 const Events = function ({ currentLang,locale }) {
@@ -124,8 +123,8 @@ const Events = function ({ currentLang,locale }) {
         if (response && response.data && response.data.data) {
           const events = response.data.data;
           setEventList(events);
-         
-          //   setTotalPage(response.data.totalPage * 20)
+         if(response.data.totalCount)
+             setTotalPage(response.data.totalCount)
         }
         setLoading(false);
       })

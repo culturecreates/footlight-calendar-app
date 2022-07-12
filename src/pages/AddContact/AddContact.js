@@ -9,11 +9,11 @@ import {
   CloseOutlined,
   
 } from "@ant-design/icons";
-import { adminContact, urlValidate } from "../utils/Utility";
-import ServiceApi from "../services/Service";
-import Spinner from "../components/Spinner";
+import { adminContact, urlValidate } from "../../utils/Utility";
+import ServiceApi from "../../services/Service";
+import Spinner from "../../components/Spinner";
 import { useDispatch, useSelector } from "react-redux";
-import { fetchContact } from "../action";
+import { fetchContact } from "../../action";
 
 const AddContact = function ({ currentLang,contactDetails,isModal=false,onsuccessAdd }) {
   const [loading, setLoading] = useState(false);

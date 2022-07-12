@@ -209,7 +209,7 @@ const RecurringEvent = function ({
     // Shift to next of required days
     current.setDate(current.getDate() + ((day - current.getDay() + 7) % 7));
     // While less than end date, add dates to result array
-    while (current < end) {
+    while (current <= end) {
       result.push(new Date(+current));
       current.setDate(current.getDate() + 7);
     }
@@ -220,6 +220,24 @@ const RecurringEvent = function ({
   const handleChange = (value) => {
     if (value === "CUSTOM") setIsModalVisible(true);
   };
+
+  const openCustomize=()=>{
+    
+    if (formFields && formFields.frequency !== "CUSTOM") 
+    {
+      const obj = {
+        startTime: moment(formFields.startTimeRecur).format("hh:mm a"),
+        endTime:
+        formFields.endTimeRecur && moment(formFields.endTimeRecur).format("hh:mm a"),
+        start: moment(formFields.startTimeRecur).format("HH:mm"),
+        end: formFields.endTimeRecur && moment(formFields.endTimeRecur).format("HH:mm"),
+      };
+      setCustomDates(customDates.map(item=>({...item,time:[obj]})))
+    }
+
+    setIsModalVisible(true)
+    
+  }
   return (
     <Card className="recurring-card">
       <div className="update-select-title">
@@ -383,7 +401,7 @@ const RecurringEvent = function ({
       <div className="customize-div">
         {nummberofDates !== 0 && <div> {nummberofDates + " Dates"}</div>}
 
-        <div onClick={() => setIsModalVisible(true)} className="customize">
+        <div onClick={() => openCustomize()} className="customize">
           <EditOutlined />
           Customize
         </div>
