@@ -209,7 +209,7 @@ const RecurringEvent = function ({
     // Shift to next of required days
     current.setDate(current.getDate() + ((day - current.getDay() + 7) % 7));
     // While less than end date, add dates to result array
-    while (current < end) {
+    while (current <= end) {
       result.push(new Date(+current));
       current.setDate(current.getDate() + 7);
     }
