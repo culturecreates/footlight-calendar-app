@@ -143,6 +143,7 @@ const AdminEvents = function ({ currentLang }) {
   };
 
   const getEvents = (page = 1, filterArray = []) => {
+    setDefaultPage(page)
     setLoading(true);
     ServiceApi.eventList(page, filterArray, currentLang === "en" ? "EN" : "FR")
       .then((response) => {
