@@ -36,7 +36,7 @@ const EventDetails = function ({ currentLang,isAdmin=false }) {
   }, []);
   const getEventDetails = (id) => {
     setLoading(true);
-    ServiceApi.getEventDetail(id,false)
+    ServiceApi.getEventDetail(id,false,true)
       .then((response) => {
         if (response && response.data && response.data) {
           const events = response.data;
