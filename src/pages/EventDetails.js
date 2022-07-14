@@ -17,23 +17,67 @@ import {
 } from "@ant-design/icons";
 import { useTranslation, Trans } from "react-i18next";
 import ServiceApi from "../services/Service";
-import { useNavigate } from "react-router-dom";
+import { useNavigate,useLocation,useSearchParams } from "react-router-dom";
 import Spinner from "../components/Spinner";
 import moment from "moment-timezone";
 import ICalendarLink from "react-icalendar-link";
+import { useDispatch, useSelector } from "react-redux";
+import { changeLang } from "../action";
 
-const EventDetails = function ({ currentLang,isAdmin=false }) {
+const EventDetails = function ({currentLang, isAdmin=false }) {
   const { t, i18n } = useTranslation();
   const [loading, setLoading] = useState(false);
+  const [updateLang, setUpdateLang] = useState(false);
   const [eventDetails, setEventDetails] = useState();
   const [eventIcal, setEventIcal] = useState();
+  const [eventDate, setEventDate] = useState();
+  
+  const [search, setSearch] = useSearchParams();
+
   const navigate = useNavigate();
+  const location = useLocation();
+  const dispatch = useDispatch();
+
+  const langStore = useSelector((state) => state.lang);
+
 
   const { eventId } = useParams();
 
   useEffect(() => {
     getEventDetails(eventId);
   }, []);
+
+  useEffect(() => {
+    const search = window.location.search;
+    const params = new URLSearchParams(search);
+    const code = params.get("lang");
+    console.log(code,currentLang)
+    if (code)
+    {
+      if(code==="en")
+       moment.locale("en");
+      dispatch(changeLang(code)); 
+      setUpdateLang(true)
+      
+      const date = moment(params.get("date"), 'YYYY-MM-DD_HH-mm-ss')
+      setEventDate(date)         
+     
+    }
+    
+  }, [location]);
+
+
+  useEffect(() => {
+    
+    if( langStore && updateLang)
+    {
+      setSearch({ lang: langStore,
+      date:moment(eventDetails.startDate).tz(eventDetails.scheduleTimezone?eventDetails.scheduleTimezone:"Canada/Eastern").format("YYYY-MM-DD_HH-mm-ss") });
+     
+    }
+    
+  }, [langStore]);
+
   const getEventDetails = (id) => {
     setLoading(true);
     ServiceApi.getEventDetail(id,false,true)
@@ -55,6 +99,7 @@ const EventDetails = function ({ currentLang,isAdmin=false }) {
             };
             setEventIcal(eventTest);
             setEventDetails(events);
+            // setEventDate(eventDate) 
           }
         }
         setLoading(false);
@@ -65,14 +110,16 @@ const EventDetails = function ({ currentLang,isAdmin=false }) {
   };
   const menu = (
     <Menu
+    onClick={(e)=>subEventsClick(eventDetails.subEvents[e.key])}
       items={eventDetails?.subEvents.map((item, index) => {
         if(index !==0)
         {
+          const date =moment(item.startDate).tz(item.scheduleTimezone?item.scheduleTimezone:"Canada/Eastern").format("YYYY-MM-DD_HH-mm-ss")
+          const dateFormated = moment(date, 'YYYY-MM-DD_HH-mm-ss')
         const obj = {
           label:
-            new Date(item.startDate).toLocaleDateString(currentLang, {
-              weekday: "long",
-            }) + moment(item.startDate).tz(eventDetails.scheduleTimezone?eventDetails.scheduleTimezone:"Canada/Eastern").format(" DD MMM YYYY")+" - "+ moment(item.startDate).tz(eventDetails.scheduleTimezone?eventDetails.scheduleTimezone:"Canada/Eastern").format("hh:mm A"),
+          moment(dateFormated).tz(eventDetails.scheduleTimezone?eventDetails.scheduleTimezone:"Canada/Eastern").format("dddd")
+             + moment(dateFormated).tz(eventDetails.scheduleTimezone?eventDetails.scheduleTimezone:"Canada/Eastern").format(" DD MMM YYYY")+" - "+ moment(dateFormated).tz(eventDetails.scheduleTimezone?eventDetails.scheduleTimezone:"Canada/Eastern").format("hh:mm a"),
           key: index,
         };
         return obj;
@@ -93,6 +140,11 @@ const EventDetails = function ({ currentLang,isAdmin=false }) {
   const obj = data.find(item=>item.url)
   return obj.url?.uri
   }
+  const subEventsClick=(item)=>{
+    const date =moment(item.startDate).tz(item.scheduleTimezone?item.scheduleTimezone:"Canada/Eastern").format("YYYY-MM-DD_HH-mm-ss")
+          const dateFormated = moment(date, 'YYYY-MM-DD_HH-mm-ss')
+    setEventDate(dateFormated) 
+  }
   return (
     <div>
     <div className="main-event-layout">
@@ -107,15 +159,15 @@ const EventDetails = function ({ currentLang,isAdmin=false }) {
           <div className="event-title" style={{ maxWidth: "1100px" }}>{eventDetails.name[currentLang]}</div>
           <div className="event-title-section">
             <div className="event-time-section">
+              {eventDate && <>
               <div className="event-time-header">
-                {new Date(eventDetails.startDate).toLocaleDateString(
-                  currentLang,
-                  { weekday: "long" }
-                ) + moment(eventDetails.startDate).format(" DD MMM YYYY")}
+                {moment(eventDate).tz(eventDetails.scheduleTimezone?eventDetails.scheduleTimezone:"Canada/Eastern").format("dddd") + moment(eventDate).tz(eventDetails.scheduleTimezone?eventDetails.scheduleTimezone:"Canada/Eastern").format(" DD MMM YYYY")}
               </div>
               <div>
-                {moment(eventDetails.startDate).tz(eventDetails.scheduleTimezone?eventDetails.scheduleTimezone:"Canada/Eastern").format('hh:mm a')}
+                {moment(eventDate).tz(eventDetails.scheduleTimezone?eventDetails.scheduleTimezone:"Canada/Eastern").format('hh:mm a')}
               </div>
+              </>
+}
               <div className="subevent-dropdown">
                 {eventDetails?.subEvents?.length > 1 && (
                   <>

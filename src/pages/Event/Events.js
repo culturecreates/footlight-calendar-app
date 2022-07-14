@@ -45,7 +45,7 @@ const Events = function ({ currentLang,locale }) {
   const { t, i18n } = useTranslation();
 
   useEffect(() => {
-    moment.locale("fr-ca");
+    // moment.locale("fr-ca");
     if(filterStore && filterStore.data)
     {
       setupEventsFilter(filterStore.data);

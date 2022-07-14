@@ -11,7 +11,7 @@ const EventItem = function ({ item, currentLang }) {
     const navigate = useNavigate();
     const redirectionToDetails=()=>{
         
-        navigate(`/events/${item.uuid}`);
+        navigate(`/events/${item.uuid}?lang=${currentLang}&date=${moment(item.startDate).tz(item.scheduleTimezone?item.scheduleTimezone:"Canada/Eastern").format("YYYY-MM-DD_HH-mm-ss")}`);
     }
   return (
     <div

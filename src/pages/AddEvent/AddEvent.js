@@ -188,8 +188,8 @@ const AddEvent = function ({ currentLang, eventDetails }) {
         // timeZone: values.timeZone,
         weekDays: values.frequency === "WEEKLY" ? values.daysOfWeek : undefined,
         customDates:
-          form.getFieldsValue().frequency === "CUSTOM" &&
-          form.getFieldsValue().customDates,
+          form.getFieldsValue().frequency === "CUSTOM" ?
+          form.getFieldsValue().customDates: undefined,
       };
       eventObj.recurringEvent = recurEvent;
     }
