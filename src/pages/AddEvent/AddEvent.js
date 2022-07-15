@@ -393,9 +393,7 @@ const AddEvent = function ({ currentLang, eventDetails }) {
         <Row>
           <Col flex="0 1 450px">
             <div className="update-select-title">
-              {t("Event", { lng: currentLang }) +
-                " " +
-                t("Name", { lng: currentLang })}
+              {t("Title")}
             </div>
             <Form.Item
               name="title"
