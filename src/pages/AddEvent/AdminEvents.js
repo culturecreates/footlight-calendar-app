@@ -169,13 +169,14 @@ const AdminEvents = function ({ currentLang }) {
     <Layout className="dashboard-layout">
       {isAdd &&
        <Breadcrumb separator=">">
-    <Breadcrumb.Item onClick={()=>navigate(`/admin/events`)}>{t("Events", { lng: currentLang })}</Breadcrumb.Item>
-    <Breadcrumb.Item >{eventDetails?eventDetails.name["fr"]: t("AddEvent", { lng: currentLang })}</Breadcrumb.Item>
-    
-  </Breadcrumb>
+        <Breadcrumb.Item onClick={()=>navigate(`/admin/events`)}>{t("Events")}</Breadcrumb.Item>
+        <Breadcrumb.Item >{eventDetails?eventDetails.name[currentLang]:''}</Breadcrumb.Item>
+      </Breadcrumb>
 }
       <Row className="admin-event-header">
-        <Col className="header-title" flex="0 1 300px">{t("Events", { lng: currentLang })}</Col>
+        {!isAdd &&
+        <Col className="header-title" flex="0 1 300px">{t("Events")}</Col>
+}
         {!isAdd &&
         <Col className="flex-align">
           <SemanticSearch
@@ -185,7 +186,7 @@ const AdminEvents = function ({ currentLang }) {
           />
           <Button type="primary" icon={<PlusOutlined />} size={"large"}
           onClick={()=>navigate(`/admin/add-event`)}>
-            {t("Event", { lng: currentLang })}
+            {t("Event")}
           </Button>
         </Col>
 }
