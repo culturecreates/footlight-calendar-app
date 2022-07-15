@@ -107,14 +107,15 @@ const AdminContacts = function ({ currentLang }) {
   return (
     <Layout className="dashboard-layout">
       {isAdd &&
-       <Breadcrumb separator=">">
-    <Breadcrumb.Item onClick={()=>navigate(`/admin/contacts`)}>{t("Contacts", { lng: currentLang })}</Breadcrumb.Item>
-    <Breadcrumb.Item >{t("AddContact", { lng: currentLang })}</Breadcrumb.Item>
-    
-  </Breadcrumb>
+      <Breadcrumb separator=">">
+        <Breadcrumb.Item onClick={()=>navigate(`/admin/contacts`)}>{t("Contacts")}</Breadcrumb.Item>
+        <Breadcrumb.Item >{contactDetails?contactDetails.name[currentLang]:t("AddContact")}</Breadcrumb.Item>
+      </Breadcrumb>
 }
       <Row className="admin-event-header">
-        <Col className="header-title" flex="0 1 300px">{t("Contacts", { lng: currentLang })}</Col>
+      {!isAdd &&
+        <Col className="header-title" flex="0 1 300px">{t("Contacts")}</Col>
+      }
         {!isAdd &&
         <Col className="flex-align">
           {/* <SemanticSearch
@@ -124,7 +125,7 @@ const AdminContacts = function ({ currentLang }) {
           /> */}
           <Button type="primary" icon={<PlusOutlined />} size={"large"}
           onClick={()=>navigate(`/admin/add-contact`)}>
-            {t("Contacts", { lng: currentLang })}
+            {t("Contact")}
           </Button>
         </Col>
 }

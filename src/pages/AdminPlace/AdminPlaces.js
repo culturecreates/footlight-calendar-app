@@ -109,14 +109,15 @@ const AdminPlaces = function ({ currentLang }) {
   return (
     <Layout className="dashboard-layout">
       {isAdd &&
-       <Breadcrumb separator=">">
-    <Breadcrumb.Item onClick={()=>navigate(`/admin/places`)}>{t("Places", { lng: currentLang })}</Breadcrumb.Item>
-    <Breadcrumb.Item >{t("AddPlace", { lng: currentLang })}</Breadcrumb.Item>
-    
-  </Breadcrumb>
+      <Breadcrumb separator=">">
+        <Breadcrumb.Item onClick={()=>navigate(`/admin/places`)}>{t("Places")}</Breadcrumb.Item>
+        <Breadcrumb.Item >{placeDetails?placeDetails.name[currentLang]:t("AddPlace")}</Breadcrumb.Item>
+      </Breadcrumb>
 }
       <Row className="admin-event-header">
-        <Col className="header-title" flex="0 1 300px">{t("Places", { lng: currentLang })}</Col>
+      {!isAdd &&
+        <Col className="header-title" flex="0 1 300px">{t("Places")}</Col>
+      }
         {!isAdd &&
         <Col className="flex-align">
           {/* <SemanticSearch
@@ -126,7 +127,7 @@ const AdminPlaces = function ({ currentLang }) {
           /> */}
           <Button type="primary" icon={<PlusOutlined />} size={"large"}
           onClick={()=>navigate(`/admin/add-place`)}>
-            {t("Places", { lng: currentLang })}
+            {t("Place")}
           </Button>
         </Col>
 }

@@ -170,7 +170,7 @@ const AdminEvents = function ({ currentLang }) {
       {isAdd &&
        <Breadcrumb separator=">">
         <Breadcrumb.Item onClick={()=>navigate(`/admin/events`)}>{t("Events")}</Breadcrumb.Item>
-        <Breadcrumb.Item >{eventDetails?eventDetails.name[currentLang]:''}</Breadcrumb.Item>
+        <Breadcrumb.Item >{eventDetails?eventDetails.name[currentLang]:t("AddEvent")}</Breadcrumb.Item>
       </Breadcrumb>
 }
       <Row className="admin-event-header">
