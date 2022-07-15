@@ -97,7 +97,7 @@ i18n
           "AddEvent":"Ajouter un événement",
           "Name":"Nom",
           "Location":"Emplacement",
-          "StartDate":"Date de Début",
+          "StartDate":"Date de début",
           "Published":"Publié",
           "FileUpload":"Sélectionnez les fichiers à télécharger",
           "DragAndDrop":"ou glisser-déposer des fichiers à télécharger",
