@@ -36,6 +36,7 @@ import { fetchContact, fetchPlace } from "../../action";
 import { fbUrlValidate, timeZone, urlValidate } from "../../utils/Utility";
 import AddNewContactModal from "../../components/AddNewContactModal";
 import PriceModal from "../../components/PriceModal/PriceModal";
+import Spinner from "../../components/Spinner";
 
 const { Option } = Select;
 const { Dragger } = Upload;
@@ -52,7 +53,7 @@ const AddEvent = function ({ currentLang, eventDetails }) {
   const [isEndDate, setIsEndDate] = useState(false);
   const [isRecurring, setIsRecurring] = useState(false);
   const [showPriceModal, setShowPriceModal] = useState(false);
-
+  const [loading, setLoading] = useState(false);
   const [allLocations, setAllLocations] = useState();
   const [eventType, setEventType] = useState("offline");
   const [fileList, setFileList] = useState([]);
@@ -135,6 +136,7 @@ const AddEvent = function ({ currentLang, eventDetails }) {
   };
 
   const handleSubmit = (values) => {
+    setLoading(true)
     if (!isRecurring) {
       values.startDate.set({
         h: values.startTime.get("hour"),
@@ -208,17 +210,19 @@ const AddEvent = function ({ currentLang, eventDetails }) {
                 compressedFile
               )
                 .then((response) => {
+                  setLoading(false)
                   message.success("Event Updated Successfully");
                   navigate(`/admin/events`);
                 })
-                .catch((error) => {});
+                .catch((error) => {setLoading(false)});
             else {
+              setLoading(false)
               message.success("Event Updated Successfully");
               navigate(`/admin/events`);
             }
           }
         })
-        .catch((error) => {});
+        .catch((error) => {setLoading(false)});
     else
       ServiceApi.addEvent(eventObj)
         .then((response) => {
@@ -230,11 +234,13 @@ const AddEvent = function ({ currentLang, eventDetails }) {
                 compressedFile
               )
                 .then((response) => {
+                  setLoading(false)
                   message.success("Event Created Successfully");
                   navigate(`/admin/events`);
                 })
-                .catch((error) => {});
+                .catch((error) => {setLoading(false)});
             else {
+              setLoading(false)
               message.success("Event Created Successfully");
               navigate(`/admin/events`);
             }
@@ -729,6 +735,7 @@ const AddEvent = function ({ currentLang, eventDetails }) {
 }
 {showPriceModal && <PriceModal isModalVisible={showPriceModal} setIsModalVisible={setShowPriceModal}
 currentLang={currentLang}/> }
+ {loading && <Spinner />}
     </Layout>
   );
 };
