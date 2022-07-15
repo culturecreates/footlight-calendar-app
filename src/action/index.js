@@ -1,4 +1,4 @@
-import { FILTER, PLACES,CONTACTS} from "./Types";
+import { FILTER, PLACES,CONTACTS, LANG} from "./Types";
 
 export const fetchFilter = (data) => {
   return {
@@ -17,6 +17,13 @@ export const fetchPlace = (data) => {
 export const fetchContact = (data) => {
   return {
     type: CONTACTS,
+    data,
+  };
+};
+
+export const changeLang = (data) => {
+  return {
+    type: LANG,
     data,
   };
 };

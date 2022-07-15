@@ -53,7 +53,7 @@ i18n
           "Country":"Country",
           "Locality":"Locality",
           "PostalCode":"Postal Code",
-          "Street Address":"Street Address",
+          "StreetAddress":"Street Address",
           "ContainedInPlace":"Contained In Place",
           "AddPlace":"Add Place",
           "EndDateTime":"End Date Time",
@@ -109,7 +109,7 @@ i18n
           "Country":"Pays",
           "Locality":"Localité",
           "PostalCode":"Code postal",
-          "Street Address":"Adresse municipale",
+          "StreetAddress":"Adresse municipale",
           "ContainedInPlace":"Contenu en place",
           "AddPlace":"Ajouter un lieu",
           "EndDateTime":"Date de fin Heure"

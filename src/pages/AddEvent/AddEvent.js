@@ -35,6 +35,8 @@ import { useDispatch, useSelector } from "react-redux";
 import { fetchContact, fetchPlace } from "../../action";
 import { fbUrlValidate, timeZone, urlValidate } from "../../utils/Utility";
 import AddNewContactModal from "../../components/AddNewContactModal";
+import PriceModal from "../../components/PriceModal/PriceModal";
+import Spinner from "../../components/Spinner";
 
 const { Option } = Select;
 const { Dragger } = Upload;
@@ -50,6 +52,8 @@ const AddEvent = function ({ currentLang, eventDetails }) {
   const [formValue, setFormVaue] = useState();
   const [isEndDate, setIsEndDate] = useState(false);
   const [isRecurring, setIsRecurring] = useState(false);
+  const [showPriceModal, setShowPriceModal] = useState(false);
+  const [loading, setLoading] = useState(false);
   const [allLocations, setAllLocations] = useState();
   const [eventType, setEventType] = useState("offline");
   const [fileList, setFileList] = useState([]);
@@ -132,6 +136,7 @@ const AddEvent = function ({ currentLang, eventDetails }) {
   };
 
   const handleSubmit = (values) => {
+    setLoading(true)
     if (!isRecurring) {
       values.startDate.set({
         h: values.startTime.get("hour"),
@@ -165,7 +170,7 @@ const AddEvent = function ({ currentLang, eventDetails }) {
       contactPoint: values.contact ?{
         entityId: values.contact
       }:undefined,
-      url:{uri:values.eventPage},
+      url:values.eventPage && {uri:values.eventPage},
       sameAs:values.facebookLink?[values.facebookLink]:[],
     };
     if (isEndDate && !isRecurring)
@@ -188,8 +193,8 @@ const AddEvent = function ({ currentLang, eventDetails }) {
         // timeZone: values.timeZone,
         weekDays: values.frequency === "WEEKLY" ? values.daysOfWeek : undefined,
         customDates:
-          form.getFieldsValue().frequency === "CUSTOM" &&
-          form.getFieldsValue().customDates,
+          form.getFieldsValue().frequency === "CUSTOM" ?
+          form.getFieldsValue().customDates: undefined,
       };
       eventObj.recurringEvent = recurEvent;
     }
@@ -205,17 +210,19 @@ const AddEvent = function ({ currentLang, eventDetails }) {
                 compressedFile
               )
                 .then((response) => {
+                  setLoading(false)
                   message.success("Event Updated Successfully");
                   navigate(`/admin/events`);
                 })
-                .catch((error) => {});
+                .catch((error) => {setLoading(false)});
             else {
+              setLoading(false)
               message.success("Event Updated Successfully");
               navigate(`/admin/events`);
             }
           }
         })
-        .catch((error) => {});
+        .catch((error) => {setLoading(false)});
     else
       ServiceApi.addEvent(eventObj)
         .then((response) => {
@@ -227,11 +234,13 @@ const AddEvent = function ({ currentLang, eventDetails }) {
                 compressedFile
               )
                 .then((response) => {
+                  setLoading(false)
                   message.success("Event Created Successfully");
                   navigate(`/admin/events`);
                 })
-                .catch((error) => {});
+                .catch((error) => {setLoading(false)});
             else {
+              setLoading(false)
               message.success("Event Created Successfully");
               navigate(`/admin/events`);
             }
@@ -624,6 +633,16 @@ const AddEvent = function ({ currentLang, eventDetails }) {
               </Select>
             </Form.Item>
 
+            <Button
+            type="primary"
+           
+            size="large"
+            style={{marginBottom:"20px"}}
+            onClick={()=>setShowPriceModal(true)}
+          >
+           Price/Prix
+          </Button>
+
             <div className="update-select-title">
               {t("Facebook Link", { lng: currentLang })}
             </div>
@@ -714,6 +733,9 @@ const AddEvent = function ({ currentLang, eventDetails }) {
       {showAddContact &&
       <AddNewContactModal isModalVisible={showAddContact} setIsModalVisible={setShowAddContact}/>
 }
+{showPriceModal && <PriceModal isModalVisible={showPriceModal} setIsModalVisible={setShowPriceModal}
+currentLang={currentLang}/> }
+ {loading && <Spinner />}
     </Layout>
   );
 };

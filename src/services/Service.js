@@ -32,7 +32,7 @@ export default class ServiceApi {
       }
     });
   }
-  static searchSuggesion(value,lng) {
+  static searchSuggesion(value,lng="fr") {
     return Axios({
       url: `search-suggestion`,
       method: "GET",
@@ -42,7 +42,7 @@ export default class ServiceApi {
       }
     });
   }
-  static eventList(page=1,filterArray=[],lng) {
+  static eventList(page=1,filterArray=[],lng="fr") {
     console.log(filterArray,filterArray.find((o) => o.type === "queryString")&&filterArray.find((o) => o.type === "queryString").name)
     return Axios({
       url: `events/list`,

@@ -9,9 +9,10 @@ import {
 
 const EventItem = function ({ item, currentLang }) {
     const navigate = useNavigate();
+    const regex = / /g;
     const redirectionToDetails=()=>{
         
-        navigate(`/events/${item.uuid}`);
+        navigate(`/events/${item.slug?item.slug?.fr:item.name.fr.replace(regex, "-")}/${item.uuid}?lang=${currentLang}&date=${moment(item.startDate).tz(item.scheduleTimezone?item.scheduleTimezone:"Canada/Eastern").format("YYYY-MM-DD_HH-mm-ss")}`);
     }
   return (
     <div

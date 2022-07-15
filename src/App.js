@@ -3,7 +3,7 @@ import "./App.css";
 import { useTranslation, Trans } from "react-i18next";
 import "antd/dist/antd.min.css";
 import "antd/dist/antd.less";
-import React,{ useState } from "react";
+import React,{ useState , useEffect} from "react";
 import { BrowserRouter as Router, Route, Routes } from "react-router-dom";
 import EventDetails from "./pages/EventDetails";
 import moment from "moment";
@@ -12,6 +12,9 @@ import frCA from "antd/lib/locale/fr_CA";
 import "moment/locale/fr-ca";
 import AdminDashboard from "./pages/AdminDasboard";
 import Events from "./pages/Event/Events";
+import { useDispatch, useSelector } from "react-redux";
+import { changeLang } from "./action";
+
 moment.locale("fr-ca");
 
 
@@ -20,6 +23,9 @@ function App() {
   const [locale, setLocale] = useState(frCA);
   const [currentLang, setCurrentLang] = useState("fr");
   const [isEnglish, setIsEnglish] = useState(false);
+  const dispatch = useDispatch();
+
+  const langStore = useSelector((state) => state.lang);
 
   const { t, i18n } = useTranslation();
   const changeLanguage = (lng) => {
@@ -38,9 +44,20 @@ function App() {
   //     moment.locale("fr-ca");
   //   }
   // };
+  useEffect(() => {
+    if( langStore)
+    {
+      
+      onChange(langStore==="en"?true:false)
+     
+    }
+    
+  }, [langStore]);
   function onChange(checked) {
+   
     setIsEnglish(checked)
     if(!checked){
+      dispatch(changeLang("fr")); 
       i18n.changeLanguage("fr");
      setCurrentLang("fr")
      setLocale(frCA)
@@ -50,6 +67,7 @@ function App() {
     // window.location.href = '/user/capability' ;  
     else
     {
+      dispatch(changeLang("en")); 
       i18n.changeLanguage("en");
      setCurrentLang("en")
      setLocale(enUS)
@@ -102,7 +120,7 @@ function App() {
         <Router>
         <Routes>
           <Route path="/" element={<Events currentLang={currentLang} locale={locale}/>} />
-          <Route path="/events/:eventId" element={<EventDetails currentLang={currentLang}/>} />
+          <Route path="/events/:slug/:eventId" element={<EventDetails currentLang={currentLang}/>} />
 
           <Route path="/admin/*" element={<AdminDashboard currentLang={currentLang} locale={locale}/>} />
         </Routes>
