@@ -39,7 +39,6 @@ i18n
           "tickets":"Tickets",
           "Events":"Events",
           "Places":"Places",
-          "AddEvent":"Add Event",
           "Name":"Name",
           "Location":"Location",
           "StartDate":"Start Date",
@@ -55,7 +54,6 @@ i18n
           "PostalCode":"Postal Code",
           "StreetAddress":"Street Address",
           "ContainedInPlace":"Contained In Place",
-          "AddPlace":"Add Place",
           "EndDateTime":"End Date Time",
           "RecurringEvent":"Recurring Event",
           "Frequency":"Frequency"
@@ -94,7 +92,6 @@ i18n
           "tickets":"Billets",
           "Events":"Événements",
           "Places":"Lieu",
-          "AddEvent":"Ajouter un événement",
           "Name":"Nom",
           "Location":"Emplacement",
           "StartDate":"Date de début",
@@ -110,7 +107,6 @@ i18n
           "PostalCode":"Code postal",
           "StreetAddress":"Adresse municipale",
           "ContainedInPlace":"Contenu en place",
-          "AddPlace":"Ajouter un lieu",
           "EndDateTime":"Date/heure de fin"
         }
       }

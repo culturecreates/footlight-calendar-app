@@ -126,7 +126,7 @@ const AdminPlaces = function ({ currentLang }) {
           /> */}
           <Button type="primary" icon={<PlusOutlined />} size={"large"}
           onClick={()=>navigate(`/admin/add-place`)}>
-            Add {t("Places", { lng: currentLang })}
+            {t("Places", { lng: currentLang })}
           </Button>
         </Col>
 }

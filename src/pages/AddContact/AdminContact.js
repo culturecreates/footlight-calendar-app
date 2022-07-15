@@ -124,7 +124,7 @@ const AdminContacts = function ({ currentLang }) {
           /> */}
           <Button type="primary" icon={<PlusOutlined />} size={"large"}
           onClick={()=>navigate(`/admin/add-contact`)}>
-            Add {t("Contacts", { lng: currentLang })}
+            {t("Contacts", { lng: currentLang })}
           </Button>
         </Col>
 }

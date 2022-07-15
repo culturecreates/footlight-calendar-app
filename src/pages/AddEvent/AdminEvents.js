@@ -185,7 +185,7 @@ const AdminEvents = function ({ currentLang }) {
           />
           <Button type="primary" icon={<PlusOutlined />} size={"large"}
           onClick={()=>navigate(`/admin/add-event`)}>
-            Add {t("Event", { lng: currentLang })}
+            {t("Event", { lng: currentLang })}
           </Button>
         </Col>
 }
