@@ -80,7 +80,7 @@ i18n
           "additionalType":"Additional Type",
           "Search": "Recherchez un événement, un thème ou un lieu",
           "Results":"Résultats de recherche",
-          "Different": "auture",
+          "Different": "autres",
           "Contact":"Contact",
           "Contacts":"Contacts",
           "AddContact":"Ajoutez un contact",
