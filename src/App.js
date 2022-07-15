@@ -107,7 +107,7 @@ function App() {
         offset: 0,
       }} md={{ span: 8 }} lg={{ span: 8 }}>
       <div className="header-text">
-            <div className={isEnglish?"active-admin":"active-user"}>French</div>
+            <div className={isEnglish?"active-admin":"active-user"}>Français</div>
             <Switch checked={isEnglish} data-testid="admin-user-switch"
            className="switch-user" onChange={onChange}  />
             <div className={!isEnglish?"active-admin":"active-user"}>English</div> </div>
