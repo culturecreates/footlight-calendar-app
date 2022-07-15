@@ -250,7 +250,7 @@ const Events = function ({ currentLang,locale }) {
    
         
       <Col flex="0 1 320px">
-        <div className="filter-type">{t("Region", { lng: currentLang })}</div>
+        <div className="filter-type">OUTAOUAIS</div>
         <div>
           <Row gutter={16} className="region-row">
             {regions.map((item) => (
