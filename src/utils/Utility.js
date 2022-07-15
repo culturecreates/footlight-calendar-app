@@ -113,7 +113,7 @@ export const adminSideMenuLinks = [
     },
     {
       name: "streetAddress",
-      title:"Street Address",
+      title:"StreetAddress",
       required:true,
       placeHolder: "Enter Street Address",
       type:"text"
