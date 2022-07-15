@@ -119,7 +119,7 @@ function App() {
        
         <Router>
         <Routes>
-          <Route path="/" element={<Events currentLang={langStore} locale={locale}/>} />
+          <Route path="/" element={<Events currentLang={currentLang} locale={locale}/>} />
           <Route path="/events/:eventId" element={<EventDetails currentLang={currentLang}/>} />
 
           <Route path="/admin/*" element={<AdminDashboard currentLang={currentLang} locale={locale}/>} />
