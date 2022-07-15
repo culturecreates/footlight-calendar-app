@@ -58,8 +58,7 @@ i18n
           "AddPlace":"Add Place",
           "EndDateTime":"End Date Time",
           "RecurringEvent":"Recurring Event",
-          "Frequency":"Frequency",
-          welcome: "Hello  <strong>World</strong>"
+          "Frequency":"Frequency"
         }
       },
       fr: {
