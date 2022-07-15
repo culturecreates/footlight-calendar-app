@@ -35,6 +35,7 @@ import { useDispatch, useSelector } from "react-redux";
 import { fetchContact, fetchPlace } from "../../action";
 import { fbUrlValidate, timeZone, urlValidate } from "../../utils/Utility";
 import AddNewContactModal from "../../components/AddNewContactModal";
+import PriceModal from "../../components/PriceModal/PriceModal";
 
 const { Option } = Select;
 const { Dragger } = Upload;
@@ -50,6 +51,8 @@ const AddEvent = function ({ currentLang, eventDetails }) {
   const [formValue, setFormVaue] = useState();
   const [isEndDate, setIsEndDate] = useState(false);
   const [isRecurring, setIsRecurring] = useState(false);
+  const [showPriceModal, setShowPriceModal] = useState(false);
+
   const [allLocations, setAllLocations] = useState();
   const [eventType, setEventType] = useState("offline");
   const [fileList, setFileList] = useState([]);
@@ -165,7 +168,7 @@ const AddEvent = function ({ currentLang, eventDetails }) {
       contactPoint: values.contact ?{
         entityId: values.contact
       }:undefined,
-      url:{uri:values.eventPage},
+      url:values.eventPage && {uri:values.eventPage},
       sameAs:values.facebookLink?[values.facebookLink]:[],
     };
     if (isEndDate && !isRecurring)
@@ -624,6 +627,16 @@ const AddEvent = function ({ currentLang, eventDetails }) {
               </Select>
             </Form.Item>
 
+            <Button
+            type="primary"
+           
+            size="large"
+            style={{marginBottom:"20px"}}
+            onClick={()=>setShowPriceModal(true)}
+          >
+           Price/Prix
+          </Button>
+
             <div className="update-select-title">
               {t("Facebook Link", { lng: currentLang })}
             </div>
@@ -714,6 +727,8 @@ const AddEvent = function ({ currentLang, eventDetails }) {
       {showAddContact &&
       <AddNewContactModal isModalVisible={showAddContact} setIsModalVisible={setShowAddContact}/>
 }
+{showPriceModal && <PriceModal isModalVisible={showPriceModal} setIsModalVisible={setShowPriceModal}
+currentLang={currentLang}/> }
     </Layout>
   );
 };
