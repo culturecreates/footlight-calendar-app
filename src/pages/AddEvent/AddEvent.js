@@ -33,7 +33,7 @@ import RecurringEvent from "../../components/RecurringEvent";
 import Compressor from "compressorjs";
 import { useDispatch, useSelector } from "react-redux";
 import { fetchContact, fetchPlace } from "../../action";
-import { fbUrlValidate, timeZone, urlValidate } from "../../utils/Utility";
+import { fbUrlValidate, publics, timeZone, urlValidate } from "../../utils/Utility";
 import AddNewContactModal from "../../components/AddNewContactModal";
 import PriceModal from "../../components/PriceModal/PriceModal";
 import Spinner from "../../components/Spinner";
@@ -263,7 +263,7 @@ const AddEvent = function ({ currentLang, eventDetails }) {
       form.setFieldsValue({
         contact:eventDetails.contactPoint?.uuid,
         desc: eventDetails.description ? eventDetails.description["fr"] : "",
-        location: eventDetails.location?.uuid,
+        location: eventDetails.locations&&eventDetails.locations[0].uuid,
         startDate: moment(new Date(eventDetails.startDate), "DD-MM-YYYY").tz(
           eventDetails.scheduleTimezone
             ? eventDetails.scheduleTimezone
@@ -562,6 +562,39 @@ const AddEvent = function ({ currentLang, eventDetails }) {
                     <Option
                       data-testid="update-two-select-option"
                       value={item.uuid}
+                      key={item.name["fr"]}
+                    >
+                      {item.name["fr"]}
+                    </Option>
+                  ))}
+              </Select>
+            </Form.Item>
+
+            <div className="update-select-title">
+            {t("Publics", { lng: currentLang })}
+            </div>
+
+            <Form.Item name={"audience"} rules={[{ required: false }]}>
+              <Select
+                data-testid="update-two-select-dropdown"
+                placeholder={`Select Audience`}
+                key="updateDropdownKey"
+                className="search-select"
+                optionFilterProp="children"
+                showSearch
+                mode="multiple"
+                filterOption={(input, option) =>
+                  option.children &&
+                  option.children.toLowerCase().indexOf(input.toLowerCase()) >=
+                    0
+                }
+                
+              >
+                {publics &&
+                  publics.map((item) => (
+                    <Option
+                      data-testid="update-two-select-option"
+                      value={item.uri}
                       key={item.name["fr"]}
                     >
                       {item.name["fr"]}
