@@ -99,7 +99,7 @@ function App() {
         offset: 0,
       }}
       md={{ span: 8 }} lg={{ span: 8 }}>
-      <div className="footer-title">FootLight</div>
+      <div className="footer-title">Footlight</div>
       </Col>
         {/* <div className="footer-cal">{t("headerText", { lng: currentLang })}</div> */}
         <Col xs={{
@@ -129,7 +129,7 @@ function App() {
       <Footer className="app-footer">
         <Row className="footer-links">
           <Col>
-        <div className="footer-title">FootLight</div>
+        <div className="footer-title">Footlight</div>
         </Col>
         <Col>
         <div className="footer-cal">{t("headerText", { lng: currentLang })}</div>
