@@ -641,7 +641,7 @@ const AddEvent = function ({ currentLang, eventDetails }) {
               </Select>
             </Form.Item>
 
-            <div className="update-select-title">
+            {/* <div className="update-select-title">
             {t("Publics", { lng: currentLang })}
             </div>
 
@@ -672,7 +672,7 @@ const AddEvent = function ({ currentLang, eventDetails }) {
                     </Option>
                   ))}
               </Select>
-            </Form.Item>
+            </Form.Item> */}
           </Col>
           <Col className="upload-col">
             
@@ -737,7 +737,7 @@ const AddEvent = function ({ currentLang, eventDetails }) {
               </Select>
             </Form.Item>
 
-            <Button
+            {/* <Button
             type="primary"
            
             size="large"
@@ -745,7 +745,7 @@ const AddEvent = function ({ currentLang, eventDetails }) {
             onClick={()=>setShowPriceModal(true)}
           >
            Price/Prix
-          </Button>
+          </Button> */}
 
             <div className="update-select-title">
               {t("Facebook Link", { lng: currentLang })}
