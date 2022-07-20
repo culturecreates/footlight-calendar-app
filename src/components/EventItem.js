@@ -27,11 +27,11 @@ const EventItem = function ({ item, currentLang }) {
       <div>
         <div className="event-date">
           <div className="event-date-section">
-            <div>{moment(item.startDate).tz(item.scheduleTimezone?item.scheduleTimezone:"Canada/Eastern").format("DDMMM")}</div>
+            <div>{moment(item.startDate).tz(item.scheduleTimezone?item.scheduleTimezone:"Canada/Eastern").format("DD MMM")}</div>
             {item.endDate &&
             <>
             <div>&nbsp;-&nbsp;</div>
-            <div>{moment(item.endDate).tz(item.scheduleTimezone?item.scheduleTimezone:"Canada/Eastern").format("DDMMM")}</div>
+            <div>{moment(item.endDate).tz(item.scheduleTimezone?item.scheduleTimezone:"Canada/Eastern").format("DD MMM")}</div>
             </>}
           </div>
         </div>
