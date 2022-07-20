@@ -35,6 +35,9 @@ const RecurringEvent = function ({
   };
   useEffect(() => {
     if (eventDetails ) {
+      if (formFields?.frequency === "CUSTOM"  || eventDetails.recurringEvent?.frequency === "CUSTOM")
+       setIsCustom(true);
+      else setIsCustom(false);
       if(eventDetails.recurringEvent?.customDates)
       {
       setIsCustom(true);
@@ -137,10 +140,12 @@ const RecurringEvent = function ({
         setNumberofDates(0);
       }
     }
-    if (formFields) {
-      if (formFields.frequency === "CUSTOM") setIsCustom(true);
+    if (formFields.frequency) {
+      if (formFields.frequency === "CUSTOM" )
+       setIsCustom(true);
       else setIsCustom(false);
     }
+   
   }, [formFields]);
 
   const getNumberOfWeekDays = async (start, end, daysofweek) => {
