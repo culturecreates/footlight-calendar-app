@@ -33,12 +33,12 @@ import RecurringEvent from "../../components/RecurringEvent";
 import Compressor from "compressorjs";
 import { useDispatch, useSelector } from "react-redux";
 import { fetchContact, fetchPlace } from "../../action";
-import { fbUrlValidate, timeZone, urlValidate } from "../../utils/Utility";
+import { fbUrlValidate, publics, timeZone, urlValidate } from "../../utils/Utility";
 import AddNewContactModal from "../../components/AddNewContactModal";
 import PriceModal from "../../components/PriceModal/PriceModal";
 import Spinner from "../../components/Spinner";
 
-const { Option } = Select;
+const { Option, OptGroup } = Select;
 const { Dragger } = Upload;
 // moment.tz.setDefault('Europe/Berlin')
 const getSrcFromFile = (file) => {
@@ -50,6 +50,9 @@ const getSrcFromFile = (file) => {
 };
 const AddEvent = function ({ currentLang, eventDetails }) {
   const [formValue, setFormVaue] = useState();
+  const [checkselectedOnline, setcheckselectedOnline] = useState(false);
+  const [checkselectedOffline, setcheckselectedOffline] = useState(false);
+  const [formLocation, setFormLocation] = useState([]);
   const [isEndDate, setIsEndDate] = useState(false);
   const [isRecurring, setIsRecurring] = useState(false);
   const [showPriceModal, setShowPriceModal] = useState(false);
@@ -161,10 +164,10 @@ const AddEvent = function ({ currentLang, eventDetails }) {
       scheduleTimezone: values.timeZone,
       locationId: {
         place: {
-          entityId: eventType === "offline" ? values.location : null,
+          entityId: formLocation.find(item=>item.type==="Offline")?formLocation.find(item=>item.type==="Offline").value : null,
         },
         virtualLocation: {
-          entityId: eventType === "online" ? values.location : null,
+          entityId: formLocation.find(item=>item.type==="Online")?formLocation.find(item=>item.type==="Online").value : null,
         },
       },
       contactPoint: values.contact ?{
@@ -259,11 +262,11 @@ const AddEvent = function ({ currentLang, eventDetails }) {
             ? placeStore.virtualLocation
             : placeStore.places
         );
-
+    
       form.setFieldsValue({
         contact:eventDetails.contactPoint?.uuid,
         desc: eventDetails.description ? eventDetails.description["fr"] : "",
-        location: eventDetails.location?.uuid,
+        location: eventDetails.locations&&eventDetails.locations.map(item=>item.uuid),
         startDate: moment(new Date(eventDetails.startDate), "DD-MM-YYYY").tz(
           eventDetails.scheduleTimezone
             ? eventDetails.scheduleTimezone
@@ -285,8 +288,34 @@ const AddEvent = function ({ currentLang, eventDetails }) {
           ? eventDetails.scheduleTimezone
           : "Canada/Eastern",
         eventPage:eventDetails.url?.uri,
-        facebookLink:eventDetails.sameAs.length>0? eventDetails.sameAs[0]:undefined 
+        facebookLink:eventDetails.sameAs.length>0? eventDetails.sameAs[0]:undefined ,
+        
       });
+      if(eventDetails.locations){
+        const eventFormLoc= eventDetails.locations.map(item=>{
+          const obj={
+            value:item.uuid,
+            type: item.isVirtualLocation ? "Online" : "Offline"
+          }
+          return obj
+        })
+        setFormLocation(eventFormLoc) 
+        const objOnline = eventFormLoc.find(item=>item.type==="Online")
+      const objOffline = eventFormLoc.find(item=>item.type==="Offline")
+      console.log(objOffline,eventFormLoc)
+      if(objOffline)
+        setcheckselectedOffline(true)
+      else
+        setcheckselectedOffline(false)  
+        
+  
+      if(objOnline)
+        setcheckselectedOnline(true)
+      else 
+        setcheckselectedOnline(false) 
+       
+        // setFormVaue(form.getFieldsValue())
+      }
       if (eventDetails.image) {
         const obj = {
           uid: "-1",
@@ -312,22 +341,25 @@ const AddEvent = function ({ currentLang, eventDetails }) {
               "DD-MM-YYYY"
             )
           ],
-          startTimeRecur: moment(
+          startTimeRecur:eventDetails.recurringEvent.startTime? moment(
             eventDetails.recurringEvent?.startTime,
             "HH:mm"
-          ),
-          endTimeRecur: moment(eventDetails.recurringEvent?.endTime, "HH:mm"),
+          ):undefined,
+          endTimeRecur: eventDetails.recurringEvent.endTime?moment(eventDetails.recurringEvent?.endTime, "HH:mm"):undefined,
           customDates: eventDetails.recurringEvent?.customDates,
           daysOfWeek: eventDetails.recurringEvent?.weekDays,
         });
         setIsRecurring(true);
+        // setFormVaue(form.getFieldsValue())
       }
+      
     } else
       form.setFieldsValue({
         frequency: "DAILY",
         timeZone: "Canada/Eastern",
         desc: "",
       });
+      setFormVaue(form.getFieldsValue())
   }, [eventDetails]);
   // a.substring(11,20)
   const onChangeStart = (date, dateString) => {
@@ -346,6 +378,27 @@ const AddEvent = function ({ currentLang, eventDetails }) {
     }
   };
 
+  const handleChangeLoc = (value,option) => {
+   
+    const objOnline = option.find(item=>item.type==="Online")
+    const objOffline = option.find(item=>item.type==="Offline")
+    setFormLocation(option)
+    if(objOffline)
+      setcheckselectedOffline(true)
+    else
+      setcheckselectedOffline(false)  
+      
+
+    if(objOnline)
+      setcheckselectedOnline(true)
+    else 
+      setcheckselectedOnline(false) 
+    // const selectObj = option.
+    // form.setFieldsValue({
+    //   location;"jjj"
+    // });
+  };
+ 
   const onChange = (info) => {
     setIsUpload(true);
     setFileList(info.fileList);
@@ -520,7 +573,7 @@ const AddEvent = function ({ currentLang, eventDetails }) {
                 eventDetails={eventDetails}
               />
             )}
-            <div>
+            {/* <div>
               <Radio.Group
                 name="radiogroup"
                 value={eventType}
@@ -533,7 +586,7 @@ const AddEvent = function ({ currentLang, eventDetails }) {
                   {t("Online", { lng: currentLang })}
                 </Radio>
               </Radio.Group>
-            </div>
+            </div> */}
             <div className="update-select-title">
               {t("Location", { lng: currentLang })}
             </div>
@@ -546,27 +599,80 @@ const AddEvent = function ({ currentLang, eventDetails }) {
                 className="search-select"
                 optionFilterProp="children"
                 showSearch
+                mode="multiple"
                 filterOption={(input, option) =>
                   option.children &&
                   option.children.toLowerCase().indexOf(input.toLowerCase()) >=
                     0
                 }
+                onChange={handleChangeLoc}
                 // onChange={handleChange}
                 // defaultValue={selectList && selectList[0].name}
                 // value={itemValue}
               >
-                {placeList &&
-                  placeList.map((item) => (
+                <OptGroup label={t("Online", { lng: currentLang })}>
+                {allLocations &&
+                  allLocations.virtualLocations.map((item) => (
+                    <Option
+                      type="Online"
+                      value={item.uuid}
+                      disabled={formValue?.location?.includes(item.uuid)?false: checkselectedOnline}
+                      key={item.name["fr"]}
+                    >
+                      {item.name["fr"]}
+                    </Option>
+                  ))}
+    </OptGroup>
+    <OptGroup label={t("Offline", { lng: currentLang })}>
+    {allLocations &&
+                  allLocations.places.map((item) => (
+                    <Option
+                    type="Offline"
+                      value={item.uuid}
+                      disabled={formValue?.location?.includes(item.uuid)?false:checkselectedOffline}
+                      // !form.getFieldsValue().location.includes(item.uuid)
+                      key={item.name["fr"]}
+                    >
+                      {item.name["fr"]}
+                    </Option>
+                  ))}
+    </OptGroup>
+                
+              </Select>
+            </Form.Item>
+
+            {/* <div className="update-select-title">
+            {t("Publics", { lng: currentLang })}
+            </div>
+
+            <Form.Item name={"audience"} rules={[{ required: false }]}>
+              <Select
+                data-testid="update-two-select-dropdown"
+                placeholder={`Select Audience`}
+                key="updateDropdownKey"
+                className="search-select"
+                optionFilterProp="children"
+                showSearch
+                mode="multiple"
+                filterOption={(input, option) =>
+                  option.children &&
+                  option.children.toLowerCase().indexOf(input.toLowerCase()) >=
+                    0
+                }
+                
+              >
+                {publics &&
+                  publics.map((item) => (
                     <Option
                       data-testid="update-two-select-option"
-                      value={item.uuid}
+                      value={item.uri}
                       key={item.name["fr"]}
                     >
                       {item.name["fr"]}
                     </Option>
                   ))}
               </Select>
-            </Form.Item>
+            </Form.Item> */}
           </Col>
           <Col className="upload-col">
             
@@ -631,7 +737,7 @@ const AddEvent = function ({ currentLang, eventDetails }) {
               </Select>
             </Form.Item>
 
-            <Button
+            {/* <Button
             type="primary"
            
             size="large"
@@ -639,7 +745,7 @@ const AddEvent = function ({ currentLang, eventDetails }) {
             onClick={()=>setShowPriceModal(true)}
           >
            Price/Prix
-          </Button>
+          </Button> */}
 
             <div className="update-select-title">
               {t("Facebook Link", { lng: currentLang })}

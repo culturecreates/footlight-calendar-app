@@ -219,3 +219,4 @@ export const adminSideMenuLinks = [
       },
     ]
   
+    export const publics=[{"uri":"https://cultureoutaouais.com/resource/audience#GrandPublic","name":{"en":"General public","fr":"Grand public"}},{"uri":"https://cultureoutaouais.com/resource/audience#GroupesEnfants","name":{"en":"Children","fr":"Enfants"}},{"uri":"https://cultureoutaouais.com/resource/audience#Elders","name":{"en":"Elders","fr":"Aîné·e·s"}},{"uri":"https://cultureoutaouais.com/resource/audience#Adults","name":{"en":"Adults","fr":"Adultes"}},{"uri":"https://cultureoutaouais.com/resource/audience#Ado","name":{"en":"Teens","fr":"Adolescent·e·s"}}]
