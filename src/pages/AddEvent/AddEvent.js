@@ -191,7 +191,7 @@ const AddEvent = function ({ currentLang, eventDetails }) {
           form.getFieldsValue().frequency !== "CUSTOM" ?
           moment(values.startTimeRecur).format("HH:mm") : undefined,
         endTime:
-          form.getFieldsValue().frequency !== "CUSTOM" ?
+          form.getFieldsValue().frequency !== "CUSTOM" && values.endTimeRecur ?
           moment(values.endTimeRecur).format("HH:mm") : undefined,
         // timeZone: values.timeZone,
         weekDays: values.frequency === "WEEKLY" ? values.daysOfWeek : undefined,
@@ -350,7 +350,13 @@ const AddEvent = function ({ currentLang, eventDetails }) {
           daysOfWeek: eventDetails.recurringEvent?.weekDays,
         });
         setIsRecurring(true);
-        // setFormVaue(form.getFieldsValue())
+        const obj={
+          startTimeRecur:eventDetails.recurringEvent.startTime? moment(
+            eventDetails.recurringEvent?.startTime,
+            "HH:mm"
+          ):undefined
+        }
+        setFormVaue(obj)
       }
       
     } else

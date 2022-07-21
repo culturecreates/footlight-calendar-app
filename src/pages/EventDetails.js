@@ -144,6 +144,12 @@ const EventDetails = function ({currentLang, isAdmin=false }) {
     const date =moment(item.startDate).tz(item.scheduleTimezone?item.scheduleTimezone:"Canada/Eastern").format("YYYY-MM-DD_HH-mm-ss")
           const dateFormated = moment(date, 'YYYY-MM-DD_HH-mm-ss')
     setEventDate(dateFormated) 
+    if( langStore && updateLang)
+    {
+      setSearch({ lang: langStore,
+      date:date});
+     
+    }
   }
   return (
     <div>
