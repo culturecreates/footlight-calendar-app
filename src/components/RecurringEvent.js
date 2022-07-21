@@ -145,7 +145,6 @@ const RecurringEvent = function ({
        setIsCustom(true);
       else setIsCustom(false);
     }
-   
   }, [formFields]);
 
   const getNumberOfWeekDays = async (start, end, daysofweek) => {
@@ -243,6 +242,34 @@ const RecurringEvent = function ({
     setIsModalVisible(true)
     
   }
+
+  const disabledHours = () => {
+    const hours = [];
+    const currentHour = formFields.startTimeRecur?moment(formFields.startTimeRecur).hour():moment(
+      "00:02",
+      "HH:mm"
+    ).hour();
+
+    for (let i = 0; i < currentHour; i++) {
+      hours.push(i);
+    }
+
+    return hours;
+  };
+
+  const disabledMinutes = (selectedHour) => {
+    const minutes = [];
+    // const currentMinute = moment().minute();
+    // if (selectedHour === moment().hour()) {
+    //   for (let i = currentMinute + 1; i <= 60; i++) {
+    //     minutes.push(i);
+    //   }
+    // }
+    return minutes;
+  };
+
+ 
+
   return (
     <Card className="recurring-card">
       <div className="update-select-title">
@@ -397,7 +424,10 @@ const RecurringEvent = function ({
                 className="status-comment-item"
                 rules={[{ required: false, message: "End time required" }]}
               >
-                <TimePicker format="HH:mm" />
+                <TimePicker format="HH:mm" 
+      disabledHours={disabledHours}
+      disabledMinutes={disabledMinutes}
+     />
               </Form.Item>
             </div>
           </div>
