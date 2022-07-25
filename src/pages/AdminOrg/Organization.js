@@ -8,19 +8,19 @@ import { PlusOutlined, ExclamationCircleOutlined,DeleteOutlined } from "@ant-des
 import { useNavigate,useLocation } from "react-router-dom";
 import Spinner from "../../components/Spinner";
 import ServiceApi from "../../services/Service";
+import AddOrganization from "./AddOrganization";
 import { useDispatch, useSelector } from "react-redux";
-import { fetchContact, fetchPlace } from "../../action";
-import AddContact from "./AddContact";
+import { fetchOrg, fetchPlace } from "../../action";
 
 const { confirm } = Modal;
 
-const AdminContacts = function ({ currentLang }) {
-  const [contactList, setContactList] = useState([]);
+const Organization = function ({ currentLang }) {
+  const [orgList, setOrgList] = useState([]);
   const [loading, setLoading] = useState(false);
   const [isAdd, setIsAdd] = useState(false);
   const [totalPage, setTotalPage] = useState(1);
   const [defaultPage, setDefaultPage] = useState(1);
-  const [contactDetails, setContactDetails] = useState()
+  const [placeDetails, setPlaceDetails] = useState()
   const navigate = useNavigate();
   const location = useLocation();
 
@@ -29,19 +29,19 @@ const AdminContacts = function ({ currentLang }) {
 
   const eventTableHeader = [
     {
-      title: t("Name", { lng: currentLang }),
+      title: t("PlaceName", { lng: currentLang }),
       dataIndex: "name",
       key: "name",
       render: (e, record) => (
         <Row className="image-name">
           
           <Col flex="1 1 150px">
-              
           {record.name[currentLang]}
           </Col>
         </Row>
       ),
     },
+
     {
       title: "",
       dataIndex: "hasDependency",
@@ -75,42 +75,46 @@ const AdminContacts = function ({ currentLang }) {
   };
   const handleDeleteContact=(id)=>{
     setLoading(true);
-    ServiceApi.deleteContact(id)
+    ServiceApi.deleteOrg(id)
       .then((response) => {
-        getContacts();
+        getPlaces();
         setLoading(false);
       })
       .catch((error) => {
         setLoading(false);
       });
   }
+ 
+
+ 
+ 
 
   useEffect(() => {
-    if(location.pathname.includes("admin/add-contact"))
+    if(location.pathname.includes("admin/add-organization"))
     {
       setIsAdd(true)
       const search = window.location.search;
     const params = new URLSearchParams(search);
     const eventId = params.get("id");
     if(eventId)
-    getContactDetails(eventId)
+    getplaceDetails(eventId)
     }
     else
     {
       setIsAdd(false)
-      getContacts();
-      setContactDetails()
+      getPlaces();
+      setPlaceDetails()
     }
    
   }, [location]);
 
-  const getContactDetails = (id) => {
+  const getplaceDetails = (id) => {
     setLoading(true);
-    ServiceApi.getContactDetail(id)
+    ServiceApi.getOrgDetail(id)
       .then((response) => {
         if (response && response.data && response.data) {
           const events = response.data;
-          setContactDetails(events)
+          setPlaceDetails(events)
           if (response.data.StatusCode !== 400) {
              
           }
@@ -122,16 +126,17 @@ const AdminContacts = function ({ currentLang }) {
       });
   };
 
-  const getContacts = (page = 1) => {
+  const getPlaces = (page = 1) => {
     setLoading(true);
-    ServiceApi.getAllContacts(page, currentLang === "en" ? "EN" : "FR")
+    ServiceApi.getAllOrg()
       .then((response) => {
         if (response && response.data && response.data.data) {
           const events = response.data.data;
          
-          dispatch(fetchContact(response.data.data));
-          setContactList(events);
-        
+          setOrgList(events);
+          dispatch(fetchOrg(response.data.data));
+            if(response.data.totalCount)
+            setTotalPage(response.data.totalCount)
         }
         setLoading(false);
       })
@@ -142,47 +147,46 @@ const AdminContacts = function ({ currentLang }) {
 
   const selectSemantic = (selectObj) => {
     const searchArray = [selectObj];
-    getContacts(1, searchArray);
+    getPlaces(1, searchArray);
   };
 
   return (
     <Layout className="dashboard-layout">
       {isAdd &&
       <Breadcrumb separator=">">
-        <Breadcrumb.Item onClick={()=>navigate(`/admin/contacts`)}>{t("Contacts")}</Breadcrumb.Item>
-        <Breadcrumb.Item >{contactDetails?contactDetails.name[currentLang]:t("AddContact")}</Breadcrumb.Item>
+        <Breadcrumb.Item onClick={()=>navigate(`/admin/organization`)}>{t("Organization")}</Breadcrumb.Item>
+        <Breadcrumb.Item >{placeDetails?placeDetails.name[currentLang]:t("AddOrganization")}</Breadcrumb.Item>
       </Breadcrumb>
 }
       <Row className="admin-event-header">
       {!isAdd &&
-        <Col className="header-title" flex="0 1 300px">{t("Contacts")}</Col>
+        <Col className="header-title" flex="0 1 300px">{t("Organization")}</Col>
       }
         {!isAdd &&
         <Col className="flex-align">
           {/* <SemanticSearch
             onSelection={selectSemantic}
-            onClearSearch={getContacts}
+            onClearSearch={getPlaces}
             currentLang={currentLang}
           /> */}
           <Button type="primary" icon={<PlusOutlined />} size={"large"}
-          onClick={()=>navigate(`/admin/add-contact`)}>
-            {t("Contact")}
+          onClick={()=>navigate(`/admin/add-organization`)}>
+            {t("Organization")}
           </Button>
         </Col>
 }
       </Row>
       <Card className="segment-card">
-        {!isAdd ? 
-        <Table
+        {!isAdd ? <Table
            
-              dataSource={contactList}
+              dataSource={orgList}
               columns={eventTableHeader}
               className={"event-table"}
-              scroll={{x: 700, y: "calc(100% - 60px)" }}
+              scroll={{x: 800, y: "calc(100% - 60px)" }}
               pagination={{
                 onChange: page =>{
                   setDefaultPage(page)
-                  getContacts(
+                  getPlaces(
                     page
                   )
                 },
@@ -196,24 +200,22 @@ const AdminContacts = function ({ currentLang }) {
                 return {
                   onClick: (event) => {
                     event.stopPropagation()
-                    navigate(`/admin/add-contact/?id=${record.uuid}`);
-                    
-                  }, 
+                    navigate(`/admin/add-organization/?id=${record.uuid}`);
+                    // setSelectedProduct(record);
+                  }, // click row
                 };
               }}
             /> 
-       
             :
-           
-        <AddContact currentLang={currentLang} contactDetails={contactDetails}/>
+        <AddOrganization currentLang={currentLang} orgDetails={placeDetails}/>
             }
       </Card>
       {loading && <Spinner />}
     </Layout>
   );
 };
-export default AdminContacts;
+export default Organization;
 
-AdminContacts.propTypes = {
+Organization.propTypes = {
   currentLang: PropTypes.string,
 };

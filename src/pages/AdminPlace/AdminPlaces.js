@@ -1,16 +1,18 @@
 import React, { useState, useEffect } from "react";
 import moment from "moment";
 import PropTypes from "prop-types";
-import { Layout, Card, Table, Button, Switch, Avatar, Breadcrumb, Col, Row } from "antd";
+import { Layout, Card, Table, Button, Switch, Modal, Breadcrumb, Col, Row } from "antd";
 import { useTranslation, Trans } from "react-i18next";
 import "../AdminDashboard.css";
-import { PlusOutlined, ForkOutlined } from "@ant-design/icons";
+import { PlusOutlined, ExclamationCircleOutlined,DeleteOutlined } from "@ant-design/icons";
 import { useNavigate,useLocation } from "react-router-dom";
 import Spinner from "../../components/Spinner";
 import ServiceApi from "../../services/Service";
 import AddPlaces from "./AddPlaces";
 import { useDispatch, useSelector } from "react-redux";
 import { fetchPlace } from "../../action";
+
+const { confirm } = Modal;
 
 const AdminPlaces = function ({ currentLang }) {
   const [placeList, setPlaceList] = useState([]);
@@ -38,12 +40,50 @@ const AdminPlaces = function ({ currentLang }) {
           </Col>
         </Row>
       ),
-    }
+    },
+    {
+      title: "",
+      dataIndex: "hasDependency",
+      key: "hasDependency",
+      width:100,
+      render: (e, record) => (
+        <DeleteOutlined
+          style={{fontSize:"23px"}}
+          onClick={(event) => handleDelete(record, event)}
+         
+        />
+      ),
+    },
   ];
 
-  const handleDelete = (checked,record,event) => {
+  const handleDelete = (record,event) => {
     event.stopPropagation()
+    confirm({
+      title: 'Are you sure to delete?',
+      icon: <ExclamationCircleOutlined />,
+      content: ' This action cannot be undone.',
+  
+      onOk() {
+        handleDeleteContact(record.uuid)
+      },
+  
+      onCancel() {
+        console.log('Cancel');
+      },
+    });
   };
+  const handleDeleteContact=(id)=>{
+    setLoading(true);
+    ServiceApi.deletePlace(id)
+      .then((response) => {
+        getPlaces();
+        setLoading(false);
+      })
+      .catch((error) => {
+        setLoading(false);
+      });
+  }
+ 
  
 
   useEffect(() => {
