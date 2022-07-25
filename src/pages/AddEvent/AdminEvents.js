@@ -84,8 +84,8 @@ const AdminEvents = function ({ currentLang }) {
       title: t("Location", { lng: currentLang }),
       dataIndex: "hasLegacyCapability",
       key: "hasLegacyCapability",
-      render: (e, record) => <div>{record.locationName[currentLang]}</div>,
-    },
+      render: (e, record) => <div>{record?.locationName?.[currentLang]}</div>,
+    },  
     {
       title: t("Published", { lng: currentLang }),
       dataIndex: "hasDependency",
