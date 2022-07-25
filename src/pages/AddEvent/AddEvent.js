@@ -16,6 +16,7 @@ import {
   Divider,
   Space,
   Typography,
+  Card,
 } from "antd";
 import {
   FileImageOutlined,
@@ -23,6 +24,7 @@ import {
   CloseOutlined,
   PlusOutlined,
   MinusOutlined,
+  DeleteOutlined
 } from "@ant-design/icons";
 import { useTranslation } from "react-i18next";
 import { Upload } from "antd";
@@ -32,7 +34,7 @@ import { useNavigate } from "react-router-dom";
 import RecurringEvent from "../../components/RecurringEvent";
 import Compressor from "compressorjs";
 import { useDispatch, useSelector } from "react-redux";
-import { fetchContact, fetchPlace } from "../../action";
+import { fetchAudience, fetchContact, fetchOrg, fetchPlace } from "../../action";
 import { fbUrlValidate, publics, timeZone, urlValidate } from "../../utils/Utility";
 import AddNewContactModal from "../../components/AddNewContactModal";
 import PriceModal from "../../components/PriceModal/PriceModal";
@@ -61,12 +63,16 @@ const AddEvent = function ({ currentLang, eventDetails }) {
   const [eventType, setEventType] = useState("offline");
   const [fileList, setFileList] = useState([]);
   const [placeList, setPlaceList] = useState([]);
+  const [orgList,setOrgList]= useState([])
+  const [publicsList,setPublicsList]= useState([])
   const [contactList, setContactList] = useState([]);
   const [isUpload, setIsUpload] = useState(false);
   const [isUpdate, setIsUpdate] = useState(false);
   const [showAddContact,setShowAddContact]= useState(false)
   const [numberOfDays, setNumberOfDays] = useState(0);
   const [compressedFile, setCompressedFile] = useState(null);
+  const [offerConfig, setOfferConfig] = useState();
+  const [offerIds, setOfferIds] = useState([]);
   const [form] = Form.useForm();
   const navigate = useNavigate();
 
@@ -79,12 +85,26 @@ const AddEvent = function ({ currentLang, eventDetails }) {
   const dispatch = useDispatch();
   const placeStore = useSelector((state) => state.place);
   const contactStore = useSelector((state) => state.contact);
+  const orgStore = useSelector((state) => state.org);
+  const audienceStore = useSelector((state) => state.audience);
   useEffect(() => {
     if (placeStore == null) {
       getAllPlaces();
     } else {
       setAllLocations(placeStore);
       setPlaceList(placeStore.places);
+    }
+
+    if (orgStore == null) {
+      getOrg();
+    } else {
+      setOrgList(orgStore)
+    }
+
+    if (audienceStore == null) {
+      getPublics();
+    } else {
+      setPublicsList(audienceStore)
     }
 
   }, []);
@@ -101,6 +121,42 @@ const AddEvent = function ({ currentLang, eventDetails }) {
 
     }
   },[contactStore])
+
+  const getPublics = (page = 1) => {
+    setLoading(true);
+    ServiceApi.getTaxonomy()
+      .then((response) => {
+        if (response && response.data && response.data.data) {
+          const events = response.data.data;
+         
+          setPublicsList(events);
+          dispatch(fetchAudience(response.data.data));
+           
+        }
+        setLoading(false);
+      })
+      .catch((error) => {
+        setLoading(false);
+      });
+  };
+
+  const getOrg = (page = 1) => {
+    setLoading(true);
+    ServiceApi.getAllOrg()
+      .then((response) => {
+        if (response && response.data && response.data.data) {
+          const events = response.data.data;
+         
+          setOrgList(events);
+          dispatch(fetchOrg(response.data.data));
+           
+        }
+        setLoading(false);
+      })
+      .catch((error) => {
+        setLoading(false);
+      });
+  };
 
   const getContacts = (page = 1) => {
     
@@ -175,6 +231,20 @@ const AddEvent = function ({ currentLang, eventDetails }) {
       }:undefined,
       url:values.eventPage && {uri:values.eventPage},
       sameAs:values.facebookLink?[values.facebookLink]:[],
+      offerConfiguration: offerConfig,
+      offers: offerIds.map(item=>{ const obj={entityId:item}
+      return obj}),
+      organizer :values.organization? {organization :values.organization.map(item=>{const
+         obj ={
+        entityId:item
+      }
+       return obj})}:undefined,
+       audience:values.audience? values.audience.map(item=>{
+         const obj ={
+       uri:item
+     }
+      return obj}):undefined
+     
     };
     if (isEndDate && !isRecurring)
       eventObj.endDate = moment(values.endDate).format("YYYY-MM-DDTHH:mm:ss");
@@ -262,7 +332,7 @@ const AddEvent = function ({ currentLang, eventDetails }) {
             ? placeStore.virtualLocation
             : placeStore.places
         );
-    
+        setOfferConfig(eventDetails?.offerConfiguration)
       form.setFieldsValue({
         contact:eventDetails.contactPoint?.uuid,
         desc: eventDetails.description ? eventDetails.description["fr"] : "",
@@ -281,14 +351,16 @@ const AddEvent = function ({ currentLang, eventDetails }) {
           : undefined,
         title: eventDetails.name["fr"],
         endTime: eventDetails.endDate
-          ? moment(eventDetails.endDate.substring(11, 20), "HH-mm-ss")
+          ? moment(eventDetails.endDate.substring(11, 20), "HH-mm")
           : undefined,
-        startTime: moment(eventDetails.startDate.substring(11, 20), "HH-mm-ss"),
+        startTime: moment(eventDetails.startDate.substring(11, 20), "HH-mm"),
         timeZone: eventDetails.scheduleTimezone
           ? eventDetails.scheduleTimezone
           : "Canada/Eastern",
         eventPage:eventDetails.url?.uri,
         facebookLink:eventDetails.sameAs.length>0? eventDetails.sameAs[0]:undefined ,
+        organization:eventDetails?.organizer?.organizations.map(item=>item.uuid),
+        audience: eventDetails?.audience?.map(item=>item.uri)
         
       });
       if(eventDetails.locations){
@@ -437,6 +509,11 @@ const AddEvent = function ({ currentLang, eventDetails }) {
     let customDate = moment().format("YYYY-MM-DD");
     return current && current < moment(customDate, "YYYY-MM-DD");
   };
+  const closePriceModal = (config,ids) => {
+    setOfferConfig(config);
+    setOfferIds(ids)
+    console.log(ids,config)
+  };
   return (
     <Layout className="add-event-layout">
       <Form
@@ -495,7 +572,7 @@ const AddEvent = function ({ currentLang, eventDetails }) {
                     className="status-comment-item"
                     rules={[{ required: true, message: "Start time required" }]}
                   >
-                    <TimePicker format="HH:mm:ss" />
+                    <TimePicker format="HH:mm" />
                   </Form.Item>
                 </div>
               </div>
@@ -539,7 +616,7 @@ const AddEvent = function ({ currentLang, eventDetails }) {
                     className="status-comment-item"
                     rules={[{ required: true, message: "End time required" }]}
                   >
-                    <TimePicker format="HH:mm:ss" />
+                    <TimePicker format="HH:mm" />
                   </Form.Item>
                 </div>
               </div>
@@ -647,7 +724,7 @@ const AddEvent = function ({ currentLang, eventDetails }) {
               </Select>
             </Form.Item>
 
-            {/* <div className="update-select-title">
+           <div className="update-select-title">
             {t("Publics", { lng: currentLang })}
             </div>
 
@@ -667,18 +744,18 @@ const AddEvent = function ({ currentLang, eventDetails }) {
                 }
                 
               >
-                {publics &&
-                  publics.map((item) => (
+                {publicsList &&
+                  publicsList.map((item) => (
                     <Option
                       data-testid="update-two-select-option"
-                      value={item.uri}
+                      value={item.identifier.uri}
                       key={item.name["fr"]}
                     >
                       {item.name["fr"]}
                     </Option>
                   ))}
               </Select>
-            </Form.Item> */}
+            </Form.Item> 
           </Col>
           <Col className="upload-col">
             
@@ -743,15 +820,62 @@ const AddEvent = function ({ currentLang, eventDetails }) {
               </Select>
             </Form.Item>
 
-            {/* <Button
-            type="primary"
+             <Button
+           
            
             size="large"
-            style={{marginBottom:"20px"}}
+            style={{marginBottom:"20px",border:" 1px dashed #abaeb2",
+            width: "350px"}}
             onClick={()=>setShowPriceModal(true)}
           >
            Price/Prix
-          </Button> */}
+          </Button> 
+{
+  offerConfig &&
+
+          <Card size="small" extra={<DeleteOutlined onClick={()=>{
+            setOfferIds([])
+            setOfferConfig()
+          }}/>} title="PRIX"  style={{ width: 355, marginBottom:"10px" }}>
+      <div>{offerConfig.category}</div>
+      <div style={{wordBreak:"break-all",color:"#838080"}}>{offerConfig.url?.uri}</div>
+      {offerConfig.prices?.map(item=>
+        <div><span>{item.price} ${offerConfig.priceCurrency}</span> <span></span>({item.desc})</div>)}
+    </Card>
+}
+
+<div className="update-select-title">
+            {t("Organization", { lng: currentLang })}
+            </div>
+
+            <Form.Item name={"organization"} rules={[{ required: false }]}>
+              <Select
+                data-testid="update-two-select-dropdown"
+                placeholder={`Select Organization`}
+                key="updateDropdownKey"
+                className="search-select"
+                optionFilterProp="children"
+                showSearch
+                mode="multiple"
+                filterOption={(input, option) =>
+                  option.children &&
+                  option.children.toLowerCase().indexOf(input.toLowerCase()) >=
+                    0
+                }
+                
+              >
+                {orgList &&
+                  orgList.map((item) => (
+                    <Option
+                      data-testid="update-two-select-option"
+                      value={item.uuid}
+                      key={item.name["fr"]}
+                    >
+                      {item.name["fr"]}
+                    </Option>
+                  ))}
+              </Select>
+            </Form.Item> 
 
             <div className="update-select-title">
               {t("Facebook Link", { lng: currentLang })}
@@ -844,7 +968,8 @@ const AddEvent = function ({ currentLang, eventDetails }) {
       <AddNewContactModal isModalVisible={showAddContact} setIsModalVisible={setShowAddContact}/>
 }
 {showPriceModal && <PriceModal isModalVisible={showPriceModal} setIsModalVisible={setShowPriceModal}
-currentLang={currentLang}/> }
+currentLang={currentLang}
+closePriceModal={closePriceModal}/> }
  {loading && <Spinner />}
     </Layout>
   );

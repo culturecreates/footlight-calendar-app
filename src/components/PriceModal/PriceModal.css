@@ -10,7 +10,7 @@
     margin-right: 40px;
 }
 .dollar-input{
-    width: 125px;
+    width: 180px;
     margin-right: 20px;
 }
 .ant-radio-group.price-radio{
@@ -26,6 +26,7 @@
     padding: 9px 15px;
     background: #ffffff;
     margin: 0px;
+    flex: 1;
 }
 .radio-price-content{
     padding: 9px 15px;

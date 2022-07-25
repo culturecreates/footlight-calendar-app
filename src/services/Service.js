@@ -9,6 +9,37 @@ export default class ServiceApi {
     // dd/mm/yyyy
     
   }
+  static deleteContact(id) {
+    return Axios({
+      url: `contact-points/${id}`,
+      method: "DELETE",
+    
+    });
+  }
+
+  static deletePlace(id) {
+    return Axios({
+      url: `places/${id}`,
+      method: "DELETE",
+    
+    });
+  }
+
+  static deleteOrg(id) {
+    return Axios({
+      url: `organizations/${id}`,
+      method: "DELETE",
+    
+    });
+  }
+
+  static deleteEvent(id) {
+    return Axios({
+      url: `events/${id}`,
+      method: "DELETE",
+    
+    });
+  }
   static calendarInfo() {
     return Axios({
       url: `calendar-info`,
@@ -30,6 +61,12 @@ export default class ServiceApi {
       params:{
         excludeContainsPlace: true
       }
+    });
+  }
+  static getAllOrg() {
+    return Axios({
+      url: `organizations`,
+      method: "GET",
     });
   }
   static searchSuggesion(value,lng="fr") {
@@ -90,6 +127,24 @@ export default class ServiceApi {
     });
   }
 
+  static getOrgDetail(id) {
+    return Axios({
+      url: `organizations/${id}`,
+      method: "GET",
+      
+
+    });
+  }
+
+  static getTaxonomy() {
+    return Axios({
+      url: `taxonomy`,
+      method: "GET",
+      params:{"concept-scheme":process.env.REACT_APP_CONCEPT_SCHEME}
+
+    });
+  }
+
   static addEvent(payload) {
     return Axios({
       url: `events`,
@@ -140,6 +195,15 @@ export default class ServiceApi {
     });
   }
 
+  static addOrg(payload) {
+    return Axios({
+      url: `organizations`,
+      method: "POST",
+      data: JSON.stringify(payload),
+
+    });
+  }
+
   static addPlace(payload) {
     return Axios({
       url: `places`,
@@ -175,5 +239,22 @@ export default class ServiceApi {
     });
   }
 
+  static updateOrg(payload,id) {
+    return Axios({
+      url: `organizations/${id}`,
+      method: "PATCH",
+      data: JSON.stringify(payload),
+
+    });
+  }
+
+  static addOffer(payload) {
+    return Axios({
+      url: `offers`,
+      method: "POST",
+      data: JSON.stringify(payload),
+
+    });
+  }
   
 }

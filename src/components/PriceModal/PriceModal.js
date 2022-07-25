@@ -2,9 +2,10 @@ import { Radio, Modal,Form,Input,Button ,Select} from "antd";
 import { useEffect, useState } from "react";
 import { useTranslation } from "react-i18next";
 import { DollarCircleOutlined,PlusOutlined,DeleteOutlined } from '@ant-design/icons';
-import { timeZone, urlValidate } from "../../utils/Utility";
+import { priceDollarType, urlValidate } from "../../utils/Utility";
 import uniqid from "uniqid";
 import "./PriceModal.css"
+import ServiceApi from "../../services/Service";
 const { Option } = Select;
 
 
@@ -12,14 +13,16 @@ const PriceModal = ({
   isModalVisible,
   setIsModalVisible,
   currentLang,
+  closePriceModal
 }) => {
   const [payantList, setPayantList] = useState([{
       desc:"",
       dollar:"",
       id: uniqid(),
   }]);
-  const [selectedCheckbox, setSelectedCheckbox] = useState([]);
-  const [priceType, setPriceType] = useState("Gratuit");
+  const [priceList, setPriceList] = useState([]);
+  const [priceType, setPriceType] = useState("FREE");
+  const [dollarType, setDollarTpe] = useState("CAD");
   const [form] = Form.useForm();
   const { t, i18n } = useTranslation();
 
@@ -40,7 +43,7 @@ const PriceModal = ({
  const addPayant =()=>{
      setPayantList([...payantList,{
         desc:"",
-        dollar:"",
+        price:"",
         id: uniqid(),
     }])
  }
@@ -48,10 +51,52 @@ const PriceModal = ({
     setPriceType(e.target.value)
    
   };
+  const handleDollarChange = (value) => {
+    setDollarTpe(value)
+   
+  };
   const deletePrice=(itemPrice)=>{
       setPayantList(payantList.filter(item=>item.id !== itemPrice.id))
   }
+
+  const handleInputChange = (e,type,id) => {
+    setPayantList(payantList.map(item=>{
+      if(item.id === id)
+       item[type]=e.target.value;
+      
+       return item
+    }))
+   console.log(e,type)
+   
+  };
   const handleSubmit = (values) => {
+
+    const payload={
+      category:priceType,
+      name: {fr:values.name},
+      url: {
+        uri: values.url
+      },
+      priceCurrency:dollarType,
+      prices: priceType==="PAYING" ?payantList.map(item=>{
+        const obj={
+          price:item.price,
+          desc:item.desc
+        }
+        return obj
+      }):undefined
+    }
+
+    ServiceApi.addOffer(
+      payload
+    )
+      .then((response) => {
+        closePriceModal(payload,response.data.id)
+        setIsModalVisible(false);
+      })
+      .catch((error) => {});
+
+    console.log(payload)
   }
  
   return (
@@ -70,17 +115,17 @@ const PriceModal = ({
                 value={priceType}
                 onChange={(e, i) => handleChange(e, i)}
               >
-                <Radio value={"Gratuit"}>
+                <Radio value={"FREE"}>
                   {t("Gratuit", { lng: currentLang })}
                 </Radio>
-                <Radio value={"Payant"}>
+                <Radio value={"PAYING"}>
                   {t("Payant", { lng: currentLang })}
                 </Radio>
-                <Radio value={"Contribution"}>
+                {/* <Radio value={"Contribution"}>
                   {t("Contribution Volonataire", { lng: currentLang })}
-                </Radio>
+                </Radio> */}
               </Radio.Group>
-              {priceType !=="Gratuit"&&
+              {priceType !=="FREE"&&
               <div className="radio-price-content">
               {priceType==="Contribution"&&
               <div className="flex-input">
@@ -88,12 +133,13 @@ const PriceModal = ({
               
               </div>
 }
-              {priceType==="Payant"&&
+              {priceType==="PAYING"&&
               <>
               {payantList.map(item=>
                 <div className="flex-input" key={item.id}>
-                <Input addonAfter={<DollarCircleOutlined />} className="dollar-input" type="number" />
-                <Input  placeholder="Description" />
+                <Input addonAfter={<DollarCircleOutlined />} className="dollar-input" type="number" 
+                onChange={(e)=>handleInputChange(e,"price",item.id)}/>
+                <Input  placeholder="Description" onChange={(e)=>handleInputChange(e,"desc",item.id)}/>
                 {payantList.length>1 &&
                 <DeleteOutlined className="delete-price" onClick={()=>deletePrice(item)}/>}
                 </div>)}
@@ -108,11 +154,12 @@ const PriceModal = ({
               
               <div className="text-align-end">
               <Select
-                  defaultValue="Canada/Eastern"
+                  value={dollarType}
                   className="time-zone-select"
                   bordered={false}
+                  onChange={handleDollarChange}
                 >
-                  {timeZone.map((item) => (
+                  {priceDollarType.map((item) => (
                     <Option value={item.value} key={item.value}>
                       {item.name}
                     </Option>
@@ -135,7 +182,7 @@ const PriceModal = ({
               {t("Notes", { lng: currentLang })} 
             </div>
             <Form.Item
-              name="title"
+              name="name"
               className="status-comment-item"
               rules={[
                 {
@@ -151,7 +198,7 @@ const PriceModal = ({
               {t("Site web de la billeteria", { lng: currentLang })}
             </div>
             <Form.Item
-              name="eventPage"
+              name="url"
               className="status-comment-item"
               rules={[
                 {

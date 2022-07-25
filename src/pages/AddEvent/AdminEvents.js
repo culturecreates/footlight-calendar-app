@@ -1,10 +1,10 @@
 import React, { useState, useEffect } from "react";
 import moment from "moment";
 import PropTypes from "prop-types";
-import { Layout, Card, Table, Button, Switch, Avatar, Breadcrumb, Col, Row } from "antd";
+import { Layout, Card, Table, Button, Switch, Avatar, Breadcrumb, Col, Row,Modal } from "antd";
 import { useTranslation, Trans } from "react-i18next";
 import "../AdminDashboard.css";
-import { PlusOutlined, ForkOutlined } from "@ant-design/icons";
+import { PlusOutlined, ExclamationCircleOutlined,DeleteOutlined } from "@ant-design/icons";
 import { useNavigate,useLocation } from "react-router-dom";
 import Spinner from "../../components/Spinner";
 import ServiceApi from "../../services/Service";
@@ -13,6 +13,7 @@ import AddEvent from "./AddEvent";
 import { useDispatch, useSelector } from "react-redux";
 import { fetchPlace } from "../../action";
 
+const { confirm } = Modal;
 
 const AdminEvents = function ({ currentLang }) {
   const [eventList, setEventList] = useState([]);
@@ -93,14 +94,54 @@ const AdminEvents = function ({ currentLang }) {
       render: (e, record) => (
         <Switch
           className="publish-switch"
-          onChange={(checked,event) => handleDelete(checked,record, event)}
+          onChange={(checked,event) => handleSwitch(checked,record, event)}
           defaultChecked={false}
+        />
+      ),
+    },
+    {
+      title: "",
+      dataIndex: "hasDependency",
+      key: "hasDependency",
+      width:100,
+      render: (e, record) => (
+        <DeleteOutlined
+          style={{fontSize:"23px"}}
+          onClick={(event) => handleDelete(record, event)}
+         
         />
       ),
     },
   ];
 
-  const handleDelete = (checked,record,event) => {
+  const handleDelete = (record,event) => {
+    event.stopPropagation()
+    confirm({
+      title: 'Are you sure to delete?',
+      icon: <ExclamationCircleOutlined />,
+      content: ' This action cannot be undone.',
+  
+      onOk() {
+        handleDeleteEvents(record.uuid)
+      },
+  
+      onCancel() {
+        console.log('Cancel');
+      },
+    });
+  };
+  const handleDeleteEvents=(id)=>{
+    setLoading(true);
+    ServiceApi.deleteEvent(id)
+      .then((response) => {
+        getEvents();
+        setLoading(false);
+      })
+      .catch((error) => {
+        setLoading(false);
+      });
+  }
+  const handleSwitch = (checked,record,event) => {
     event.stopPropagation()
   };
  
@@ -197,7 +238,7 @@ const AdminEvents = function ({ currentLang }) {
               dataSource={eventList}
               columns={eventTableHeader}
               className={"event-table"}
-              scroll={{x: 800, y: "calc(100% - 60px)" }}
+              scroll={{x: 900, y: "calc(100% - 60px)" }}
               pagination={{
                 onChange: page =>{
                   setDefaultPage(page)

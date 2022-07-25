@@ -11,6 +11,14 @@ export const adminSideMenuLinks = [
       name: "Contact",
       link: "/admin/contacts",
     },
+    {
+      name: "Organization",
+      link: "/admin/organization",
+    },
+    {
+      name: "Taxonomy",
+      link: "/admin/taxonomy",
+    },
     
     
   ];
@@ -72,6 +80,39 @@ export const adminSideMenuLinks = [
       required:false,
       placeHolder: "Enter Telephone",
       type:"text"
+    },
+    
+  ]
+  
+  export const adminOrg=[
+    {
+      name: "name",
+      title:"Name",
+      required:true,
+      placeHolder: "Enter Orgnization Name",
+      type:"text"
+    },
+    {
+      name: "description",
+      title:"Description",
+      required:false,
+      placeHolder: "Enter Description",
+      type:"area"
+    },
+    {
+      name: "url",
+      title:"Site Web",
+      required:true,
+      placeHolder: "Enter Url",
+      type:"text"
+    },
+  
+    {
+      name: "contact",
+      title:"Contact",
+      required:false,
+      placeHolder: "Select Contact",
+      type:"select"
     },
     
   ]
@@ -150,6 +191,17 @@ export const adminSideMenuLinks = [
     
     
   ];
+
+  export const priceDollarType =[
+    {
+      name:"Canadian Dollar (CAD)",
+      value:"CAD"
+    },
+    {
+      name:"US Dollar (USD)",
+      value:"USD"
+    },
+  ]
 
   export const timeZone =[
     {
