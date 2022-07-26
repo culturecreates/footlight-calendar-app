@@ -50,6 +50,8 @@
 
 .event-contact-details{
     margin-left: 10px;
+    margin-bottom: 5px;
+    margin-top: 5px;
 }
 .image-and-contact{
     margin-left: 15px;
@@ -134,6 +136,7 @@
 }
 .contact-address{
     margin-left: 10px;
+    word-break: break-all;
 }
 .contact-address a{
     color: #f04d46;
@@ -142,7 +145,7 @@
     font-size: 12px;
     margin-left: 10px;
     color: #dea4a4;
-    margin-bottom: 10px;
+    margin-bottom: 1px;
 }
 .virrtual-event{
     margin-top: 10px;

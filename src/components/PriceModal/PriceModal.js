@@ -186,7 +186,7 @@ const PriceModal = ({
               className="status-comment-item"
               rules={[
                 {
-                  required: true,
+                  required: false,
                   message: "Notes required",
                   whitespace: true,
                 },
@@ -202,7 +202,7 @@ const PriceModal = ({
               className="status-comment-item"
               rules={[
                 {
-                  required: false,
+                  required: true,
                   message: "Url required",
                   whitespace: true,
                 },

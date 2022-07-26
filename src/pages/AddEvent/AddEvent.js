@@ -34,7 +34,7 @@ import { useNavigate } from "react-router-dom";
 import RecurringEvent from "../../components/RecurringEvent";
 import Compressor from "compressorjs";
 import { useDispatch, useSelector } from "react-redux";
-import { fetchAudience, fetchContact, fetchOrg, fetchPlace } from "../../action";
+import { fetchAudience, fetchContact, fetchOrg, fetchPlace, fetchTypes } from "../../action";
 import { fbUrlValidate, publics, timeZone, urlValidate } from "../../utils/Utility";
 import AddNewContactModal from "../../components/AddNewContactModal";
 import PriceModal from "../../components/PriceModal/PriceModal";
@@ -139,7 +139,7 @@ const AddEvent = function ({ currentLang, eventDetails }) {
           const events = response.data.data;
          
           setTypeList(events);
-          // dispatch(fetchAudience(response.data.data));
+          dispatch(fetchTypes(response.data.data));
            
         }
         setLoading(false);
@@ -255,7 +255,7 @@ const AddEvent = function ({ currentLang, eventDetails }) {
       },
       contactPoint: values.contact ?{
         entityId: values.contact
-      }:undefined,
+      }:null,
       url:values.eventPage && {uri:values.eventPage},
       sameAs:values.facebookLink?[values.facebookLink]:[],
       offerConfiguration: offerConfig,
@@ -365,6 +365,7 @@ const AddEvent = function ({ currentLang, eventDetails }) {
             : placeStore.places
         );
         setOfferConfig(eventDetails?.offerConfiguration)
+        setOfferIds(eventDetails?.offers?.map(item=>item.uuid))
       form.setFieldsValue({
         contact:eventDetails.contactPoint?.uuid,
         desc: eventDetails.description ? eventDetails.description["fr"] : "",
@@ -865,6 +866,7 @@ const AddEvent = function ({ currentLang, eventDetails }) {
                 style={{ width: 350 }}
                 dropdownClassName="contact-select"
                 placeholder="Select Contact"
+                allowClear
                 dropdownRender={(menu) => (
                   <>
                     {menu}

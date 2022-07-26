@@ -261,35 +261,42 @@ const EventDetails = function ({currentLang, isAdmin=false }) {
                   currentLang={currentLang}
                 />
               )}
-              {eventDetails.contactPoint && (
+               {eventDetails.contactPoint && (
                 <EventContact
                   name="contact"
                   values={eventDetails.contactPoint}
                   currentLang={currentLang}
                 />
               )}
-              {eventDetails.sameAs && eventDetails.sameAs.length > 0 && (
+             {eventDetails.sameAs && eventDetails.sameAs.length > 0 && (
                 <EventContact
                   name="Link"
                   values={eventDetails.url?[eventDetails.sameAs,eventDetails.url.uri]:eventDetails.sameAs}
                   currentLang={currentLang}
                 />
               )}
-              {eventDetails.audience?.length > 0 && (
+               {eventDetails.organizer &&eventDetails.organizer.organizations?.length>0 && (
+                <EventContact
+                  name="organizations"
+                  values={eventDetails.organizer.organizations}
+                  currentLang={currentLang}
+                />
+              )}
+              {/* {eventDetails.audience?.length > 0 && (
                 <EventContact
                   name="audience"
                   values={eventDetails.audience}
                   currentLang={currentLang}
                 />
-              )}
-              {eventDetails.type?.length > 0 && (
+              )} 
+               {eventDetails.type?.length > 0 && (
                 <EventContact
                   name="type"
                   values={eventDetails.type}
                   currentLang={currentLang}
                 />
-              )}
-              {eventDetails.additionalType?.length > 0 && (
+              )}*/}
+             {eventDetails.additionalType?.length > 0 && (
                 <EventContact
                   name="additionalType"
                   values={eventDetails.additionalType}

@@ -7,7 +7,7 @@ import {
   WifiOutlined ,ForkOutlined
 } from "@ant-design/icons";
 
-const EventItem = function ({ item, currentLang }) {
+const EventItem = function ({ item, currentLang="fr" }) {
     const navigate = useNavigate();
     const regex = / /g;
     const redirectionToDetails=()=>{
@@ -42,7 +42,7 @@ const EventItem = function ({ item, currentLang }) {
         style={{marginRight:"15px"}}/></>}
         {item.attendanceMode === "MIXED" &&<><ForkOutlined  rotate={180}
         style={{marginRight:"15px",fontSize:"17px"}}/></>}
-        {item.locationName[currentLang]}</div>
+        {item.locationName && item.locationName[currentLang]}</div>
       </div>
     </div>
   );
