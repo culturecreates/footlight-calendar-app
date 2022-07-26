@@ -145,6 +145,15 @@ export default class ServiceApi {
     });
   }
 
+  static getTaxonomyType() {
+    return Axios({
+      url: `taxonomy`,
+      method: "GET",
+      params:{"concept-scheme":"https://cultureoutaouais.com/resource/TypeEvenementConcept"}
+
+    });
+  }
+
   static addEvent(payload) {
     return Axios({
       url: `events`,
