@@ -173,6 +173,7 @@
     padding: 4px 11px;
 
 }
+.search-select .ant-space-align-center,
 .contact-select .ant-space-align-center{
     width: 100%;
     display: flex;

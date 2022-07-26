@@ -15,14 +15,20 @@ import {
 import { adminPlaces } from "../../utils/Utility";
 import ServiceApi from "../../services/Service";
 import Spinner from "../../components/Spinner";
+import { useDispatch, useSelector } from "react-redux";
+import { fetchPlace } from "../../action";
 
-const AddPlaces = function ({ currentLang,placeDetails }) {
+
+const AddPlaces = function ({ currentLang,placeDetails,isModal=false,onsuccessAdd }) {
   const [address, setAddress] = useState("");
   const [loading, setLoading] = useState(false);
   const [isUpdate, setIsUpdate] = useState(false);
   const { t, i18n } = useTranslation();
   const [form] = Form.useForm();
   const navigate = useNavigate();
+  const dispatch = useDispatch();
+
+  const contactStore = useSelector((state) => state.place);
 
   const handleChange = (address) => {
     setAddress(address);
@@ -140,7 +146,15 @@ const AddPlaces = function ({ currentLang,placeDetails }) {
             .then((response) => {
                 setLoading(false)
               message.success("Place Created Successfully");
+              
+              if (contactStore != null) {
+                const newContact = [...contactStore,postalObj]
+                dispatch(fetchPlace(newContact));
+              }
+              if(!isModal)
               navigate(`/admin/places`);
+            else
+            onsuccessAdd()
             })
             .catch((error) => {
                 setLoading(false)

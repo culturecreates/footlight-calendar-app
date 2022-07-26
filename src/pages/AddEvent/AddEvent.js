@@ -34,7 +34,7 @@ import { useNavigate } from "react-router-dom";
 import RecurringEvent from "../../components/RecurringEvent";
 import Compressor from "compressorjs";
 import { useDispatch, useSelector } from "react-redux";
-import { fetchAudience, fetchContact, fetchOrg, fetchPlace } from "../../action";
+import { fetchAudience, fetchContact, fetchOrg, fetchPlace, fetchTypes } from "../../action";
 import { fbUrlValidate, publics, timeZone, urlValidate } from "../../utils/Utility";
 import AddNewContactModal from "../../components/AddNewContactModal";
 import PriceModal from "../../components/PriceModal/PriceModal";
@@ -70,6 +70,7 @@ const AddEvent = function ({ currentLang, eventDetails }) {
   const [isUpload, setIsUpload] = useState(false);
   const [isUpdate, setIsUpdate] = useState(false);
   const [showAddContact,setShowAddContact]= useState(false)
+  const [showAddType,setShowAddType]= useState("Contact")
   const [numberOfDays, setNumberOfDays] = useState(0);
   const [compressedFile, setCompressedFile] = useState(null);
   const [offerConfig, setOfferConfig] = useState();
@@ -139,7 +140,7 @@ const AddEvent = function ({ currentLang, eventDetails }) {
           const events = response.data.data;
          
           setTypeList(events);
-          // dispatch(fetchAudience(response.data.data));
+          dispatch(fetchTypes(response.data.data));
            
         }
         setLoading(false);
@@ -255,7 +256,7 @@ const AddEvent = function ({ currentLang, eventDetails }) {
       },
       contactPoint: values.contact ?{
         entityId: values.contact
-      }:undefined,
+      }:null,
       url:values.eventPage && {uri:values.eventPage},
       sameAs:values.facebookLink?[values.facebookLink]:[],
       offerConfiguration: offerConfig,
@@ -271,7 +272,7 @@ const AddEvent = function ({ currentLang, eventDetails }) {
        uri:item
      }
       return obj}):undefined,
-      type:values.type? values.type.map(item=>{
+      additionalType:values.type? values.type.map(item=>{
         const obj ={
       uri:item
     }
@@ -365,6 +366,7 @@ const AddEvent = function ({ currentLang, eventDetails }) {
             : placeStore.places
         );
         setOfferConfig(eventDetails?.offerConfiguration)
+        setOfferIds(eventDetails?.offers?.map(item=>item.uuid))
       form.setFieldsValue({
         contact:eventDetails.contactPoint?.uuid,
         desc: eventDetails.description ? eventDetails.description["fr"] : "",
@@ -393,7 +395,7 @@ const AddEvent = function ({ currentLang, eventDetails }) {
         facebookLink:eventDetails.sameAs.length>0? eventDetails.sameAs[0]:undefined ,
         organization:eventDetails?.organizer?.organizations.map(item=>item.uuid),
         audience: eventDetails?.audience?.map(item=>item.uri),
-        type: eventDetails?.type?.map(item=>item.uri),
+        type: eventDetails?.additionalType?.map(item=>item?.identifier?.uri),
         
       });
       if(eventDetails.locations){
@@ -510,6 +512,10 @@ const AddEvent = function ({ currentLang, eventDetails }) {
     // });
   };
  
+  const showAddModal=(typeName)=>{
+    setShowAddContact(true)
+    setShowAddType(typeName)
+  }
   const onChange = (info) => {
     setIsUpload(true);
     setFileList(info.fileList);
@@ -713,6 +719,7 @@ const AddEvent = function ({ currentLang, eventDetails }) {
                 placeholder={`Select Location`}
                 key="updateDropdownKey"
                 className="search-select"
+                dropdownClassName="contact-select"
                 optionFilterProp="children"
                 showSearch
                 mode="multiple"
@@ -722,6 +729,20 @@ const AddEvent = function ({ currentLang, eventDetails }) {
                     0
                 }
                 onChange={handleChangeLoc}
+                dropdownRender={(menu) => (
+                  <>
+                    {menu}
+                    <Divider style={{ margin: "8px 0" }} />
+                    <Space align="center" style={{ padding: "0 8px 4px" }}>
+                      <Typography.Link
+                        onClick={() => showAddModal("Location")}
+                        style={{ whiteSpace: "nowrap" }}
+                      >
+                        <PlusOutlined /> Add New Location
+                      </Typography.Link>
+                    </Space>
+                  </>
+                )}
                 // onChange={handleChange}
                 // defaultValue={selectList && selectList[0].name}
                 // value={itemValue}
@@ -865,13 +886,14 @@ const AddEvent = function ({ currentLang, eventDetails }) {
                 style={{ width: 350 }}
                 dropdownClassName="contact-select"
                 placeholder="Select Contact"
+                allowClear
                 dropdownRender={(menu) => (
                   <>
                     {menu}
                     <Divider style={{ margin: "8px 0" }} />
                     <Space align="center" style={{ padding: "0 8px 4px" }}>
                       <Typography.Link
-                        onClick={() => setShowAddContact(true)}
+                        onClick={() => showAddModal("Contact")}
                         style={{ whiteSpace: "nowrap" }}
                       >
                         <PlusOutlined /> Add New Contact
@@ -923,11 +945,26 @@ const AddEvent = function ({ currentLang, eventDetails }) {
                 optionFilterProp="children"
                 showSearch
                 mode="multiple"
+                dropdownClassName="contact-select"
                 filterOption={(input, option) =>
                   option.children &&
                   option.children.toLowerCase().indexOf(input.toLowerCase()) >=
                     0
                 }
+                dropdownRender={(menu) => (
+                  <>
+                    {menu}
+                    <Divider style={{ margin: "8px 0" }} />
+                    <Space align="center" style={{ padding: "0 8px 4px" }}>
+                      <Typography.Link
+                        onClick={() => showAddModal("Organization")}
+                        style={{ whiteSpace: "nowrap" }}
+                      >
+                        <PlusOutlined /> Add New Organization
+                      </Typography.Link>
+                    </Space>
+                  </>
+                )}
                 
               >
                 {orgList &&
@@ -1031,7 +1068,8 @@ const AddEvent = function ({ currentLang, eventDetails }) {
         </Form.Item>
       </Form>
       {showAddContact &&
-      <AddNewContactModal isModalVisible={showAddContact} setIsModalVisible={setShowAddContact}/>
+      <AddNewContactModal isModalVisible={showAddContact} setIsModalVisible={setShowAddContact}
+      type={showAddType}/>
 }
 {showPriceModal && <PriceModal isModalVisible={showPriceModal} setIsModalVisible={setShowPriceModal}
 currentLang={currentLang}

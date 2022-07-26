@@ -25,7 +25,7 @@ const SemanticSearch = function ({ onSelection, onClearSearch,currentLang,search
       const renderItem = (title,types,uuid="") => ({
         value: title,
         options:types,
-        key: title,
+        key: (types==="audiences" || types === "types")?uuid:title,
 
         // key: types === "places"?uuid:title,
         label: (
@@ -50,7 +50,7 @@ const SemanticSearch = function ({ onSelection, onClearSearch,currentLang,search
                 {
                     label: renderTitle('audiences',lng),
                     options: events.audiences.map(item=>{
-                        const obj=renderItem(item.name[lng],"audiences")
+                        const obj=renderItem(item.name[lng],"audiences",item.identifier?.uri)
                         return obj
                       })
                   },
@@ -71,7 +71,7 @@ const SemanticSearch = function ({ onSelection, onClearSearch,currentLang,search
                   {
                     label: renderTitle('types',lng),
                     options: events.types.map(item=>{
-                        const obj=renderItem(item.name[lng],"types")
+                        const obj=renderItem(item.name[lng],"types",item.identifier?.uri)
                         return obj
                       })
                   },
