@@ -13,7 +13,7 @@ import { adminContact, adminOrg, urlValidate } from "../../utils/Utility";
 import ServiceApi from "../../services/Service";
 import Spinner from "../../components/Spinner";
 import { useDispatch, useSelector } from "react-redux";
-import { fetchContact } from "../../action";
+import { fetchContact, fetchOrg } from "../../action";
 import AddNewContactModal from "../../components/AddNewContactModal";
 
 const { Option, OptGroup } = Select;
@@ -31,7 +31,7 @@ const AddOrganization = function ({ currentLang,orgDetails,isModal=false,onsucce
   const dispatch = useDispatch();
 
 
-  const contactStore = useSelector((state) => state.contact);
+  const contactStore = useSelector((state) => state.org);
 
   const handleSubmit = (values) => {
     const postalObj = {
@@ -66,7 +66,7 @@ const AddOrganization = function ({ currentLang,orgDetails,isModal=false,onsucce
             setLoading(false) 
             if (contactStore != null) {
               const newContact = [...contactStore,postalObj]
-              dispatch(fetchContact(newContact));
+              dispatch(fetchOrg(newContact));
             }
             
             message.success("Organization Created Successfully");
@@ -249,7 +249,8 @@ const AddOrganization = function ({ currentLang,orgDetails,isModal=false,onsucce
       </Form>
       {loading && <Spinner />}
       {showAddContact &&
-      <AddNewContactModal isModalVisible={showAddContact} setIsModalVisible={setShowAddContact}/>
+      <AddNewContactModal isModalVisible={showAddContact} setIsModalVisible={setShowAddContact}
+      type="Contact"/>
 }
     </Layout>
   );
