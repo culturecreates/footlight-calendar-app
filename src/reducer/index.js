@@ -5,6 +5,7 @@ import contact from "./ContactReducer"
 import lang from "./LangReducer"
 import org from "./OrgReducer"
 import audience from "./AudienceReducer"
+import types from "./TypesReducer"
 
 export default combineReducers({
   filter,
@@ -12,6 +13,7 @@ export default combineReducers({
   contact,
   org,
   audience,
+  types,
   lang
   
 });

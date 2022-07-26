@@ -65,6 +65,7 @@ const AddEvent = function ({ currentLang, eventDetails }) {
   const [placeList, setPlaceList] = useState([]);
   const [orgList,setOrgList]= useState([])
   const [publicsList,setPublicsList]= useState([])
+  const [typeList,setTypeList]= useState([])
   const [contactList, setContactList] = useState([]);
   const [isUpload, setIsUpload] = useState(false);
   const [isUpdate, setIsUpdate] = useState(false);
@@ -87,6 +88,7 @@ const AddEvent = function ({ currentLang, eventDetails }) {
   const contactStore = useSelector((state) => state.contact);
   const orgStore = useSelector((state) => state.org);
   const audienceStore = useSelector((state) => state.audience);
+  const typesStore = useSelector((state) => state.types);
   useEffect(() => {
     if (placeStore == null) {
       getAllPlaces();
@@ -107,6 +109,13 @@ const AddEvent = function ({ currentLang, eventDetails }) {
       setPublicsList(audienceStore)
     }
 
+    if (typesStore == null) {
+      getTypes();
+    } else {
+      setTypeList(typesStore)
+    }
+
+    
   }, []);
   useEffect(()=>{
 
@@ -121,6 +130,24 @@ const AddEvent = function ({ currentLang, eventDetails }) {
 
     }
   },[contactStore])
+
+  const getTypes = (page = 1) => {
+    setLoading(true);
+    ServiceApi.getTaxonomyType()
+      .then((response) => {
+        if (response && response.data && response.data.data) {
+          const events = response.data.data;
+         
+          setTypeList(events);
+          // dispatch(fetchAudience(response.data.data));
+           
+        }
+        setLoading(false);
+      })
+      .catch((error) => {
+        setLoading(false);
+      });
+  };
 
   const getPublics = (page = 1) => {
     setLoading(true);
@@ -243,7 +270,12 @@ const AddEvent = function ({ currentLang, eventDetails }) {
          const obj ={
        uri:item
      }
-      return obj}):undefined
+      return obj}):undefined,
+      type:values.type? values.type.map(item=>{
+        const obj ={
+      uri:item
+    }
+     return obj}):undefined
      
     };
     if (isEndDate && !isRecurring)
@@ -360,7 +392,8 @@ const AddEvent = function ({ currentLang, eventDetails }) {
         eventPage:eventDetails.url?.uri,
         facebookLink:eventDetails.sameAs.length>0? eventDetails.sameAs[0]:undefined ,
         organization:eventDetails?.organizer?.organizations.map(item=>item.uuid),
-        audience: eventDetails?.audience?.map(item=>item.uri)
+        audience: eventDetails?.audience?.map(item=>item.uri),
+        type: eventDetails?.type?.map(item=>item.uri),
         
       });
       if(eventDetails.locations){
@@ -746,6 +779,39 @@ const AddEvent = function ({ currentLang, eventDetails }) {
               >
                 {publicsList &&
                   publicsList.map((item) => (
+                    <Option
+                      data-testid="update-two-select-option"
+                      value={item.identifier.uri}
+                      key={item.name["fr"]}
+                    >
+                      {item.name["fr"]}
+                    </Option>
+                  ))}
+              </Select>
+            </Form.Item> 
+
+            <div className="update-select-title">
+            {t("Types", { lng: currentLang })}
+            </div>
+
+            <Form.Item name={"type"} rules={[{ required: false }]}>
+              <Select
+                data-testid="update-two-select-dropdown"
+                placeholder={`Select Types`}
+                key="updateDropdownKey"
+                className="search-select"
+                optionFilterProp="children"
+                showSearch
+                mode="multiple"
+                filterOption={(input, option) =>
+                  option.children &&
+                  option.children.toLowerCase().indexOf(input.toLowerCase()) >=
+                    0
+                }
+                
+              >
+                {typeList &&
+                  typeList.map((item) => (
                     <Option
                       data-testid="update-two-select-option"
                       value={item.identifier.uri}
