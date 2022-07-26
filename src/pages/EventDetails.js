@@ -246,9 +246,9 @@ const EventDetails = function ({currentLang, isAdmin=false }) {
                   
                   </Button>
 }
-                  {eventDetails.offers.find(item=>item.url) &&
+                  {eventDetails.ticketUrl &&
                   <Button danger className="buy-button">
-                    <a href={getUriOffers(eventDetails.offers)} target="_blank" rel="noreferrer">{t("tickets", { lng: currentLang })}</a>
+                    <a href={eventDetails.ticketUrl} target="_blank" rel="noreferrer">{t("tickets", { lng: currentLang })}</a>
                     
                   </Button>
 }

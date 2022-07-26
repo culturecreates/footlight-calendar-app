@@ -6,6 +6,7 @@ import { useNavigate } from "react-router-dom";
 import {
   WifiOutlined ,ForkOutlined
 } from "@ant-design/icons";
+import backgroundImg from "../assets/placeholder.png";
 
 const EventItem = function ({ item, currentLang="fr" }) {
     const navigate = useNavigate();
@@ -20,7 +21,7 @@ const EventItem = function ({ item, currentLang="fr" }) {
       style={{
         backgroundImage: item.image
           ? `url(${item?.image?.thumbnail?.uri})`
-          : `url(https://cdn.caligram.com/uploads/event/8J5/medium/6242018236834.png)`,
+          : `url(${backgroundImg})`,
       }}
       onClick={()=>redirectionToDetails()}
     >
