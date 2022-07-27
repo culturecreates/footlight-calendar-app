@@ -13,7 +13,8 @@ const PriceModal = ({
   isModalVisible,
   setIsModalVisible,
   currentLang,
-  closePriceModal
+  closePriceModal,
+  offerConfig
 }) => {
   const [payantList, setPayantList] = useState([{
       desc:"",
@@ -37,8 +38,21 @@ const PriceModal = ({
     setIsModalVisible(false);
   };
   useEffect(() => {
- 
-  }, []);
+    console.log(offerConfig)
+    if(offerConfig)
+    {
+      if(offerConfig.category === "PAYING")
+      {
+        setPriceType("PAYING")
+        setPayantList(offerConfig.prices)
+      }
+      
+      form.setFieldsValue({
+        name:offerConfig.name?.fr,
+        url:offerConfig.url?.uri
+      })
+    }
+  }, [offerConfig]);
 
  const addPayant =()=>{
      setPayantList([...payantList,{
@@ -138,8 +152,10 @@ const PriceModal = ({
               {payantList.map(item=>
                 <div className="flex-input" key={item.id}>
                 <Input addonAfter={<DollarCircleOutlined />} className="dollar-input" type="number" 
+                value={item.price}
                 onChange={(e)=>handleInputChange(e,"price",item.id)}/>
-                <Input  placeholder="Description" onChange={(e)=>handleInputChange(e,"desc",item.id)}/>
+                <Input  placeholder="Description"
+                value={item.desc} onChange={(e)=>handleInputChange(e,"desc",item.id)}/>
                 {payantList.length>1 &&
                 <DeleteOutlined className="delete-price" onClick={()=>deletePrice(item)}/>}
                 </div>)}
@@ -225,12 +241,7 @@ const PriceModal = ({
           <Button
             size="large"
             
-            onClick={() => {
-             
-                form.resetFields();
-                
-              
-            }}
+            onClick={()=>handleCancel()}
           >
             Cancel
           </Button>
