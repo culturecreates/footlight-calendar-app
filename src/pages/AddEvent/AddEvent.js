@@ -260,7 +260,7 @@ const AddEvent = function ({ currentLang, eventDetails }) {
       url:values.eventPage && {uri:values.eventPage},
       sameAs:values.facebookLink?[values.facebookLink]:[],
       offerConfiguration: offerConfig,
-      offers: offerIds.map(item=>{ const obj={entityId:item}
+      offers: offerIds && offerIds.map(item=>{ const obj={entityId:item}
       return obj}),
       organizer :values.organization? {organization :values.organization.map(item=>{const
          obj ={
@@ -394,7 +394,7 @@ const AddEvent = function ({ currentLang, eventDetails }) {
         eventPage:eventDetails.url?.uri,
         facebookLink:eventDetails.sameAs.length>0? eventDetails.sameAs[0]:undefined ,
         organization:eventDetails?.organizer?.organizations.map(item=>item.uuid),
-        audience: eventDetails?.audience?.map(item=>item.uri),
+        audience: eventDetails?.audience?.map(item=>item?.identifier?.uri),
         type: eventDetails?.additionalType?.map(item=>item?.identifier?.uri),
         
       });
@@ -1073,6 +1073,7 @@ const AddEvent = function ({ currentLang, eventDetails }) {
 }
 {showPriceModal && <PriceModal isModalVisible={showPriceModal} setIsModalVisible={setShowPriceModal}
 currentLang={currentLang}
+offerConfig={offerConfig}
 closePriceModal={closePriceModal}/> }
  {loading && <Spinner />}
     </Layout>

@@ -277,7 +277,9 @@ const AddPlaces = function ({ currentLang,placeDetails,isModal=false,onsuccessAd
             size="large"
             icon={<CloseOutlined />}
             onClick={() => {
-              if (isUpdate) navigate(`/admin/places`);
+              if(isModal)
+               onsuccessAdd()
+              else if (isUpdate) navigate(`/admin/places`);
               else {
                 form.resetFields();
                

@@ -228,7 +228,9 @@ const AddOrganization = function ({ currentLang,orgDetails,isModal=false,onsucce
             size="large"
             icon={<CloseOutlined />}
             onClick={() => {
-              if (isUpdate) navigate(`/admin/contacts`);
+              if(isModal)
+               onsuccessAdd()
+              else if (isUpdate) navigate(`/admin/contacts`);
               else {
                 form.resetFields();
                 
