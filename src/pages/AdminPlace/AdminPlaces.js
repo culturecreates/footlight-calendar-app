@@ -41,6 +41,19 @@ const AdminPlaces = function ({ currentLang }) {
         </Row>
       ),
     },
+    // {
+    //   title: t("Type", { lng: currentLang }),
+    //   dataIndex: "name",
+    //   key: "name",
+    //   render: (e, record) => (
+    //     <Row className="image-name">
+          
+    //       <Col flex="1 1 150px">
+    //       {record.isVirtual?"Virtual":""}
+    //       </Col>
+    //     </Row>
+    //   ),
+    // },
     {
       title: "",
       dataIndex: "hasDependency",
@@ -129,8 +142,15 @@ const AdminPlaces = function ({ currentLang }) {
       .then((response) => {
         if (response && response.data && response.data.data) {
           const events = response.data.data.places;
+          const placeVirtual = response.data.data?.virtualLocations;
+         
           dispatch(fetchPlace(response.data.data));
-          setPlaceList(events);
+          if(placeVirtual)
+          setPlaceList([...events,...placeVirtual.map(object => {
+            return {...object, isVirtual: true};
+          })]);
+          else
+            setPlaceList(events)
             if(response.data.totalCount)
             setTotalPage(response.data.totalCount)
         }
