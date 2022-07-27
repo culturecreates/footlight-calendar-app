@@ -928,7 +928,7 @@ const AddEvent = function ({ currentLang, eventDetails }) {
       <div>{offerConfig.category}</div>
       <div style={{wordBreak:"break-all",color:"#838080"}}>{offerConfig.url?.uri}</div>
       {offerConfig.prices?.map(item=>
-        <div><span>{item.price} ${offerConfig.priceCurrency}</span> <span></span>({item.desc})</div>)}
+        <div><span>{item.price} ${offerConfig.priceCurrency}</span> {item.desc &&<span>({item.desc})</span>}</div>)}
     </Card>
 }
 

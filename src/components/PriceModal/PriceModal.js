@@ -218,7 +218,7 @@ const PriceModal = ({
               className="status-comment-item"
               rules={[
                 {
-                  required: true,
+                  required: false,
                   message: "Url required",
                   whitespace: true,
                 },

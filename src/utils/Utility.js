@@ -102,7 +102,7 @@ export const adminSideMenuLinks = [
     {
       name: "url",
       title:"Site Web",
-      required:true,
+      required:false,
       placeHolder: "Enter Url",
       type:"text"
     },
