@@ -18,6 +18,7 @@ import { fetchFilter } from "../../action";
 const Events = function ({ currentLang,locale }) {
   const scrollRef = useRef();
   const [totalPage, setTotalPage] = useState(1);
+  const [currentPage, setCurrentPage] = useState(1);
   const [loading, setLoading] = useState(false);
   const [filter, setFilter] = useState([]);
   const [eventList, setEventList] = useState([]);
@@ -118,6 +119,7 @@ const Events = function ({ currentLang,locale }) {
   };
   const getEvents = (page = 1, filterArray=filter) => {
     setLoading(true);
+    setCurrentPage(page)
     ServiceApi.eventList(page,filterArray,currentLang==="en"?"EN":"FR")
       .then((response) => {
         if (response && response.data && response.data.data) {
@@ -343,7 +345,7 @@ const Events = function ({ currentLang,locale }) {
         </Row>
         <Pagination
           className="event-pagination"
-          defaultCurrent={1}
+          current={currentPage}
           pageSize={20}
           total={totalPage}
           hideOnSinglePage={true}
