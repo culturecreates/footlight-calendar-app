@@ -483,6 +483,37 @@ const AddEvent = function ({ currentLang, eventDetails }) {
       });
       setFormVaue(form.getFieldsValue())
   }, [eventDetails]);
+
+  const closeWithId=(id)=>{
+    setShowAddContact(false)
+    if(showAddType==="Contact")
+    {
+      form.setFieldsValue({
+        contact:id
+      });
+    }
+    else if(showAddType==="Location")
+    {
+      form.setFieldsValue({
+        location:[id]
+      });
+     
+        const obj=[{
+          value:id,
+          type:  "Offline"
+        }]
+      
+      setFormLocation(obj)
+      setcheckselectedOffline(true)
+      setcheckselectedOnline(false) 
+      setFormVaue(form.getFieldsValue())
+    }
+    else{
+      form.setFieldsValue({
+        organization:[id]
+      });
+    }
+  }
   // a.substring(11,20)
   const onChangeStart = (date, dateString) => {
     setStartDisable(moment(dateString, "MM-DD-YYYY"));
@@ -1078,7 +1109,7 @@ const AddEvent = function ({ currentLang, eventDetails }) {
       </Form>
       {showAddContact &&
       <AddNewContactModal isModalVisible={showAddContact} setIsModalVisible={setShowAddContact}
-      type={showAddType}/>
+      type={showAddType} closeWithId={closeWithId}/>
 }
 {showPriceModal && <PriceModal isModalVisible={showPriceModal} setIsModalVisible={setShowPriceModal}
 currentLang={currentLang}

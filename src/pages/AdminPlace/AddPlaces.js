@@ -1,16 +1,16 @@
-import { Layout, Form, Input, Button, message } from "antd";
+import { Layout, Form, Input, Button, message,Select } from "antd";
 import React, { useState, useEffect } from "react";
 import PlacesAutocomplete, {
   geocodeByAddress,
   getLatLng,
 } from "react-places-autocomplete";
 import { useNavigate } from "react-router-dom";
-import { useTranslation, Trans } from "react-i18next";
+import { useTranslation,  } from "react-i18next";
 import {
-  FileImageOutlined,
+  
   CheckOutlined,
   CloseOutlined,
-  PlusOutlined,
+  
 } from "@ant-design/icons";
 import { adminPlaces } from "../../utils/Utility";
 import ServiceApi from "../../services/Service";
@@ -18,17 +18,17 @@ import Spinner from "../../components/Spinner";
 import { useDispatch, useSelector } from "react-redux";
 import { fetchPlace } from "../../action";
 
-
-const AddPlaces = function ({ currentLang,placeDetails,isModal=false,onsuccessAdd }) {
+const { Option } = Select;
+const AddPlaces = function ({ currentLang,placeDetails,isModal=false,onsuccessAdd,onsuccessAddById }) {
   const [address, setAddress] = useState("");
   const [loading, setLoading] = useState(false);
   const [isUpdate, setIsUpdate] = useState(false);
-  const { t, i18n } = useTranslation();
+  const [containsList, setContainsList] = useState([]);
+  const { t,  } = useTranslation();
   const [form] = Form.useForm();
   const navigate = useNavigate();
   const dispatch = useDispatch();
 
-  const contactStore = useSelector((state) => state.place);
 
   const handleChange = (address) => {
     setAddress(address);
@@ -53,9 +53,9 @@ const AddPlaces = function ({ currentLang,placeDetails,isModal=false,onsuccessAd
           postalCode: results[0].address_components.find((item) =>
             item.types.includes("postal_code")
           )?.long_name,
-          containedInPlace: results[0].address_components.find((item) =>
-            item.types.includes("route")
-          )?.long_name,
+          // containedInPlace: results[0].address_components.find((item) =>
+          //   item.types.includes("route")
+          // )?.long_name,
 
           streetAddress: results[0].formatted_address,
         });
@@ -134,7 +134,7 @@ const AddPlaces = function ({ currentLang,placeDetails,isModal=false,onsuccessAd
             postalAddressId: {
               entityId: response.data.id,
             },
-            containedInPlace: values.containedInPlace,
+            containedInPlace: values.containedInPlace?{entityId:values.containedInPlace}:undefined,
            
             geo: {
               latitude: values.latitude,
@@ -146,6 +146,7 @@ const AddPlaces = function ({ currentLang,placeDetails,isModal=false,onsuccessAd
             .then((response) => {
                
               message.success("Place Created Successfully");
+              const getId=response.data?.id
               if(isModal)
              {
                 ServiceApi.getAllPlaces()
@@ -155,7 +156,7 @@ const AddPlaces = function ({ currentLang,placeDetails,isModal=false,onsuccessAd
           const events = response.data.data;
          
           dispatch(fetchPlace(events));
-          onsuccessAdd()
+          onsuccessAddById(getId)
         }
         
       })
@@ -192,7 +193,7 @@ const AddPlaces = function ({ currentLang,placeDetails,isModal=false,onsuccessAd
         addressLocality: placeDetails.postalAddress?.addressLocality,
         addressRegion:placeDetails.postalAddress?.addressRegion,
         postalCode: placeDetails.postalAddress?.postalCode,
-        containedInPlace: placeDetails.containedInPlace && placeDetails.containedInPlace[currentLang],
+        containedInPlace: placeDetails.containedInPlace && placeDetails.containedInPlace,
 
         streetAddress: placeDetails.postalAddress?.streetAddress,
         latitude: placeDetails.latitude && ''+placeDetails.latitude.latitude,
@@ -205,6 +206,23 @@ const AddPlaces = function ({ currentLang,placeDetails,isModal=false,onsuccessAd
         desc: "",
       });
   }, [placeDetails]);
+
+  useEffect(()=>{
+    ServiceApi.placeAdminArea()
+    .then((response) => {
+      setLoading(false);
+      if (response && response.data && response.data.data) {
+        const events = response.data.data;
+        setContainsList(events)
+        
+      }
+      
+    })
+    .catch((error) => {
+      setLoading(false);
+    });
+        
+  },[])
   return (
     <Layout className="add-event-layout">
       <Form
@@ -278,6 +296,18 @@ const AddPlaces = function ({ currentLang,placeDetails,isModal=false,onsuccessAd
                   className="replace-input"
                   rows={4}
                 />
+                : item.type === "select"?
+                <Select
+                style={{ width: 350 }}
+                dropdownClassName="contact-select"
+                placeholder="Select Contained place"
+                allowClear
+              
+              >
+                {containsList.map((item) => (
+                  <Option key={item.uuid} value={item.uuid}>{item.name?.fr}</Option>
+                ))}
+              </Select>
                 :
                 <Input
                   placeholder={item.placeHolder}

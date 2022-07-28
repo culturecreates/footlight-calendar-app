@@ -185,7 +185,7 @@ export const adminSideMenuLinks = [
       title:"ContainedInPlace",
       required:false,
       placeHolder: "Enter containedInPlace",
-      type:"text"
+      type:"select"
     },
     
     

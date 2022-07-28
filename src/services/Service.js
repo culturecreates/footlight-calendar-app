@@ -290,5 +290,14 @@ export default class ServiceApi {
 
     });
   }
+
+  static placeAdminArea() {
+    return Axios({
+      url: `places/administrative-area`,
+      method: "GET",
+     
+
+    });
+  }
   
 }

@@ -18,7 +18,7 @@ import AddNewContactModal from "../../components/AddNewContactModal";
 
 const { Option, OptGroup } = Select;
 
-const AddOrganization = function ({ currentLang,orgDetails,isModal=false,onsuccessAdd }) {
+const AddOrganization = function ({ currentLang,orgDetails,isModal=false,onsuccessAdd,onsuccessAddById }) {
   const [loading, setLoading] = useState(false);
   const [isUpdate, setIsUpdate] = useState(false);
   const [contactList, setContactList] = useState([]);
@@ -63,7 +63,7 @@ const AddOrganization = function ({ currentLang,orgDetails,isModal=false,onsucce
       ServiceApi.addOrg(postalObj)
       .then((response) => {
         if (response && response.data) {
-            
+          const getId=response.data?.id
             if (isModal) {
               ServiceApi.getAllOrg()
               .then((response) => {
@@ -73,8 +73,7 @@ const AddOrganization = function ({ currentLang,orgDetails,isModal=false,onsucce
                  
             
                   dispatch(fetchOrg(events));
-                  onsuccessAdd()
-                }
+                  onsuccessAddById(getId)                }
                 
               })
               .catch((error) => {

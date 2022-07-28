@@ -15,7 +15,7 @@ import Spinner from "../../components/Spinner";
 import { useDispatch, useSelector } from "react-redux";
 import { fetchContact } from "../../action";
 
-const AddContact = function ({ currentLang,contactDetails,isModal=false,onsuccessAdd }) {
+const AddContact = function ({ currentLang,contactDetails,isModal=false,onsuccessAdd,onsuccessAddById }) {
   const [loading, setLoading] = useState(false);
   const [isUpdate, setIsUpdate] = useState(false);
 
@@ -57,6 +57,7 @@ const AddContact = function ({ currentLang,contactDetails,isModal=false,onsucces
       .then((response) => {
         if (response && response.data) {
             setLoading(false) 
+            const getId=response.data?.id
             if (isModal) {
               ServiceApi.getAllContacts()
               .then((response) => {
@@ -65,7 +66,7 @@ const AddContact = function ({ currentLang,contactDetails,isModal=false,onsucces
                   const events = response.data.data;
                  
                   dispatch(fetchContact(events));
-                  onsuccessAdd()
+                  onsuccessAddById(getId)
                 
                 }
                
