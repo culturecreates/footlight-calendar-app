@@ -28,12 +28,19 @@ const EventItem = function ({ item, currentLang="fr" }) {
       <div>
         <div className="event-date">
           <div className="event-date-section">
+          {item.endDate && moment(item.startDate).isSame(moment(item.endDate), 'day') ?
+                      <div>{moment(item.startDate).tz(item.scheduleTimezone?item.scheduleTimezone:"Canada/Eastern").format("DD MMM")}</div>
+                    :
+                    <>
             <div>{moment(item.startDate).tz(item.scheduleTimezone?item.scheduleTimezone:"Canada/Eastern").format("DD MMM")}</div>
             {item.endDate &&
             <>
             <div>&nbsp;-&nbsp;</div>
             <div>{moment(item.endDate).tz(item.scheduleTimezone?item.scheduleTimezone:"Canada/Eastern").format("DD MMM")}</div>
-            </>}
+            </>
+            }
+            </>
+}
           </div>
         </div>
       </div>

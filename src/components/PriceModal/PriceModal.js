@@ -104,7 +104,24 @@ const PriceModal = ({
       prices: priceType==="PAYING" ?payantList.map(item=>{
         const obj={
           price:item.price,
-          desc:item.desc
+          name:{fr:item.desc}
+        }
+        return obj
+      }):undefined
+    }
+
+    const payloadSend={
+      category:priceType,
+      name: {fr:values.name},
+      url: {
+        uri: values.url
+      },
+      priceCurrency:dollarType,
+      prices: priceType==="PAYING" ?payantList.map(item=>{
+        const obj={
+          price:item.price,
+          desc:item.desc,
+          id:item.id
         }
         return obj
       }):undefined
@@ -114,7 +131,7 @@ const PriceModal = ({
       payload
     )
       .then((response) => {
-        closePriceModal(payload,response.data.id)
+        closePriceModal(payloadSend,response.data.id)
         setIsModalVisible(false);
       })
       .catch((error) => {});
