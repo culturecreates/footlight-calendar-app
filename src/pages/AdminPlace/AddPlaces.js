@@ -77,7 +77,7 @@ const AddPlaces = function ({ currentLang,placeDetails,isModal=false,onsuccessAd
     };
     setLoading(true)
     if (placeDetails)
-    ServiceApi.addPostalAddress(postalObj,placeDetails.postalAddress.uuid)
+    ServiceApi.updatePostalAddress(postalObj,placeDetails.postalAddress.uuid)
       .then((response) => {
         if (response && response.data) {
           const placeObj = {

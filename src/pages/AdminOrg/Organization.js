@@ -191,7 +191,7 @@ const Organization = function ({ currentLang }) {
                   )
                 },
                 current: defaultPage,
-                pageSize: 20,
+                pageSize: 200,
                 total: totalPage,
                 hideOnSinglePage: true,
                 showSizeChanger: false
