@@ -23,6 +23,8 @@ import moment from "moment-timezone";
 import ICalendarLink from "react-icalendar-link";
 import { useDispatch, useSelector } from "react-redux";
 import { changeLang } from "../action";
+import backgroundImg from "../assets/placeholder.png";
+
 
 const EventDetails = function ({currentLang, isAdmin=false }) {
   const { t, i18n } = useTranslation();
@@ -51,7 +53,7 @@ const EventDetails = function ({currentLang, isAdmin=false }) {
     const search = window.location.search;
     const params = new URLSearchParams(search);
     const code = params.get("lang");
-    console.log(code,currentLang)
+    
     if (code)
     {
       if(code==="en")
@@ -235,7 +237,7 @@ const EventDetails = function ({currentLang, isAdmin=false }) {
                   cursor:"unset",
                   backgroundImage: eventDetails?.image
                     ? `url(${eventDetails?.image?.thumbnail?.uri})`
-                    : `url(https://cdn.caligram.com/uploads/event/8J5/medium/6242018236834.png)`,
+                    : `url(${backgroundImg})`,
                 }}
               ></div>
               {eventDetails.offers && eventDetails.offers.length > 0 && (

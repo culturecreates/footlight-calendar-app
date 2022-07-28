@@ -6,6 +6,7 @@ import lang from "./LangReducer"
 import org from "./OrgReducer"
 import audience from "./AudienceReducer"
 import types from "./TypesReducer"
+import events from "./EventsReducer"
 
 export default combineReducers({
   filter,
@@ -14,6 +15,7 @@ export default combineReducers({
   org,
   audience,
   types,
+  events,
   lang
   
 });

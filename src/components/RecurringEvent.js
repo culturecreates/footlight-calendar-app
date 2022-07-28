@@ -230,10 +230,10 @@ const RecurringEvent = function ({
     if (formFields && formFields.frequency !== "CUSTOM") 
     {
       const obj = {
-        startTime: moment(formFields.startTimeRecur).format("hh:mm a"),
+        startTime: formFields.startTimeRecur && moment(formFields.startTimeRecur).format("hh:mm a"),
         endTime:
         formFields.endTimeRecur && moment(formFields.endTimeRecur).format("hh:mm a"),
-        start: moment(formFields.startTimeRecur).format("HH:mm"),
+        start: formFields.startTimeRecur && moment(formFields.startTimeRecur).format("HH:mm"),
         end: formFields.endTimeRecur && moment(formFields.endTimeRecur).format("HH:mm"),
       };
       setCustomDates(customDates.map(item=>({...item,time:[obj]})))
@@ -302,7 +302,7 @@ const RecurringEvent = function ({
               <Card>
                 <div className="custom-no-of-date">
                   {moment(item.startDate).format(
-                    "MMM,DD,YYYY"
+                    "dddd DD MMM YYYY"
                   )}
                 </div>
 

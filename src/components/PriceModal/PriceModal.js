@@ -1,4 +1,4 @@
-import { Radio, Modal,Form,Input,Button ,Select} from "antd";
+import { Radio, Modal,Form,Input,Button ,Select, message} from "antd";
 import { useEffect, useState } from "react";
 import { useTranslation } from "react-i18next";
 import { DollarCircleOutlined,PlusOutlined,DeleteOutlined } from '@ant-design/icons';
@@ -84,7 +84,16 @@ const PriceModal = ({
    
   };
   const handleSubmit = (values) => {
-
+  if(priceType==="PAYING")
+  {
+    const checkprice = payantList.filter(item=>item.price==="" || item.price===0 || item.price===undefined)
+    console.log(payantList,checkprice)
+    if(checkprice.length>0)
+    {
+      message.warn("Please enter price")
+      return
+    }
+  }
     const payload={
       category:priceType,
       name: {fr:values.name},

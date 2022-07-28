@@ -91,18 +91,9 @@ const AddEvent = function ({ currentLang, eventDetails }) {
   const audienceStore = useSelector((state) => state.audience);
   const typesStore = useSelector((state) => state.types);
   useEffect(() => {
-    if (placeStore == null) {
-      getAllPlaces();
-    } else {
-      setAllLocations(placeStore);
-      setPlaceList(placeStore.places);
-    }
+   
 
-    if (orgStore == null) {
-      getOrg();
-    } else {
-      setOrgList(orgStore)
-    }
+    
 
     if (audienceStore == null) {
       getPublics();
@@ -118,6 +109,24 @@ const AddEvent = function ({ currentLang, eventDetails }) {
 
     
   }, []);
+
+  useEffect(()=>{
+    if (orgStore == null) {
+      getOrg();
+    } else {
+      setOrgList(orgStore)
+    }
+  },[orgStore])
+
+  useEffect(()=>{
+    if (placeStore == null) {
+      getAllPlaces();
+    } else {
+      setAllLocations(placeStore);
+      setPlaceList(placeStore.places);
+    }
+  },[placeStore])
+
   useEffect(()=>{
 
     if (contactStore == null) {
@@ -474,6 +483,37 @@ const AddEvent = function ({ currentLang, eventDetails }) {
       });
       setFormVaue(form.getFieldsValue())
   }, [eventDetails]);
+
+  const closeWithId=(id)=>{
+    setShowAddContact(false)
+    if(showAddType==="Contact")
+    {
+      form.setFieldsValue({
+        contact:id
+      });
+    }
+    else if(showAddType==="Location")
+    {
+      form.setFieldsValue({
+        location:[id]
+      });
+     
+        const obj=[{
+          value:id,
+          type:  "Offline"
+        }]
+      
+      setFormLocation(obj)
+      setcheckselectedOffline(true)
+      setcheckselectedOnline(false) 
+      setFormVaue(form.getFieldsValue())
+    }
+    else{
+      form.setFieldsValue({
+        organization:[id]
+      });
+    }
+  }
   // a.substring(11,20)
   const onChangeStart = (date, dateString) => {
     setStartDisable(moment(dateString, "MM-DD-YYYY"));
@@ -1069,7 +1109,7 @@ const AddEvent = function ({ currentLang, eventDetails }) {
       </Form>
       {showAddContact &&
       <AddNewContactModal isModalVisible={showAddContact} setIsModalVisible={setShowAddContact}
-      type={showAddType}/>
+      type={showAddType} closeWithId={closeWithId}/>
 }
 {showPriceModal && <PriceModal isModalVisible={showPriceModal} setIsModalVisible={setShowPriceModal}
 currentLang={currentLang}

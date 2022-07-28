@@ -33,6 +33,14 @@ export default class ServiceApi {
     });
   }
 
+  static deleteTaxonomy(id) {
+    return Axios({
+      url: `taxonomy/${id}`,
+      method: "DELETE",
+    
+    });
+  }
+
   static deleteEvent(id) {
     return Axios({
       url: `events/${id}`,
@@ -136,11 +144,28 @@ export default class ServiceApi {
     });
   }
 
+  static getTaxonomyDetail(id) {
+    return Axios({
+      url: `taxonomy/${id}`,
+      method: "GET",
+      
+
+    });
+  }
+
   static getTaxonomy() {
     return Axios({
       url: `taxonomy`,
       method: "GET",
       params:{"concept-scheme":process.env.REACT_APP_CONCEPT_SCHEME}
+
+    });
+  }
+
+  static getAllTaxonomy() {
+    return Axios({
+      url: `taxonomy`,
+      method: "GET",
 
     });
   }
@@ -262,6 +287,15 @@ export default class ServiceApi {
       url: `offers`,
       method: "POST",
       data: JSON.stringify(payload),
+
+    });
+  }
+
+  static placeAdminArea() {
+    return Axios({
+      url: `places/administrative-area`,
+      method: "GET",
+     
 
     });
   }

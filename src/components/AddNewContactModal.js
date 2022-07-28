@@ -9,6 +9,7 @@ const AddNewContactModal = ({
   isModalVisible,
   setIsModalVisible,
   currentLang,
+  closeWithId,
   type
 }) => {
   const [checkOptions, setCheckOptions] = useState([]);
@@ -19,7 +20,9 @@ const AddNewContactModal = ({
 
     setIsModalVisible(false);
   };
-
+  const handleOkById = (id) => {
+    closeWithId(id)
+  };
  
 
   const handleCancel = () => {
@@ -39,12 +42,15 @@ const AddNewContactModal = ({
       footer={false}
     >
       {type==="Contact"?
-      <AddContact currentLang={currentLang} contactDetails={null} isModal onsuccessAdd={handleOk}/>
+      <AddContact currentLang={currentLang} contactDetails={null} isModal onsuccessAdd={handleOk}
+      onsuccessAddById={handleOkById}/>
       :
-      type==="Contact"?
-      <AddPlaces currentLang={currentLang} contactDetails={null} isModal onsuccessAdd={handleOk}/>
+      type==="Location"?
+      <AddPlaces currentLang={currentLang} contactDetails={null} isModal onsuccessAdd={handleOk}
+      onsuccessAddById={handleOkById}/>
       :
-      <AddOrganization currentLang={currentLang} contactDetails={null} isModal onsuccessAdd={handleOk}/>
+      <AddOrganization currentLang={currentLang} contactDetails={null} isModal onsuccessAdd={handleOk}
+      onsuccessAddById={handleOkById}/>
 
   }
 

@@ -18,7 +18,7 @@ import AddNewContactModal from "../../components/AddNewContactModal";
 
 const { Option, OptGroup } = Select;
 
-const AddOrganization = function ({ currentLang,orgDetails,isModal=false,onsuccessAdd }) {
+const AddOrganization = function ({ currentLang,orgDetails,isModal=false,onsuccessAdd,onsuccessAddById }) {
   const [loading, setLoading] = useState(false);
   const [isUpdate, setIsUpdate] = useState(false);
   const [contactList, setContactList] = useState([]);
@@ -63,17 +63,32 @@ const AddOrganization = function ({ currentLang,orgDetails,isModal=false,onsucce
       ServiceApi.addOrg(postalObj)
       .then((response) => {
         if (response && response.data) {
-            setLoading(false) 
-            if (contactStore != null) {
-              const newContact = [...contactStore,postalObj]
-              dispatch(fetchOrg(newContact));
+          const getId=response.data?.id
+            if (isModal) {
+              ServiceApi.getAllOrg()
+              .then((response) => {
+                setLoading(false);
+                if (response && response.data && response.data.data) {
+                  const events = response.data.data;
+                 
+            
+                  dispatch(fetchOrg(events));
+                  onsuccessAddById(getId)                }
+                
+              })
+              .catch((error) => {
+                setLoading(false);
+              });
             }
             
-            message.success("Organization Created Successfully");
-            if(!isModal)
-            navigate(`/admin/organization`);
+            
             else
-            onsuccessAdd()
+            navigate(`/admin/organization`);
+            setLoading(false) 
+
+            message.success("Organization Created Successfully");
+            
+            
         }
       })
       .catch((error) => {
