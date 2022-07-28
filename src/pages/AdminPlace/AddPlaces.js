@@ -144,17 +144,34 @@ const AddPlaces = function ({ currentLang,placeDetails,isModal=false,onsuccessAd
           };
           ServiceApi.addPlace(placeObj)
             .then((response) => {
-                setLoading(false)
+               
               message.success("Place Created Successfully");
+              if(isModal)
+             {
+                ServiceApi.getAllPlaces()
+      .then((response) => {
+        setLoading(false);
+        if (response && response.data && response.data.data) {
+          const events = response.data.data;
+         
+          dispatch(fetchPlace(events));
+          onsuccessAdd()
+        }
+        
+      })
+      .catch((error) => {
+        setLoading(false);
+      });
+                
+                
               
-              if (contactStore != null) {
-                const newContact = [...contactStore,postalObj]
-                dispatch(fetchPlace(newContact));
-              }
-              if(!isModal)
-              navigate(`/admin/places`);
-            else
-            onsuccessAdd()
+    } 
+    else    
+             {
+              setLoading(false)
+                navigate(`/admin/places`);}
+           
+            
             })
             .catch((error) => {
                 setLoading(false)

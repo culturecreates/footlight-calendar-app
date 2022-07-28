@@ -27,12 +27,20 @@ const EventContact = function ({ name, values,currentLang }) {
       :
       <div className="event-contact-details">{name === "type"?item:item.name&&item.name[currentLang]}</div>}
       {name === "offers" &&
+      <>
+      
+      {values.length>1 && item.type !== "Aggregate Offer" &&
       <div className="event-price">
         {t("offers", { lng: currentLang })}:{item.price}&nbsp;{item.priceCurrency}
       </div>
 }
       </>
+}
+      </>
       )}
+      {name === "offers" && values.length===1 &&
+          <div className="event-contact-details">{t("Free", { lng: currentLang })}</div>
+      }
     </div>
   );
 };

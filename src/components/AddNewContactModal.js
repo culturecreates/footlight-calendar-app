@@ -41,7 +41,7 @@ const AddNewContactModal = ({
       {type==="Contact"?
       <AddContact currentLang={currentLang} contactDetails={null} isModal onsuccessAdd={handleOk}/>
       :
-      type==="Contact"?
+      type==="Location"?
       <AddPlaces currentLang={currentLang} contactDetails={null} isModal onsuccessAdd={handleOk}/>
       :
       <AddOrganization currentLang={currentLang} contactDetails={null} isModal onsuccessAdd={handleOk}/>

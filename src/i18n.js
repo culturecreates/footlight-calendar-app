@@ -62,11 +62,13 @@ i18n
           "ContainedInPlace":"Contained In Place",
           "EndDateTime":"End Date Time",
           "RecurringEvent":"Recurring Event",
-          "Frequency":"Frequency"
+          "Frequency":"Frequency",
+          "Free":"Free"
         }
       },
       fr: {
         translations: {
+          "Free":"Gratuit",
           organizations:"Presente par",
           "Email":"Courriel",
           "Frequency":"Fréquence",

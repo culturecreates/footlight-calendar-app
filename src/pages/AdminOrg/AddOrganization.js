@@ -63,17 +63,33 @@ const AddOrganization = function ({ currentLang,orgDetails,isModal=false,onsucce
       ServiceApi.addOrg(postalObj)
       .then((response) => {
         if (response && response.data) {
-            setLoading(false) 
-            if (contactStore != null) {
-              const newContact = [...contactStore,postalObj]
-              dispatch(fetchOrg(newContact));
+            
+            if (isModal) {
+              ServiceApi.getAllOrg()
+              .then((response) => {
+                setLoading(false);
+                if (response && response.data && response.data.data) {
+                  const events = response.data.data;
+                 
+            
+                  dispatch(fetchOrg(events));
+                  onsuccessAdd()
+                }
+                
+              })
+              .catch((error) => {
+                setLoading(false);
+              });
             }
             
-            message.success("Organization Created Successfully");
-            if(!isModal)
-            navigate(`/admin/organization`);
+            
             else
-            onsuccessAdd()
+            navigate(`/admin/organization`);
+            setLoading(false) 
+
+            message.success("Organization Created Successfully");
+            
+            
         }
       })
       .catch((error) => {

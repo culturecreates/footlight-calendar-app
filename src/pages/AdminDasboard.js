@@ -22,6 +22,7 @@ import AdminEvents from "./AddEvent/AdminEvents";
 import AdminContacts from "./AddContact/AdminContact";
 import AdminPlaces from "./AdminPlace/AdminPlaces";
 import Organization from "./AdminOrg/Organization";
+import Taxonomy from "./Taxonomy/Taxonomy";
 
 const { Header, Content, Sider } = Layout;
 
@@ -73,6 +74,8 @@ const AdminDashboard = function ({ item, currentLang }) {
           <Route path="add-contact" element={<AdminContacts currentLang={currentLang} />} />
           <Route path="organization" element={<Organization currentLang={currentLang} />} />
           <Route path="add-organization" element={<Organization currentLang={currentLang} />} />
+          <Route path="taxonomy" element={<Taxonomy currentLang={currentLang} />} />
+          <Route path="add-taxonomy" element={<Taxonomy currentLang={currentLang} />} />
           <Route path="events/:eventId" element={<EventDetails currentLang={currentLang} isAdmin/>} />
         </Routes>
       </Content>

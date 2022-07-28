@@ -13,6 +13,7 @@ import EventItem from "../../components/EventItem";
 import SemanticSearch from "../../components/SemanticSearch";
 import { useDispatch, useSelector } from "react-redux";
 import { fetchFilter } from "../../action";
+import { useSearchParams } from "react-router-dom";
 
 
 const Events = function ({ currentLang,locale }) {
@@ -44,6 +45,8 @@ const Events = function ({ currentLang,locale }) {
   const filterStore = useSelector((state) => state.filter);
 
   const { t, i18n } = useTranslation();
+  const [search, setSearch] = useSearchParams();
+
 
   useEffect(() => {
     // moment.locale("fr-ca");
@@ -58,7 +61,14 @@ const Events = function ({ currentLang,locale }) {
   }, []);
   
   useEffect(() => {
-    getEvents();
+    const search = window.location.search;
+    const params = new URLSearchParams(search);
+    const page = params.get("page");
+    
+    if (page)
+      getEvents(page);
+    else
+     getEvents();  
   }, [filter]);
   useEffect(() => {
     if(eventsFilter)
@@ -120,6 +130,7 @@ const Events = function ({ currentLang,locale }) {
   const getEvents = (page = 1, filterArray=filter) => {
     setLoading(true);
     setCurrentPage(page)
+    setSearch({ page: page});
     ServiceApi.eventList(page,filterArray,currentLang==="en"?"EN":"FR")
       .then((response) => {
         if (response && response.data && response.data.data) {
