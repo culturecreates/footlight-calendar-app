@@ -12,7 +12,7 @@ import Spinner from "../../components/Spinner";
 import EventItem from "../../components/EventItem";
 import SemanticSearch from "../../components/SemanticSearch";
 import { useDispatch, useSelector } from "react-redux";
-import { fetchFilter } from "../../action";
+import { fetchEvents, fetchFilter } from "../../action";
 import { useSearchParams } from "react-router-dom";
 
 
@@ -43,7 +43,7 @@ const Events = function ({ currentLang,locale }) {
   const [calendarDate, setCalendarDate] = useState(moment());
   const dispatch = useDispatch();
   const filterStore = useSelector((state) => state.filter);
-
+  const eventStore = useSelector((state) => state.events);
   const { t, i18n } = useTranslation();
   const [search, setSearch] = useSearchParams();
 
@@ -64,11 +64,21 @@ const Events = function ({ currentLang,locale }) {
     const search = window.location.search;
     const params = new URLSearchParams(search);
     const page = params.get("page");
-    
-    if (page)
+    if(filter.length>0)
+     getEvents();
+    else if (eventStore)
+    {
+        setEventList(eventStore.events)
+        setCurrentPage(eventStore.currentPage)
+        setTotalPage(eventStore.totalPage)
+    }
+    else if (page)
       getEvents(page);
     else
-     getEvents();  
+      getEvents();
+  
+    
+      
   }, [filter]);
   useEffect(() => {
     if(eventsFilter)
@@ -130,7 +140,7 @@ const Events = function ({ currentLang,locale }) {
   const getEvents = (page = 1, filterArray=filter) => {
     setLoading(true);
     setCurrentPage(page)
-    setSearch({ page: page});
+   
     ServiceApi.eventList(page,filterArray,currentLang==="en"?"EN":"FR")
       .then((response) => {
         if (response && response.data && response.data.data) {
@@ -138,6 +148,17 @@ const Events = function ({ currentLang,locale }) {
           setEventList(events);
          if(response.data.totalCount)
              setTotalPage(response.data.totalCount)
+          
+         if(filterArray.length===0) {
+               const eventObj={
+                 events:events,
+                 totalPage:response.data.totalCount?response.data.totalCount:eventStore&&eventStore.totalPage,
+                 currentPage:page
+               } 
+               dispatch(fetchEvents(eventObj))
+         } 
+         else
+          dispatch(fetchEvents(null))  
         }
         setLoading(false);
       })
@@ -361,7 +382,8 @@ const Events = function ({ currentLang,locale }) {
           total={totalPage}
           hideOnSinglePage={true}
           showSizeChanger={false}
-          onChange={(page) => getEvents(page)}
+          onChange={(page) => { setSearch({ page: page});
+          getEvents(page)}}
         />
         {!loading && eventList.length === 0  &&
       <div>
