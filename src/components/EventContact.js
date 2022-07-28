@@ -25,6 +25,9 @@ const EventContact = function ({ name, values,currentLang }) {
       <a href={item} target="_blank" rel="noreferrer" className="contact-address">{item}</a>
 
       :
+     name==="offers"?item.name&&
+     <div className="event-contact-details">{name === "type"?item:item.name&&item.name[currentLang]}</div>
+     :
       <div className="event-contact-details">{name === "type"?item:item.name&&item.name[currentLang]}</div>}
       {name === "offers" &&
       <>

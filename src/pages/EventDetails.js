@@ -82,7 +82,7 @@ const EventDetails = function ({currentLang, isAdmin=false }) {
 
   const getEventDetails = (id) => {
     setLoading(true);
-    ServiceApi.getEventDetail(id,false,true)
+    ServiceApi.getEventDetail(id,false,false)
       .then((response) => {
         if (response && response.data && response.data) {
           const events = response.data;
@@ -207,25 +207,26 @@ const EventDetails = function ({currentLang, isAdmin=false }) {
               </div>
             </div>
             <div>
-              {eventDetails.location && (
-                <>
+              {eventDetails.locations && (
+                eventDetails.locations.map(itemLoc=>
+                <div>
                   <div className="event-time-header">
-                    {eventDetails.location?.name[currentLang]}
+                    {itemLoc?.name[currentLang]}
                   </div>
-                  {eventDetails.location.postalAddress && (
+                  {itemLoc.postalAddress && (
                     <address>
-                      {eventDetails.location.postalAddress.addressLocality},
-                      {eventDetails.location.postalAddress.addressRegion} <br />{" "}
-                      {eventDetails.location.postalAddress.postalCode}
+                      {itemLoc.postalAddress?.addressLocality},
+                      {itemLoc.postalAddress?.addressRegion} <br />{" "}
+                      {itemLoc.postalAddress?.postalCode}
                       <br />
-                      {eventDetails.location.postalAddress.streetAddress}
+                      {itemLoc.postalAddress?.streetAddress}
                     </address>
                   )}
-                </>
+                </div>)
               )}
-              {eventDetails.attendanceMode === "ONLINE" &&<div className="virrtual-event"><WifiOutlined rotate={270}/><WifiOutlined rotate={90}
+              {eventDetails.eventAttendanceMode === "ONLINE" &&<div className="virrtual-event"><WifiOutlined rotate={270}/><WifiOutlined rotate={90}
         style={{marginRight:"10px"}}/> {t("Online", { lng: currentLang })}</div>}
-        {eventDetails.attendanceMode === "MIXED" &&<div className="virrtual-event"><ForkOutlined  rotate={180}
+        {eventDetails.eventAttendanceMode === "MIXED" &&<div className="virrtual-event"><ForkOutlined  rotate={180}
         style={{marginRight:"10px",fontSize:"17px"}}/> {t("Hybrid", { lng: currentLang })}</div>}
             </div>
           </div>
@@ -296,13 +297,13 @@ const EventDetails = function ({currentLang, isAdmin=false }) {
                   currentLang={currentLang}
                 />
               )} */}
-             {eventDetails.additionalType?.length > 0 && (
+             {/* {eventDetails.additionalType?.length > 0 && (
                 <EventContact
                   name="additionalType"
                   values={eventDetails.additionalType}
                   currentLang={currentLang}
                 />
-              )}
+              )} */}
             </Col>
             <Col flex="1 1 400px" style={{ marginRight: "40px",marginLeft:"40px" }}>
               <div className="event-detail-desc" dangerouslySetInnerHTML={{__html: eventDetails.description&& eventDetails.description[currentLang]}}>
