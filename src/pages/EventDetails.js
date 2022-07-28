@@ -240,22 +240,20 @@ const EventDetails = function ({currentLang, isAdmin=false }) {
                     : `url(${backgroundImg})`,
                 }}
               ></div>
-              {eventDetails.offers && eventDetails.offers.length > 0 && (
-                <>
-                {eventDetails.facebookUrl &&
+                 {eventDetails.facebookUrl &&
                   <Button type="primary" danger className="buy-button">
                     <a href={eventDetails.facebookUrl} target="_blank" rel="noreferrer">{t("Event", { lng: currentLang })} Facebook</a>
                   
                   </Button>
 }
+
+             
                   {eventDetails.ticketUrl &&
                   <Button danger className="buy-button">
                     <a href={eventDetails.ticketUrl} target="_blank" rel="noreferrer">{t("tickets", { lng: currentLang })}</a>
                     
                   </Button>
 }
-                </>
-              )}
               {eventDetails.offers && (
                 <EventContact
                   name="offers"
@@ -270,13 +268,13 @@ const EventDetails = function ({currentLang, isAdmin=false }) {
                   currentLang={currentLang}
                 />
               )}
-             {eventDetails.sameAs && eventDetails.sameAs.length > 0 && (
+             {/* {eventDetails.sameAs && eventDetails.sameAs.length > 0 && (
                 <EventContact
                   name="Link"
                   values={eventDetails.url?[eventDetails.sameAs,eventDetails.url.uri]:eventDetails.sameAs}
                   currentLang={currentLang}
                 />
-              )}
+              )} */}
                {eventDetails.organizer &&eventDetails.organizer.organizations?.length>0 && (
                 <EventContact
                   name="organizations"
