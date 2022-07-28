@@ -17,7 +17,7 @@ const EventContact = function ({ name, values,currentLang }) {
         <a>{values.telephone}</a><br/>
         <a>{values.url?.uri}</a><br/>
       </div>:
-      values.map(item=>
+      values.map((item,index)=>
         <>
       
       {name === "Link"?
@@ -25,7 +25,7 @@ const EventContact = function ({ name, values,currentLang }) {
       <a href={item} target="_blank" rel="noreferrer" className="contact-address">{item}</a>
 
       :
-     name==="offers"?item.name&&
+     name==="offers"?item.name&& index===0 &&
      <div className="event-contact-details">{name === "type"?item:item.name&&item.name[currentLang]}</div>
      :
       <div className="event-contact-details">{name === "type"?item:item.name&&item.name[currentLang]}</div>}
@@ -34,7 +34,8 @@ const EventContact = function ({ name, values,currentLang }) {
       
       {values.length>1 && item.type !== "Aggregate Offer" &&
       <div className="event-price">
-        {t("offers", { lng: currentLang })}:{item.price}&nbsp;{item.priceCurrency}
+        <div>{item.price}&nbsp;{item.priceCurrency}</div>
+        {item.name &&item.name?.fr && item.name?.fr?.length>0 &&<div style={{fontSize:"13px"}}> &nbsp;- {item.name?.fr}</div>}
       </div>
 }
       </>

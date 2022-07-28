@@ -22,6 +22,7 @@
 }
 .event-time-section{
     margin-right: 30px;
+    width: 350px;
 }
 .event-time-header{
     font-family: Cogito, Verdana, Helvetica, sans-serif;
@@ -142,10 +143,12 @@
     color: #f04d46;
 }
 .event-price{
-    font-size: 14px;
+    font-size: 15px;
     margin-left: 10px;
-    color: #e25757;
+    color: #090909;
     margin-bottom: 1px;
+    display: flex;
+    align-items: center;
 }
 .virrtual-event{
     margin-top: 10px;
