@@ -98,7 +98,8 @@ const SemanticSearch = function ({ onSelection, onClearSearch,currentLang,search
       const selectObj = {
         type: options.options,
         name: options.key,
-        from:"search"
+        from:"search",
+        uri:options.key,
       };
       setSearchKey(value)
       onSelection(selectObj)

@@ -123,6 +123,7 @@ const Events = function ({ currentLang,locale }) {
       const obj = {
         name: item.name[currentLang],
         selected: false,
+        uri:item.uri,
       };
       return obj;
     });
@@ -132,6 +133,7 @@ const Events = function ({ currentLang,locale }) {
       const obj = {
         name: item.name[currentLang],
         selected: false,
+        uri:item.uri,
       };
       return obj;
     });
@@ -171,6 +173,7 @@ const Events = function ({ currentLang,locale }) {
     setSearchUpdate(item)
     item.selected = true;
     item.type = type;
+    console.log(item)
     setFilter([...filter.filter(item=>item.from !== "search"), item]);
 
     if (type === "Region") {

@@ -43,7 +43,7 @@ const CopyTimeModal = ({
           .map((item) => {
             const obj = {
               label: moment(item.startDate).format(
-                "MMM,DD,YYYY"
+                "dddd DD MMM YYYY"
               ),
               value: item.id,
             };
