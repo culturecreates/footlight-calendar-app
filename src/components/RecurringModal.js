@@ -269,8 +269,9 @@ const RecurringModal = ({
                         : "custom-no-of-date"
                     }
                   >
+                    {/* { moment(item.startDate).tz("Canada/Eastern").format("dddd")} */}
                     {moment(item.startDate).format(
-                      "MMM,DD,YYYY"
+                      "dddd DD MMM YYYY"
                     )}
                   </div>
                   <div className="crud-icons">

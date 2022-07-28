@@ -94,7 +94,7 @@ const AddPlaces = function ({ currentLang,placeDetails,isModal=false,onsuccessAd
             postalAddressId: {
               entityId: placeDetails.postalAddress.uuid,
             },
-            containedInPlace: values.containedInPlace,
+            containedInPlace: values.containedInPlace?{entityId:values.containedInPlace}:undefined,
            
             geo: {
               latitude: values.latitude,
@@ -193,7 +193,7 @@ const AddPlaces = function ({ currentLang,placeDetails,isModal=false,onsuccessAd
         addressLocality: placeDetails.postalAddress?.addressLocality,
         addressRegion:placeDetails.postalAddress?.addressRegion,
         postalCode: placeDetails.postalAddress?.postalCode,
-        containedInPlace: placeDetails.containedInPlace && placeDetails.containedInPlace,
+        containedInPlace: placeDetails.containedInPlace && placeDetails.containedInPlace?.entityId,
 
         streetAddress: placeDetails.postalAddress?.streetAddress,
         latitude: placeDetails.latitude && ''+placeDetails.latitude.latitude,

@@ -36,7 +36,8 @@ const Taxonomy = function ({ currentLang }) {
         <Row className="image-name">
           
           <Col flex="1 1 150px">
-          {record.name[currentLang]}
+        {  t(record.name[currentLang], { lng: currentLang })}
+         
           </Col>
         </Row>
       ),
@@ -48,6 +49,7 @@ const Taxonomy = function ({ currentLang }) {
       key: "hasDependency",
       width:100,
       render: (e, record) => (
+        !record.header &&
         <DeleteOutlined
           style={{fontSize:"23px"}}
           onClick={(event) => handleDelete(record, event)}
@@ -129,15 +131,52 @@ const Taxonomy = function ({ currentLang }) {
 
   const getPlaces = (page = 1) => {
     setLoading(true);
-    ServiceApi.getAllTaxonomy()
+    // ServiceApi.getAllTaxonomy()
+    //   .then((response) => {
+    //     if (response && response.data && response.data.data) {
+    //       const events = response.data.data;
+         
+    //       setTaxonomyList(events);
+    //     //   dispatch(fetchOrg(response.data.data));
+    //         if(response.data.totalCount)
+    //         setTotalPage(response.data.totalCount)
+    //     }
+    //     setLoading(false);
+    //   })
+    //   .catch((error) => {
+    //     setLoading(false);
+    //   });
+    ServiceApi.getTaxonomy()
       .then((response) => {
         if (response && response.data && response.data.data) {
-          const events = response.data.data;
+          const eventsPublic = response.data.data;
          
-          setTaxonomyList(events);
-        //   dispatch(fetchOrg(response.data.data));
-            if(response.data.totalCount)
-            setTotalPage(response.data.totalCount)
+          ServiceApi.getTaxonomyType()
+          .then((response) => {
+            if (response && response.data && response.data.data) {
+              const events = response.data.data;
+              const data = [
+                {
+                  key: 1,
+                  name: {fr:'audience'},
+                  header: true,
+                  address: 'New York No. 1 Lake Park',
+                  children:eventsPublic},
+                  {key: 2,
+                  name: {fr:'Event Type'},
+                  header: true,
+                  address: 'New York No. 1 Lake Park',
+                  children:events},
+                ]
+
+                setTaxonomyList(data);
+            }
+            setLoading(false);
+          })
+          .catch((error) => {
+            setLoading(false);
+          });
+        
         }
         setLoading(false);
       })
@@ -201,7 +240,7 @@ const Taxonomy = function ({ currentLang }) {
                 return {
                   onClick: (event) => {
                     event.stopPropagation()
-                    navigate(`/admin/add-organization/?id=${record.uuid}`);
+                    // navigate(`/admin/add-organization/?id=${record.uuid}`);
                     // setSelectedProduct(record);
                   }, // click row
                 };
