@@ -267,7 +267,7 @@ const AddEvent = function ({ currentLang, eventDetails }) {
         entityId: values.contact
       }:null,
       url:values.eventPage && {uri:values.eventPage},
-      sameAs:values.facebookLink?[values.facebookLink]:[],
+      facebookUrl:values.facebookLink,
       offerConfiguration: offerConfig,
       offers: offerIds && offerIds.map(item=>{ const obj={entityId:item}
       return obj}),
@@ -401,7 +401,7 @@ const AddEvent = function ({ currentLang, eventDetails }) {
           ? eventDetails.scheduleTimezone
           : "Canada/Eastern",
         eventPage:eventDetails.url?.uri,
-        facebookLink:eventDetails.sameAs.length>0? eventDetails.sameAs[0]:undefined ,
+        facebookLink:eventDetails.facebookUrl ,
         organization:eventDetails?.organizer?.organizations.map(item=>item.uuid),
         audience: eventDetails?.audience?.map(item=>item?.identifier?.uri),
         type: eventDetails?.additionalType?.map(item=>item?.identifier?.uri),
