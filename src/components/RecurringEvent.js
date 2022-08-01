@@ -42,6 +42,7 @@ const RecurringEvent = function ({
       {
       setIsCustom(true);
       const custom = eventDetails.recurringEvent?.customDates.map((item) => {
+        console.log("check format",moment(item.startDate).format("YYYY/M/D"))
         const obj = {
           id: uniqid(),
           name: "test name",
