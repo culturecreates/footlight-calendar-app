@@ -47,8 +47,8 @@ const RecurringEvent = function ({
           id: uniqid(),
           name: "test name",
           location: "test Location",
-          startDate: new Date(moment(item.startDate).format("YYYY,M,D")),
-          endDate: new Date(moment(item.startDate).format("YYYY,M,D")),
+          startDate: new Date(moment(item.startDate).format("YYYY/M/D")),
+          endDate: new Date(moment(item.startDate).format("YYYY/M/D")),
           initDate: item.startDate,
           isDeleted: false,
           time: item.customTimes
