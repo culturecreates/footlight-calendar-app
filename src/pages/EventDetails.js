@@ -269,13 +269,13 @@ const EventDetails = function ({currentLang, isAdmin=false }) {
                   currentLang={currentLang}
                 />
               )}
-             {/* {eventDetails.sameAs && eventDetails.sameAs.length > 0 && (
+             {eventDetails.url && eventDetails.url.uri && (
                 <EventContact
                   name="Link"
-                  values={eventDetails.url?[eventDetails.sameAs,eventDetails.url.uri]:eventDetails.sameAs}
+                  values={eventDetails.url?[eventDetails.url.uri]:[]}
                   currentLang={currentLang}
                 />
-              )} */}
+              )}
                {eventDetails.organizer &&eventDetails.organizer.organizations?.length>0 && (
                 <EventContact
                   name="organizations"

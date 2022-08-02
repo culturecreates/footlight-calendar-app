@@ -1,6 +1,7 @@
 import Item from "antd/lib/list/Item";
 import { Axios } from "../utils/ServerConfig";
 import moment from "moment";
+import * as moment_timezone from "moment-timezone"
 
 export default class ServiceApi {
   static convertDate =(date)=>{
@@ -300,4 +301,15 @@ export default class ServiceApi {
     });
   }
   
+  /**
+    * @description date: 2020-11-05,time:05:00,timezone:Canada/Atlantic   => formattedDate: 2020-11-05T08:00 +00.00
+    * @returns {Date}
+    */
+   static parseDate(date, time, timezone) {
+    const rawDate = `${date} ${time}`;
+    const formattedDate = moment_timezone.tz(rawDate, timezone).toDate();
+    return formattedDate;
+  }
+
+
 }

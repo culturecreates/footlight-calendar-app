@@ -252,7 +252,7 @@ const AddEvent = function ({ currentLang, eventDetails }) {
         fr: values.desc,
       },
       startDate: !isRecurring
-        ? moment(values.startDate).format("YYYY-MM-DDTHH:mm:ss")
+        ? ServiceApi.parseDate(moment(values.startDate).format("YYYY-MM-DD"),moment(values.startTime).format("HH:mm"),values.timeZone)
         : undefined,
       scheduleTimezone: values.timeZone,
       locationId: {
@@ -394,9 +394,17 @@ const AddEvent = function ({ currentLang, eventDetails }) {
           : undefined,
         title: eventDetails.name["fr"],
         endTime: eventDetails.endDate
-          ? moment(eventDetails.endDate.substring(11, 20), "HH-mm")
+          ? moment(new Date(eventDetails.endDate), "HH-mm").tz(
+            eventDetails.scheduleTimezone
+              ? eventDetails.scheduleTimezone
+              : "Canada/Eastern"
+          )
           : undefined,
-        startTime: moment(eventDetails.startDate.substring(11, 20), "HH-mm"),
+        startTime: moment(new Date(eventDetails.startDate), "HH-mm").tz(
+          eventDetails.scheduleTimezone
+            ? eventDetails.scheduleTimezone
+            : "Canada/Eastern"
+        ),
         timeZone: eventDetails.scheduleTimezone
           ? eventDetails.scheduleTimezone
           : "Canada/Eastern",
@@ -651,7 +659,7 @@ const AddEvent = function ({ currentLang, eventDetails }) {
                     className="status-comment-item"
                     rules={[{ required: true, message: "Start time required" }]}
                   >
-                    <TimePicker format="HH:mm" />
+                    <TimePicker format="HH:mm"/>
                   </Form.Item>
                 </div>
               </div>
