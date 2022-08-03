@@ -1,4 +1,4 @@
-import { FILTER, PLACES,CONTACTS, LANG, ORG, AUDIENCE, TYPES, EVENTLIST} from "./Types";
+import { FILTER, PLACES,CONTACTS, LANG, ORG, AUDIENCE, TYPES, EVENTLIST, EVENTBACK} from "./Types";
 
 export const fetchFilter = (data) => {
   return {
@@ -44,6 +44,12 @@ export const fetchTypes = (data) => {
 export const fetchEvents = (data) => {
   return {
     type: EVENTLIST,
+    data,
+  };
+};
+export const getBackEvents = (data) => {
+  return {
+    type: EVENTBACK,
     data,
   };
 };
