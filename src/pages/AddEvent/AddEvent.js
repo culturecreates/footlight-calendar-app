@@ -378,7 +378,7 @@ const AddEvent = function ({ currentLang, eventDetails }) {
         setOfferIds(eventDetails?.offers?.map(item=>item.uuid))
       form.setFieldsValue({
         contact:eventDetails.contactPoint?.uuid,
-        desc: eventDetails.description ? eventDetails.description["fr"] : "",
+        desc: eventDetails.description ? eventDetails.description["fr"]?eventDetails.description["fr"]==="<p><br></p>"?"<p>&nbsp;</p>":eventDetails.description["fr"] : "<p>&nbsp;</p> ":"<p>&nbsp;</p>",
         location: eventDetails.locations&&eventDetails.locations.map(item=>item.uuid),
         startDate: moment(new Date(eventDetails.startDate), "DD-MM-YYYY").tz(
           eventDetails.scheduleTimezone

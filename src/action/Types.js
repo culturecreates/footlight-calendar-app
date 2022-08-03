@@ -6,3 +6,4 @@ export const AUDIENCE = "AUDIENCE";
 export const TYPES = "TYPES";
 export const LANG = "LANG";
 export const EVENTLIST = "EVENTLIST";
+export const EVENTBACK = "EVENTBACK";

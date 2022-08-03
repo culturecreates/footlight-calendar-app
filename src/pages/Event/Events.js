@@ -12,7 +12,7 @@ import Spinner from "../../components/Spinner";
 import EventItem from "../../components/EventItem";
 import SemanticSearch from "../../components/SemanticSearch";
 import { useDispatch, useSelector } from "react-redux";
-import { fetchEvents, fetchFilter } from "../../action";
+import { fetchEvents, fetchFilter, getBackEvents } from "../../action";
 import { useSearchParams } from "react-router-dom";
 
 
@@ -44,6 +44,7 @@ const Events = function ({ currentLang,locale }) {
   const dispatch = useDispatch();
   const filterStore = useSelector((state) => state.filter);
   const eventStore = useSelector((state) => state.events);
+  const eventBackStore = useSelector((state) => state.eventBack);
   const { t, i18n } = useTranslation();
   const [search, setSearch] = useSearchParams();
 
@@ -275,6 +276,31 @@ const Events = function ({ currentLang,locale }) {
   const onClearSearch=()=>{
     setFilter([])
   }
+
+  const refs = eventList.reduce((acc, value) => {
+    acc[value.uuid] = React.createRef();
+    return acc;
+  }, {});
+
+  useEffect(()=>{
+   if(eventList.length>0 && eventBackStore)
+   {
+     if(eventList.find(item=>item.uuid===eventBackStore.uuid))
+    {
+      const obj=eventList.find(item=>item.uuid===eventBackStore.uuid)
+      if(refs[obj.uuid].current)
+      {
+        refs[obj.uuid].current.scrollIntoView({
+      behavior: 'smooth',
+      block: 'start',
+    });
+    dispatch(getBackEvents(null))
+  }
+   
+  }
+   }
+  },[eventList,refs])
+ 
   return (
       <>
       <SemanticSearch onSelection={selectSemantic} onClearSearch={onClearSearch}
@@ -372,7 +398,7 @@ const Events = function ({ currentLang,locale }) {
         <Row className="events-row">
           {eventList.map((item) => (
             <Col key={item.uuid} 
-           
+            ref={refs[item.uuid]}
             >
               <EventItem item={item} currentLang={currentLang} />
             </Col>

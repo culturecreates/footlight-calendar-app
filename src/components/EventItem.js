@@ -7,12 +7,20 @@ import {
   WifiOutlined ,ForkOutlined
 } from "@ant-design/icons";
 import backgroundImg from "../assets/placeholder.png";
+import { useDispatch } from "react-redux";
+import { getBackEvents } from "../action";
+
 
 const EventItem = function ({ item, currentLang="fr" }) {
     const navigate = useNavigate();
+    const dispatch = useDispatch();
+
     const regex = / /g;
     const redirectionToDetails=()=>{
-        
+      const obj={
+        uuid:item.uuid
+      }
+      dispatch(getBackEvents(obj))
         navigate(`/events/${item.slug?item.slug?.fr:item.name.fr.replace(regex, "-")}/${item.uuid}?lang=${currentLang}&date=${moment(item.startDate).tz(item.scheduleTimezone?item.scheduleTimezone:"Canada/Eastern").format("YYYY-MM-DD_HH-mm-ss")}`);
     }
   return (
