@@ -52,7 +52,7 @@ const RecurringModal = ({
     };
 
     if (updateAllTime) {
-      setDataSource(dateSource.map((item) => ({ ...item, time: [obj] })));
+      setDataSource(dateSource.map((item) => ({ ...item, time: item.time?[...item.time, obj].sort((a,b)=>a.startTime.localeCompare(b.startTime)):[obj] })));
     } else
       setDataSource(
         dateSource.map((item) => {
